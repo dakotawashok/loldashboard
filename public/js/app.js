@@ -12172,23 +12172,6 @@ module.exports = function spread(callback) {
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 /* harmony default export */ __webpack_exports__["default"] = {
     mounted: function mounted() {
@@ -31955,7 +31938,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "container"
   }, [_c('div', {
-    staticClass: "row"
+    staticClass: "row header-row"
   }, [_c('div', {
     staticClass: "col-sm-2 icon-wrapper"
   }, [(_vm.summonerLoaded) ? _c('div', {
@@ -32007,10 +31990,73 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "row main-tab"
   }, [(_vm.summonerLoaded) ? _c('ul', {
     staticClass: "nav nav-tabs"
-  }, [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _vm._m(4)]) : _vm._e()])])
+  }, [_vm._m(0), _vm._v(" "), _vm._m(1), _vm._v(" "), _vm._m(2), _vm._v(" "), _vm._m(3), _vm._v(" "), _vm._m(4)]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "row sub-tab"
+  }, [(_vm.summonerLoaded) ? _c('ul', {
+    staticClass: "nav nav-tabs"
+  }, [_vm._m(5), _vm._v(" "), _vm._m(6), _vm._v(" "), _vm._m(7), _vm._v(" "), _vm._m(8), _vm._v(" "), _vm._m(9)]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "row main-content-wrapper"
+  }, [(_vm.summonerLoaded) ? _c('div', {
+    staticClass: "main-content row"
+  }, _vm._l((_vm.recentGames), function(game) {
+    return _c('div', [_c('recentgamecard', {
+      attrs: {
+        "game": game
+      }
+    })], 1)
+  })) : _vm._e()])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('li', {
-    staticClass: "active",
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("Summary")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("Champions")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("Recent Games")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("Stats")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
+    attrs: {
+      "role": "presentation"
+    }
+  }, [_c('a', {
+    attrs: {
+      "href": "#"
+    }
+  }, [_vm._v("MISC")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('li', {
     attrs: {
       "role": "presentation"
     }
@@ -42605,7 +42651,7 @@ exports = module.exports = __webpack_require__(45)();
 
 
 // module
-exports.push([module.i, "\n.main-tab[data-v-cb31cc76] {\n    outline-style: solid;\n    outline-width: 1px;\n    outline-color: #2e3436;\n}\n.main-tab > ul > *[data-v-cb31cc76] {\n    width: 20%;\n}\n.main-content > *[data-v-cb31cc76] {\n    color: ghostwhite;\n    text-align: center;\n}\ninput[data-v-cb31cc76] {\n    background-color: #404040;\n    color: ghostwhite;\n    width: 65%;\n    border-width: 1px;\n\n    height: 34px;\n    text-align: center;\n}\nbutton.btn[data-v-cb31cc76] {\n    width: 33%;\n    float: right;\n}\n.well[data-v-cb31cc76] {\n    display: none;\n    margin-top: 10px;\n    color: #2e3436;\n}\n", ""]);
+exports.push([module.i, "\n.main-tab[data-v-cb31cc76], .sub-tab[data-v-cb31cc76] {\n    outline-style: solid;\n    outline-width: 1px;\n    outline-color: #2e3436;\n}\n.main-tab > ul > *[data-v-cb31cc76] {\n    width: 20%;\n}\n.header-row[data-v-cb31cc76] {\n    margin-bottom: 20px;\n}\n.main-content > *[data-v-cb31cc76] {\n    color: ghostwhite;\n    text-align: center;\n}\ninput[data-v-cb31cc76] {\n    background-color: #404040;\n    color: ghostwhite;\n    width: 65%;\n    border-width: 1px;\n\n    height: 34px;\n    text-align: center;\n}\nbutton.btn[data-v-cb31cc76] {\n    width: 33%;\n    float: right;\n}\n.well[data-v-cb31cc76] {\n    display: none;\n    margin-top: 10px;\n    color: #2e3436;\n}\n", ""]);
 
 // exports
 
@@ -42721,7 +42767,7 @@ module.exports = Component.exports
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "wrapper col-sm-4 col-md-3"
+    staticClass: "wrapper col-sm-3 col-md-2"
   }, [_c('a', {
     class: {
       won: _vm.won

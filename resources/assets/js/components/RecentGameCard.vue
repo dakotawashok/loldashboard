@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper col-sm-4 col-md-3">
+    <div class="wrapper col-sm-3 col-md-2">
         <a href="#" v-bind:class="{won: won}" v-bind:style="styleObject">
             <div class="game-item">
                 <div>{{game.gameId}}</div>
