@@ -21,16 +21,19 @@
         data : function() {
             return {
                 won : this.game.stats.win,
-                styleObject : {
-                    backgroundImage : "url('http://ddragon.leagueoflegends.com/cdn/6.8.1/img/map/map" + this.game.mapId + ".png')",
-                }
             }
         },
         computed : {
             gameDate : function() {
                 var date = new Date(this.game.createDate);
                 return date.toLocaleDateString();
+            },
+            styleObject : function() {
+                return {
+                    backgroundImage : "url('http://ddragon.leagueoflegends.com/cdn/6.8.1/img/map/map" + this.game.mapId + ".png')",
+                }
             }
+
         },
         mounted() {
 

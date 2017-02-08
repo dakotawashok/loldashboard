@@ -19,11 +19,12 @@ Vue.component('example', require('./components/Example.vue'));
 Vue.component('dashboard', require('./components/Dashboard.vue'));
 Vue.component('matchcard', require('./components/MatchCard.vue'));
 Vue.component('recentgamecard', require('./components/RecentGameCard.vue'));
+Vue.component('summarycontents', require('./components/SummaryContents.vue'));
 
 var VueResource = require('vue-resource');
 
 Vue.use(VueResource);
 
 const app = new Vue({
-    el: '#app'
+    el: '#app',
 });

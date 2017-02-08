@@ -2,6 +2,8 @@
 
 namespace App\Http\Controllers;
 
+use App\Match;
+use App\MatchList;
 use App\RankedStats;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
@@ -103,6 +105,45 @@ class SummonerController extends Controller
             }
 
             return response()->json(json_encode($returnStats));
+        }
+    }
+
+    public function getMatchList($id, $season = null, $rankedQueue = null) {
+        try {
+            if ($rankedQueue == null && $season == null) {
+                $matchList = MatchList::where('summonerId', $id)->firstOrFail();
+            } else if ($rankedQueue != null && $season == null) {
+                $matchList = MatchList::where('summonerId', $id)->where('rankedQueue', $rankedQueue)->firstOrFail();
+            } else if ($rankedQueue == null && $season != null) {
+                $matchList = MatchList::where('summonerId', $id)->where('season', $season)->firstOrFail();
+            } else {
+                $matchList = MatchList::where('summonerId', $id)->where('rankedQueue', $rankedQueue)->where('season', $season)->firstOrFail();
+            }
+
+            return response()->json($matchList->matches);
+
+        } catch (ModelNotFoundException $e) {
+            $api = new Api('RGAPI-0b8ccaa3-1745-41be-ae90-90a60dc315ef');
+
+            if ($rankedQueue == null && $season == null) {
+                $matchlist = $api->matchlist()->matchlist($id)->raw();
+            } else if ($rankedQueue != null && $season == null) {
+                $matchlist = $api->matchlist()->matchlist($id, $rankedQueue)->raw();
+            } else if ($rankedQueue == null && $season != null) {
+                $matchlist = $api->matchlist()->matchlist($id, null, $season)->raw();
+            } else {
+                $matchlist = $api->matchlist()->matchlist($id, $rankedQueue, $season)->raw();
+            }
+
+            $tempMatchList = new MatchList;
+            $tempMatchList->summonerId = $id;
+            $tempMatchList->season = $season;
+            $tempMatchList->rankedQueue = $rankedQueue;
+
+            $tempMatchList->matches = json_encode($matchlist);
+            $tempMatchList->save();
+
+            return response()->json(json_encode($matchlist));
         }
     }
 }

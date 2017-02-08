@@ -14,7 +14,7 @@ class CreateSummaryStatsTable extends Migration
     public function up()
     {
         Schema::create('summary_stats', function (Blueprint $table) {
-            $table->increments('id');
+            $table->integer('id');
             $table->string('season');
             $table->string('data', 10000);
             $table->timestamps();

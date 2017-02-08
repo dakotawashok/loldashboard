@@ -26,17 +26,9 @@ Route::get('summoner/{id}', 'SummonerController@getSummoner');
 
 Route::get('summoner/{identifier}/{type}/data/{year}', 'SummonerController@getSummonerData');
 
-Route::get('summoner/{identifier}/matchlist', function($identifier) {
-    $api = new Api('RGAPI-0b8ccaa3-1745-41be-ae90-90a60dc315ef');
+Route::get('summoner/{identifier}/matchlist', 'SummonerController@getMatchList');
 
-    $summoner = $api->summoner();
-
-    $returnSummoner = $summoner->info($identifier);
-
-    $matchlist = $api->matchlist()->matchlist($returnSummoner)->raw();
-
-    return $matchlist;
-});
+Route::get('summoner/{identifier}/matchlist/{season}', 'SummonerController@getMatchList');
 
 Route::get('summoner/{identifier}/match/{matchId}', function($identifier, $matchId) {
     $api = new Api('RGAPI-0b8ccaa3-1745-41be-ae90-90a60dc315ef');

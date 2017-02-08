@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class CreateRankedStatsTable extends Migration
+class CreateMatchListsTable extends Migration
 {
     /**
      * Run the migrations.
@@ -13,10 +13,11 @@ class CreateRankedStatsTable extends Migration
      */
     public function up()
     {
-        Schema::create('ranked_stats', function (Blueprint $table) {
-            $table->integer('id');
-            $table->string('season');
-            $table->longText('data');
+        Schema::create('match_lists', function (Blueprint $table) {
+            $table->integer('summonerId');
+            $table->string('season')->nullable();
+            $table->string('rankedQueue')->nullable();
+            $table->longText('matches');
             $table->timestamps();
         });
     }
@@ -28,6 +29,6 @@ class CreateRankedStatsTable extends Migration
      */
     public function down()
     {
-        Schema::dropIfExists('ranked_stats');
+        Schema::dropIfExists('match_lists');
     }
 }
