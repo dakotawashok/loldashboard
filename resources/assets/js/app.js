@@ -20,11 +20,14 @@ Vue.component('dashboard', require('./components/Dashboard.vue'));
 Vue.component('matchcard', require('./components/MatchCard.vue'));
 Vue.component('recentgamecard', require('./components/RecentGameCard.vue'));
 Vue.component('summarycontents', require('./components/SummaryContents.vue'));
+Vue.component('championcard', require('./components/ChampionCard.vue'));
 
 var VueResource = require('vue-resource');
 
 Vue.use(VueResource);
+var store = require('./store.js');
 
 const app = new Vue({
     el: '#app',
+    store,
 });

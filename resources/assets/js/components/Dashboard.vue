@@ -42,11 +42,14 @@
             <ul class="nav nav-tabs" v-if="currentMenu == 'Ranked'">
                 <li role="presentation" v-for="item in rankedSubMenuItems"><a href="#" v-on:click="changeSubMenu(item)">{{item}}</a></li>
             </ul>
+            <ul class="nav nav-tabs" v-if="currentMenu == 'Champions'">
+                <li role="presentation" v-for="item in summonerRankedData"><a href="#" v-on:click="changeSubMenu(item.id)">{{staticChampion(item.id)}}</a></li>
+            </ul>
         </div>
         <div class="row main-content-wrapper">
             <div class="main-content row" v-if="currentMenu == 'Summary' && currentSubMenu != ''"><summarycontents v-bind:type="currentSubMenu" v-bind:summaryData="summonerSummaryData"></summarycontents></div>
             <div class="main-content row" v-if="currentMenu == 'Ranked' && currentSubMenu !=''"><div v-for="match in matchlist"><matchcard v-bind:match="match"></matchcard></div></div>
-            <div class="main-content row" v-if="currentMenu == 'Champions'"></div>
+            <div class="main-content row" v-if="currentMenu == 'Champions' && currentSubMenu !=''"><championcard v-bind:currentSubMenu="currentSubMenu" v-bind:championStats="summonerRankedData"></championcard></div>
             <div class="main-content row" v-if="currentMenu == 'Recent Games'"><div v-for="game in recentGames"><recentgamecard v-bind:game="game"></recentgamecard></div></div>
             <div class="main-content row" v-if="currentMenu == 'Stats'"></div>
         </div>
@@ -54,15 +57,14 @@
 </template>
 
 <script>
+    import store from '../store.js';
+
     export default {
         mounted() {
-            this.getStaticData();
+            this.setStaticData();
         },
         data : function() {
             return {
-                staticData : {
-                    champions : {}
-                },
                 summonerLoaded : false,
                 summoner : {},
 
@@ -98,6 +100,18 @@
             computedProfileIconUrl : function() {
                 return "http://ddragon.leagueoflegends.com/cdn/7.2.1/img/profileicon/" + this.summoner.profileIconId + ".png";
             },
+
+            staticInfo : function() {
+                return store.state.staticInfo;
+            },
+
+            staticChampions : function() {
+                return store.state.staticInfo.champions;
+            },
+
+            sortedRankedStats : function() {
+                var tempStats = this.summonerRankedData;
+            }
         },
         methods : {
             findSummoner : function() {
@@ -131,6 +145,14 @@
                 return this.$http.get('summoner/' + id + '/recentgames');
             },
 
+            staticChampion : function(id) {
+                for (var champion in store.state.staticInfo.champions) {
+                    if (store.state.staticInfo.champions[champion].key == id) {
+                        return store.state.staticInfo.champions[champion].id;
+                    }
+                }
+            },
+
             getInfo : function() {
                 this.findSummoner().then(
                     response => {
@@ -156,13 +178,24 @@
                 $('.summoner-info').show();
             },
 
-            getStaticData : function() {
+            setStaticData : function() {
                 this.$http.get('/jsonfiles/champion.json').then(
                     response => {
-                        this.staticData.champions = response.body.data;
-                        for (var champ in this.staticData.champions) {
-                            //console.log(this.staticData.champions[champ].key);
-                        }
+                        var champions = response.body.data;
+
+                        var tempChampionsList = [];
+                        for (var champion in champions) {
+                            tempChampionsList.push(champions[champion]);
+                        };
+
+                        tempChampionsList.sort(function(championA, championB) {
+                            if (parseInt(championA.key) < parseInt(championB.key)) {
+                                return -1;
+                            } else {
+                                return 1;
+                            }
+                        });
+                        store.commit('assignChampions', tempChampionsList);
                     }
                 );
             },
@@ -192,24 +225,57 @@
                 );
             },
             currentYear : function(newYear) {
-                this.findSummonerSummaryData(this.summoner.id).then(
-                    response => {
-                        this.summonerSummaryData = JSON.parse(response.body);
-                        this.summonerSummaryData = this.summonerSummaryData.playerStatSummaries;
-                    }
-                ).catch(
-                    response => {
-                        console.log(response);
-                    }
-                );
+                this.currentSubMenu = "";
+                switch (this.currentMenu) {
+                    case "Summary" :
+                        this.findSummonerSummaryData(this.summoner.id).then(
+                            response => {
+                                this.summonerSummaryData = JSON.parse(response.body);
+                                this.summonerSummaryData = this.summonerSummaryData.playerStatSummaries;
+                            }
+                        ).catch(
+                            response => {
+                                console.log(response);
+                            }
+                        );
+                        break;
+                    case "Ranked" :
+
+                        break;
+                    case "Champions" :
+                        this.findSummonerRankedData(this.summoner.id).then(
+                            response => {
+                                this.summonerRankedData = JSON.parse(response.body);
+                                this.summonerRankedData = this.summonerRankedData.champions;
+                            }
+                        );
+                        break;
+                    case "Recent Games" :
+
+                        break;
+                    case "Stats" :
+
+                        break;
+                }
+
+
             },
             currentSubMenu : function(newMenuItem) {
-                console.log(this.currentSubMenu);
                 if (this.currentMenu == "Ranked" && this.currentSubMenu != "") {
                     this.findMatchList(this.summoner.id, this.currentSubMenu).then(
                         response => {
                             this.matchlist = JSON.parse(response.body);
                             this.matchlist = this.matchlist.matches;
+                        }
+                    );
+                }
+            },
+            currentMenu : function(newMenuItem) {
+                if (this.currentMenu == "Champions") {
+                    this.findSummonerRankedData(this.summoner.id).then(
+                        response => {
+                            this.summonerRankedData = JSON.parse(response.body);
+                            this.summonerRankedData = this.summonerRankedData.champions;
                         }
                     );
                 }
