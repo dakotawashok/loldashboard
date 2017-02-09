@@ -1,5 +1,5 @@
 <template>
-    <div class="wrapper col-sm-3 col-md-2">
+    <div class="wrapper col-sm-3 col-md-2" v-on:click="changeCurrentGameId(game.gameId)">
         <a href="#" v-bind:class="{won: won}" v-bind:style="styleObject">
             <div class="game-item">
                 <div>{{game.gameId}}</div>
@@ -34,6 +34,11 @@
                 }
             }
 
+        },
+        methods : {
+            changeCurrentGameId : function(id) {
+                this.$emit('changeCurrentGameId', id);
+            }
         },
         mounted() {
 

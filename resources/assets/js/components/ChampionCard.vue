@@ -1,8 +1,8 @@
 <template>
     <div v-if="!disabled">
         <h3>Champion : {{champion.id}}</h3>
-        <ul>
-            <li v-for="(key, value) in stats.stats">{{key}} : {{value}}</li>
+        <ul class="champion-stats-list">
+            <li v-for="(key, value) in stats.stats">{{value}} : {{key}}</li>
         </ul>
     </div>
 </template>
@@ -51,6 +51,9 @@
 </script>
 
 <style scoped>
-
+    .champion-stats-list {
+        text-align: left;
+        list-style: none;
+    }
 </style>
 

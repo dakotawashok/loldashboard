@@ -50,7 +50,7 @@
             <div class="main-content row" v-if="currentMenu == 'Summary' && currentSubMenu != ''"><summarycontents v-bind:type="currentSubMenu" v-bind:summaryData="summonerSummaryData"></summarycontents></div>
             <div class="main-content row" v-if="currentMenu == 'Ranked' && currentSubMenu !=''"><div v-for="match in matchlist"><matchcard v-bind:match="match"></matchcard></div></div>
             <div class="main-content row" v-if="currentMenu == 'Champions' && currentSubMenu !=''"><championcard v-bind:currentSubMenu="currentSubMenu" v-bind:championStats="summonerRankedData"></championcard></div>
-            <div class="main-content row" v-if="currentMenu == 'Recent Games'"><div v-for="game in recentGames"><recentgamecard v-bind:game="game"></recentgamecard></div></div>
+            <div class="main-content row" v-if="currentMenu == 'Recent Games'"><div><recentgamesview v-bind:recentGames="recentGames"></recentgamesview></div></div></div>
             <div class="main-content row" v-if="currentMenu == 'Stats'"></div>
         </div>
     </div>
@@ -335,4 +335,9 @@
         margin-top: 10px;
         color: #2e3436;
     }
+
+    .icon-wrapper {
+        margin-top: 30px;
+    }
+
 </style>

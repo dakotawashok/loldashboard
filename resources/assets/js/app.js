@@ -19,6 +19,7 @@ Vue.component('example', require('./components/Example.vue'));
 Vue.component('dashboard', require('./components/Dashboard.vue'));
 Vue.component('matchcard', require('./components/MatchCard.vue'));
 Vue.component('recentgamecard', require('./components/RecentGameCard.vue'));
+Vue.component('recentgamesview', require('./components/RecentGamesView.vue'));
 Vue.component('summarycontents', require('./components/SummaryContents.vue'));
 Vue.component('championcard', require('./components/ChampionCard.vue'));
 
