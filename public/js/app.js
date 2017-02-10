@@ -10942,11 +10942,88 @@ var store = new Vuex.Store({
     state: {
         staticInfo: {
             champions: []
-        }
+        },
+        summoner1: {
+            loaded: false,
+            summoner: {},
+            summaryData: {},
+            rankedData: {},
+            rankedMatchList: {},
+            recentGameList: {},
+            averageData: {}
+        },
+        summoner2: {
+            loaded: false,
+            summoner: {},
+            summaryData: {},
+            rankedData: {},
+            rankedMatchList: {},
+            recentGameList: {},
+            averageData: {}
+        },
+        currentMenuItem: "",
+        currentSubMenuItem: "",
+        currentYear: "2017",
+
+        loading: false
     },
     mutations: {
         assignChampions: function assignChampions(state, championsList) {
             state.staticInfo.champions = championsList;
+        },
+        assignSummoner1Summoner: function assignSummoner1Summoner(state, summoner) {
+            state.summoner1.summoner = summoner;
+        },
+        assignSummoner2Summoner: function assignSummoner2Summoner(state, summoner) {
+            state.summoner2.summoner = summoner;
+        },
+        assignSummoner1SummaryData: function assignSummoner1SummaryData(state, summaryData) {
+            state.summoner1.summaryData = summaryData;
+        },
+        assignSummoner2SummaryData: function assignSummoner2SummaryData(state, summaryData) {
+            state.summoner2.summaryData = summaryData;
+        },
+        assignSummoner1RankedData: function assignSummoner1RankedData(state, rankedData) {
+            state.summoner1.rankedData = rankedData;
+        },
+        assignSummoner2RankedData: function assignSummoner2RankedData(state, rankedData) {
+            state.summoner2.rankedData = rankedData;
+        },
+        assignSummoner1RankedMatchList: function assignSummoner1RankedMatchList(state, rankedMatchList) {
+            state.summoner1.rankedMatchList = rankedMatchList;
+        },
+        assignSummoner2RankedMatchList: function assignSummoner2RankedMatchList(state, rankedMatchList) {
+            state.summoner2.rankedMatchList = rankedMatchList;
+        },
+        assignSummoner1RecentGameList: function assignSummoner1RecentGameList(state, recentGameList) {
+            state.summoner1.recentGameList = recentGameList;
+        },
+        assignSummoner2RecentGameList: function assignSummoner2RecentGameList(state, recentGameList) {
+            state.summoner2.recentGameList = recentGameList;
+        },
+        assignSummoner1AverageData: function assignSummoner1AverageData(state, averageData) {
+            state.summoner1.averageData = averageData;
+        },
+        assignSummoner2AverageData: function assignSummoner2AverageData(state, averageData) {
+            state.summoner2.averageData = averageData;
+        },
+        assignSummoner1Loaded: function assignSummoner1Loaded(state, loaded) {
+            state.summoner1.loaded = loaded;
+        },
+        assignSummoner2Loaded: function assignSummoner2Loaded(state, loaded) {
+            state.summoner2.loaded = loaded;
+        },
+        assignCurrentMenuItem: function assignCurrentMenuItem(state, menuItem) {
+            state.currentMenuItem = menuItem;
+        },
+        assignCurrentSubMenuItem: function assignCurrentSubMenuItem(state, menuItem) {
+            state.currentSubMenuItem = menuItem;
+        },
+        assignCurrentYear: function assignCurrentYear(state, year) {
+            state.currentYear = year;
+        },
+        assignLoading: function assignLoading(state, loading) {
+            state.loading = loading;
         }
     }
 });
@@ -11556,10 +11633,12 @@ __webpack_require__(41);
 Vue.component('example', __webpack_require__(52));
 Vue.component('dashboard', __webpack_require__(51));
 Vue.component('matchcard', __webpack_require__(53));
+Vue.component('rankedmatchlistview', __webpack_require__(87));
 Vue.component('recentgamecard', __webpack_require__(54));
 Vue.component('recentgamesview', __webpack_require__(55));
 Vue.component('summarycontents', __webpack_require__(56));
 Vue.component('championcard', __webpack_require__(50));
+Vue.component('statsview', __webpack_require__(82));
 
 var VueResource = __webpack_require__(64);
 
@@ -12535,6 +12614,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
 
 
 
@@ -12545,6 +12630,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
     data: function data() {
         return {
+            summoner1Id: "",
+            summoner2Id: "",
+
             summonerLoaded: false,
             summoner: {},
 
@@ -12561,37 +12649,195 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             matches: {},
             recentGames: {},
             mainMenuItems: ['Summary', 'Ranked', 'Champions', 'Recent Games', 'Stats'],
-            rankedSubMenuItems: ['SEASON2017', 'PRESEASON2017', 'SEASON2016', 'PRESEASON2016', 'SEASON2015']
+            rankedSubMenuItems: ['SEASON2017', 'PRESEASON2017', 'SEASON2016', 'PRESEASON2016', 'SEASON2015'],
+            statsSubMenuItems: ['Current Year Ranked Stats', 'Normal Game Stats', 'Stats with Friends']
         };
     },
     computed: {
-        computedProfileIconUrl: function computedProfileIconUrl() {
-            return "http://ddragon.leagueoflegends.com/cdn/7.2.1/img/profileicon/" + this.summoner.profileIconId + ".png";
+        summoner1ProfileIconUrl: function summoner1ProfileIconUrl() {
+            return "http://ddragon.leagueoflegends.com/cdn/7.2.1/img/profileicon/" + this.summoner1.profileIconId + ".png";
+        },
+        summoner2ProfileIconUrl: function summoner2ProfileIconUrl() {
+            return "http://ddragon.leagueoflegends.com/cdn/7.2.1/img/profileicon/" + this.summoner2.profileIconId + ".png";
+        },
+        summaryStatsSubMenuItems: function summaryStatsSubMenuItems() {
+            var tempMenuItems = [];
+            if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && !__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
+                for (var stat in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summaryData) {
+                    tempMenuItems.push(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summaryData[stat].playerStatSummaryType);
+                }
+                return tempMenuItems;
+            } else if (!__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
+                for (var stat in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summaryData) {
+                    tempMenuItems.push(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summaryData[stat].playerStatSummaryType);
+                }
+                return tempMenuItems;
+            } else {
+                for (var stat in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summaryData) {
+                    tempMenuItems.push(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summaryData[stat].playerStatSummaryType);
+                }
+                for (var stat in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summaryData) {
+                    var found = false;
+                    for (var tempMenuItem in tempMenuItems) {
+                        if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summaryData[stat].playerStatSummaryType == tempMenuItems[tempMenuItem]) {
+                            found = true;
+                        }
+                    }
+                    if (!found) {
+                        tempMenuItems.push(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summaryData[stat].playerStatSummaryType);
+                    }
+                }
+            }
+            tempMenuItems.sort(function (a, b) {
+                var itemA = a.toUpperCase();
+                var itemB = b.toUpperCase();
+                if (itemA < itemB) {
+                    return -1;
+                } else {
+                    return 1;
+                }
+            });
+            return tempMenuItems;
         },
 
         staticInfo: function staticInfo() {
             return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo;
         },
-
         staticChampions: function staticChampions() {
             return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions;
         },
 
-        sortedRankedStats: function sortedRankedStats() {
-            var tempStats = this.summonerRankedData;
+        summoner1: function summoner1() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner;
+        },
+        summoner2: function summoner2() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner;
+        },
+
+        summoner1Loaded: function summoner1Loaded() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded;
+        },
+        summoner2Loaded: function summoner2Loaded() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded;
+        },
+
+        currentMenuItem: function currentMenuItem() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentMenuItem;
+        },
+        currentSubMenuItem: function currentSubMenuItem() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentSubMenuItem;
+        },
+
+        loading: function loading() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.loading;
         }
     },
     methods: {
-        findSummoner: function findSummoner() {
-            return this.$http.get('/summoner/' + this.identifier);
+        findSummoner: function findSummoner(summonerNumber) {
+            if (summonerNumber == "1") {
+                __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1Loaded', false);
+                return this.$http.get('/summoner/' + this.summoner1Id);
+            } else {
+                __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2Loaded', false);
+                return this.$http.get('/summoner/' + this.summoner2Id);
+            }
         },
 
         findSummonerSummaryData: function findSummonerSummaryData(identifier) {
             return this.$http.get('/summoner/' + identifier + '/summary/data/' + this.currentYear);
         },
 
+        // if only the first summoner is loaded, load the data for just the first summoner
+        // if only the second summoner is loaded, load the data for just the second summoner
+        // if both summoners are loaded, load the data for both of the summoners
+        assignSummonerSummaryData: function assignSummonerSummaryData() {
+            var _this = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', true);
+            if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && !__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
+                this.findSummonerSummaryData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id).then(function (response) {
+                    var tempSummaryData = JSON.parse(response.body);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1SummaryData', tempSummaryData.playerStatSummaries);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
+                });
+            } else if (!__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
+                this.findSummonerSummaryData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id).then(function (response) {
+                    var tempSummaryData = JSON.parse(response.body);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2SummaryData', tempSummaryData.playerStatSummaries);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
+                });
+            } else if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
+                // I make temporary variables like this so that I can commit both of them at the same time which fixes
+                // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
+                var tempSummaryData1 = {};
+                var tempSummaryData2 = {};
+                this.findSummonerSummaryData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id).then(function (response) {
+                    var tempSummaryData = JSON.parse(response.body);
+                    tempSummaryData1 = tempSummaryData.playerStatSummaries;
+                    return _this.findSummonerSummaryData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id);
+                }).then(function (response) {
+                    var tempSummaryData = JSON.parse(response.body);
+                    tempSummaryData2 = tempSummaryData.playerStatSummaries;
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1SummaryData', tempSummaryData1);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2SummaryData', tempSummaryData2);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
+                }).catch(function (response) {
+                    console.log("Error in Dashboard!");
+                    console.log(response);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
+                });
+            }
+        },
+
         findSummonerRankedData: function findSummonerRankedData(identifier) {
             return this.$http.get('/summoner/' + identifier + '/ranked/data/' + this.currentYear);
+        },
+
+        assignRankedMatchList: function assignRankedMatchList() {
+            var _this2 = this;
+
+            console.log("Loading...");
+            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', true);
+            if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && !__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
+                console.log("Loading Ranked Match List for Summoner 1 only");
+                this.findMatchList(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id, __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentSubMenuItem).then(function (response) {
+                    var tempRankedMatchList = JSON.parse(response.body);
+                    console.log(tempRankedMatchList);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1RankedMatchList', tempRankedMatchList);
+                    console.log("Done loading!");
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
+                });
+            } else if (!__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
+                console.log("Loading Ranked Match List for Summoner 2 only");
+                this.findMatchList(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id, __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentSubMenuItem).then(function (response) {
+                    var tempRankedMatchList = JSON.parse(response.body);
+                    console.log(tempRankedMatchList);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2RankedMatchList', tempRankedMatchList);
+                    console.log("Done loading!");
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
+                });
+            } else if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
+                // I make temporary variables like this so that I can commit both of them at the same time which fixes
+                // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
+                var tempRankedMatchList1 = {};
+                var tempRankedMatchList2 = {};
+                console.log("Loading Ranked Match List for Summoner 1 & Summoner 2");
+                this.findMatchList(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id, __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentSubMenuItem).then(function (response) {
+                    tempRankedMatchList1 = JSON.parse(response.body);
+                    return _this2.findMatchList(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id, __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentSubMenuItem);
+                }).then(function (response) {
+                    tempRankedMatchList2 = JSON.parse(response.body);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1RankedMatchList', tempRankedMatchList1);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2RankedMatchList', tempRankedMatchList2);
+                    console.log("Done loading!");
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
+                }).catch(function (response) {
+                    console.log("Error in Dashboard!");
+                    console.log(response);
+                    console.log("Done loading!");
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
+                });
+            }
         },
 
         findMatchList: function findMatchList(identifier, season) {
@@ -12618,18 +12864,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         },
 
-        getInfo: function getInfo() {
-            var _this = this;
+        getInfo: function getInfo(summonerNumber) {
+            var _this3 = this;
 
-            this.findSummoner().then(function (response) {
-                _this.summoner = JSON.parse(response.body);
-                _this.summonerLoaded = true;
-                return _this.findRecentGames(_this.summoner.id);
+            this.findSummoner(summonerNumber).then(function (response) {
+                if (summonerNumber == "1") {
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1Summoner', JSON.parse(response.body));
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1Loaded', true);
+                } else {
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2Summoner', JSON.parse(response.body));
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2Loaded', true);
+                }
+                _this3.summoner = JSON.parse(response.body);
+                _this3.summonerLoaded = true;
+                return _this3.findRecentGames(_this3.summoner.id);
             }).then(function (response) {
-                _this.recentGames = response.body.games;
-                return _this.findSummonerRankedData(_this.summoner.id);
+                _this3.recentGames = response.body.games;
+                return _this3.findSummonerRankedData(_this3.summoner.id);
             }).then(function (response) {
-                _this.summonerRankedData = JSON.parse(response.body);
+                _this3.summonerRankedData = JSON.parse(response.body);
             }).catch(function (response) {
                 console.log(response);
             });
@@ -12657,75 +12910,123 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             });
         },
 
+        // ChangeMenu :
+        // Changes the states current menu, and sets the current sub menu item to "" in case you were already looking at a view
+        // Then, depending on the menu that was selected, it will load data that the sub menu might need
         changeMenu: function changeMenu(menuItem) {
-            this.currentMenu = menuItem;
-            this.currentSubMenu = "";
+            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentMenuItem', menuItem);
+            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentSubMenuItem', "");
+            switch (menuItem) {
+                case "Summary":
+                    this.assignSummonerSummaryData();
+                    break;
+                case "Ranked":
+                    break;
+            }
             $('.sub-tab').show();
         },
 
         changeSubMenu: function changeSubMenu(menuItem) {
+            // Change the sub menu in the current state, then, depending on what the menu item is, load the data for that item
             this.currentSubMenu = menuItem;
+            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentSubMenuItem', menuItem);
+
+            switch (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentMenuItem) {
+                case "Summary":
+                    //load the summary data;
+                    break;
+                case "Ranked":
+                    this.assignRankedMatchList();
+                    break;
+                case "Champions":
+                    //load the ranked data
+                    break;
+                case "Stats":
+                    //load the stats data
+                    break;
+            }
         }
 
     },
     watch: {
         summoner: function summoner(newSummoner) {
-            var _this2 = this;
+            var _this4 = this;
 
+            this.changeMenu("");
             this.findSummonerSummaryData(newSummoner.id).then(function (response) {
-                _this2.summonerSummaryData = JSON.parse(response.body);
-                _this2.summonerSummaryData = _this2.summonerSummaryData.playerStatSummaries;
+                _this4.summonerSummaryData = JSON.parse(response.body);
+                _this4.summonerSummaryData = _this4.summonerSummaryData.playerStatSummaries;
             }).catch(function (response) {
                 console.log(response);
             });
         },
         currentYear: function currentYear(newYear) {
-            var _this3 = this;
+            var _this5 = this;
 
-            this.currentSubMenu = "";
-            switch (this.currentMenu) {
+            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentYear', newYear);
+            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentSubMenuItem', "");
+            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', true);
+            console.log('loading year' + newYear);
+
+            switch (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentMenuItem) {
                 case "Summary":
-                    this.findSummonerSummaryData(this.summoner.id).then(function (response) {
-                        _this3.summonerSummaryData = JSON.parse(response.body);
-                        _this3.summonerSummaryData = _this3.summonerSummaryData.playerStatSummaries;
-                    }).catch(function (response) {
-                        console.log(response);
-                    });
+                    this.assignSummonerSummaryData();
                     break;
                 case "Ranked":
 
                     break;
                 case "Champions":
                     this.findSummonerRankedData(this.summoner.id).then(function (response) {
-                        _this3.summonerRankedData = JSON.parse(response.body);
-                        _this3.summonerRankedData = _this3.summonerRankedData.champions;
+                        _this5.summonerRankedData = JSON.parse(response.body);
+                        _this5.summonerRankedData = _this5.summonerRankedData.champions;
                     });
                     break;
                 case "Recent Games":
 
                     break;
                 case "Stats":
-
+                    this.findSummonerRankedData(this.summoner.id).then(function (response) {
+                        _this5.summonerAverageData = JSON.parse(response.body);
+                        _this5.summonerAverageData = _this5.summonerAverageData.champions;
+                        for (var championData in _this5.summonerAverageData) {
+                            if (_this5.summonerAverageData[championData].id == "0") {
+                                _this5.summonerAverageData = _this5.summonerAverageData[championData].stats;
+                                break;
+                            }
+                        }
+                    });
                     break;
             }
+            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
         },
         currentSubMenu: function currentSubMenu(newMenuItem) {
-            var _this4 = this;
+            var _this6 = this;
 
             if (this.currentMenu == "Ranked" && this.currentSubMenu != "") {
                 this.findMatchList(this.summoner.id, this.currentSubMenu).then(function (response) {
-                    _this4.matchlist = JSON.parse(response.body);
-                    _this4.matchlist = _this4.matchlist.matches;
+                    _this6.matchlist = JSON.parse(response.body);
+                    _this6.matchlist = _this6.matchlist.matches;
                 });
             }
         },
         currentMenu: function currentMenu(newMenuItem) {
-            var _this5 = this;
+            var _this7 = this;
 
             if (this.currentMenu == "Champions") {
                 this.findSummonerRankedData(this.summoner.id).then(function (response) {
-                    _this5.summonerRankedData = JSON.parse(response.body);
-                    _this5.summonerRankedData = _this5.summonerRankedData.champions;
+                    _this7.summonerRankedData = JSON.parse(response.body);
+                    _this7.summonerRankedData = _this7.summonerRankedData.champions;
+                });
+            } else if (this.currentMenu == "Stats") {
+                this.findSummonerRankedData(this.summoner.id).then(function (response) {
+                    _this7.summonerAverageData = JSON.parse(response.body);
+                    _this7.summonerAverageData = _this7.summonerAverageData.champions;
+                    for (var championData in _this7.summonerAverageData) {
+                        if (_this7.summonerAverageData[championData].id == "0") {
+                            _this7.summonerAverageData = _this7.summonerAverageData[championData].stats;
+                            break;
+                        }
+                    }
                 });
             }
         }
@@ -12898,6 +13199,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(jQuery) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(5);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -12913,31 +13233,74 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = {
-    props: ['type', 'summaryData'],
-    methods: {},
-    data: function data() {
-        return {
-            noData: false
-        };
-    },
-    computed: {
-        currentData: function currentData() {
-            for (var summary in this.summaryData) {
-                if (this.summaryData === undefined) {
-                    console.log('wow thats weird');
+    props: [],
+    methods: {
+        // This method gets the aggregated stats for a specific summoner, and if the stats aren't find for the specific type,
+        // it sets the nodata flag as true.
+        getSummaryModeAggregatedStats: function getSummaryModeAggregatedStats(summonerData, type, summonerNumber) {
+            var found = false;
+            for (var summary in summonerData) {
+                if (summonerData === undefined) {
+                    console.log("That's weird");
                 } else {
-                    if (this.summaryData[summary].playerStatSummaryType == this.type) {
-                        if (jQuery.isEmptyObject(this.summaryData[summary].aggregatedStats)) {
-                            console.log("No data in this");
-                            this.noData = true;
+                    if (summonerData[summary].playerStatSummaryType == type) {
+                        if (jQuery.isEmptyObject(summonerData[summary].aggregatedStats || summonerData[summary].aggregatedStats == undefined)) {
+                            if (summonerNumber == "1") {
+                                this.summoner1NoData = true;
+                            } else if (summonerNumber == "2") {
+                                this.summoner2NoData = true;
+                            }
                         } else {
-                            this.noData = false;
+                            if (summonerNumber == "1") {
+                                this.summoner1NoData = false;
+                                this.summoner1Wins = summonerData[summary].wins;
+                                this.summoner1Losses = summonerData[summary].losses;
+                            } else if (summonerNumber == "2") {
+                                this.summoner2NoData = false;
+                                this.summoner2Wins = summonerData[summary].wins;
+                                this.summoner2Losses = summonerData[summary].losses;
+                            }
                         }
-                        return this.summaryData[summary];
+                        return summonerData[summary].aggregatedStats;
                     }
                 }
             }
+            if (!found) {
+                if (summonerNumber == "1") {
+                    this.summoner1NoData = true;
+                } else if (summonerNumber == "2") {
+                    this.summoner2NoData = true;
+                }
+            }
+            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
+        }
+    },
+    data: function data() {
+        return {
+            summoner1NoData: false,
+            summoner1Wins: "",
+            summoner1Losses: "",
+            summoner2NoData: false,
+            summoner2Wins: "",
+            summoner2Losses: ""
+        };
+    },
+    computed: {
+        summoner1SummaryData: function summoner1SummaryData() {
+            return this.getSummaryModeAggregatedStats(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summaryData, __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentSubMenuItem, "1");
+        },
+        summoner2SummaryData: function summoner2SummaryData() {
+            return this.getSummaryModeAggregatedStats(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summaryData, __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentSubMenuItem, "2");
+        },
+
+        summoner1Loaded: function summoner1Loaded() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded;
+        },
+        summoner2Loaded: function summoner2Loaded() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded;
         }
     },
     mounted: function mounted() {}
@@ -15416,7 +15779,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\n.summary-list[data-v-7263195e] {\n    text-align: left;\n    list-style: none;\n}\n", ""]);
+exports.push([module.i, "\n.summary-list[data-v-7263195e] {\n    text-align: left;\n    list-style: none;\n}\n.summary-list2[data-v-7263195e] {\n    text-align: right;\n    list-style: none;\n}\n", ""]);
 
 // exports
 
@@ -15444,7 +15807,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\n.form-control[data-v-cb31cc76] {\n    margin-top: 10px;\n    background-color: transparent;\n    color: ghostwhite;\n}\n.main-tab[data-v-cb31cc76], .sub-tab[data-v-cb31cc76] {\n    outline-style: solid;\n    outline-width: 1px;\n    outline-color: #2e3436;\n}\n.sub-tab[data-v-cb31cc76] {\n    display: none;\n}\n.main-tab > ul > *[data-v-cb31cc76] {\n    width: 20%;\n}\n.header-row[data-v-cb31cc76] {\n    margin-bottom: 20px;\n    margin-top: 15px;\n}\n.main-content > *[data-v-cb31cc76] {\n    color: ghostwhite;\n    text-align: center;\n}\ninput[data-v-cb31cc76] {\n    background-color: #404040;\n    color: ghostwhite;\n    width: 65%;\n    border-width: 1px;\n\n    height: 34px;\n    text-align: center;\n}\nbutton.btn[data-v-cb31cc76] {\n    width: 33%;\n    float: right;\n}\n.well[data-v-cb31cc76] {\n    display: none;\n    margin-top: 10px;\n    color: #2e3436;\n}\n.icon-wrapper[data-v-cb31cc76] {\n    margin-top: 30px;\n}\n\n", ""]);
+exports.push([module.i, "\n.summoner2-form-wrapper[data-v-cb31cc76] {\n    text-align: right;\n}\n.summoner2-form-wrapper > input[data-v-cb31cc76] {\n    float: right;\n}\n.form-control[data-v-cb31cc76] {\n    margin-top: 60px;\n    background-color: transparent;\n    color: ghostwhite;\n}\n.main-tab[data-v-cb31cc76], .sub-tab[data-v-cb31cc76] {\n    outline-style: solid;\n    outline-width: 1px;\n    outline-color: #2e3436;\n}\n.sub-tab[data-v-cb31cc76] {\n    display: none;\n}\n.main-tab > ul > *[data-v-cb31cc76] {\n    width: 20%;\n}\n.header-row[data-v-cb31cc76] {\n    margin-bottom: 20px;\n    margin-top: 15px;\n}\n.main-content > *[data-v-cb31cc76] {\n    color: ghostwhite;\n    text-align: center;\n}\ninput[data-v-cb31cc76] {\n    background-color: #404040;\n    color: ghostwhite;\n    width: 65%;\n    border-width: 1px;\n\n    height: 34px;\n    text-align: center;\n}\nbutton.btn[data-v-cb31cc76] {\n    width: 33%;\n    float: right;\n}\n.well[data-v-cb31cc76] {\n    display: none;\n    margin-top: 10px;\n    color: #2e3436;\n}\n.icon-wrapper[data-v-cb31cc76] {\n    margin-top: 30px;\n}\n\n", ""]);
 
 // exports
 
@@ -32907,13 +33270,27 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "summary-contents"
-  }, [_c('h3', [_vm._v("Summary Contents")]), _vm._v(" "), _c('h4', [_vm._v(_vm._s(_vm.currentData.playerStatSummaryType))]), _vm._v(" "), (_vm.noData) ? _c('h5', [_vm._v("No stats found for this Queue for the current selected year")]) : _vm._e(), _vm._v(" "), _c('ul', {
+    staticClass: "summary-contents container-fluid"
+  }, [_vm._m(0), _vm._v(" "), _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-sm-6 summoner1-stats"
+  }, [(_vm.summoner1NoData) ? _c('h5', [_vm._v("No stats found for this Queue for the current selected year")]) : _vm._e(), _vm._v(" "), _c('h6', [_vm._v("Wins: " + _vm._s(_vm.summoner1Wins))]), _vm._v(" "), _c('ul', {
     staticClass: "summary-list"
-  }, _vm._l((_vm.currentData.aggregatedStats), function(key, value) {
-    return _c('li', [_vm._v("\n            " + _vm._s(value) + " : " + _vm._s(key) + "\n        ")])
-  }))])
-},staticRenderFns: []}
+  }, _vm._l((_vm.summoner1SummaryData), function(key, value) {
+    return _c('li', [_vm._v("\n                    " + _vm._s(value) + " : " + _vm._s(key) + "\n                ")])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-6 summoner2-stats"
+  }, [(_vm.summoner2NoData) ? _c('h5', [_vm._v("No stats found for this Queue for the current selected year")]) : _vm._e(), _vm._v(" "), _c('h6', [_vm._v("Wins: " + _vm._s(_vm.summoner2Wins))]), _vm._v(" "), _c('ul', {
+    staticClass: "summary-list2"
+  }, _vm._l((_vm.summoner2SummaryData), function(key, value) {
+    return _c('li', [_vm._v("\n                    " + _vm._s(value) + " : " + _vm._s(key) + "\n                ")])
+  }))])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "row"
+  }, [_c('h3', [_vm._v("Summary Contents")])])
+}]}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -32952,11 +33329,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "row header-row"
   }, [_c('div', {
     staticClass: "col-sm-2 icon-wrapper"
-  }, [(_vm.summonerLoaded) ? _c('div', {
+  }, [(_vm.summoner1Loaded) ? _c('div', {
     staticClass: "icon"
   }, [_c('img', {
     attrs: {
-      "src": _vm.computedProfileIconUrl
+      "src": _vm.summoner1ProfileIconUrl
     }
   })]) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "col-sm-3 summoner-form-wrapper"
@@ -32966,26 +33343,28 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     directives: [{
       name: "model",
       rawName: "v-model",
-      value: (_vm.identifier),
-      expression: "identifier"
+      value: (_vm.summoner1Id),
+      expression: "summoner1Id"
     }],
     attrs: {
       "placeholder": "Summoner Name"
     },
     domProps: {
-      "value": _vm._s(_vm.identifier)
+      "value": _vm._s(_vm.summoner1Id)
     },
     on: {
       "keyup": function($event) {
         if (_vm._k($event.keyCode, "enter", 13)) { return; }
-        _vm.getInfo($event)
+        _vm.getInfo(1)
       },
       "input": function($event) {
         if ($event.target.composing) { return; }
-        _vm.identifier = $event.target.value
+        _vm.summoner1Id = $event.target.value
       }
     }
-  }), _vm._v(" "), (_vm.summonerLoaded) ? _c('select', {
+  })])]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-2"
+  }, [(_vm.summonerLoaded) ? _c('select', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -33006,17 +33385,44 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         })[0]
       }
     }
-  }, [_c('option', [_vm._v("2017")]), _vm._v(" "), _c('option', [_vm._v("2016")]), _vm._v(" "), _c('option', [_vm._v("2015")]), _vm._v(" "), _c('option', [_vm._v("2014")]), _vm._v(" "), _c('option', [_vm._v("2013")])]) : _vm._e()])]), _vm._v(" "), _c('div', {
-    staticClass: "col-sm-2 season-ranklist-wrapper"
-  }, [(_vm.summonerLoaded) ? _c('div', {
-    staticClass: "season-ranklist"
-  }) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "col-sm-5 season-friends-wrapper"
-  }, [(_vm.summonerLoaded) ? _c('div', {
-    staticClass: "season-friends"
-  }) : _vm._e()])]), _vm._v(" "), _c('div', {
+  }, [_c('option', [_vm._v("2017")]), _vm._v(" "), _c('option', [_vm._v("2016")]), _vm._v(" "), _c('option', [_vm._v("2015")]), _vm._v(" "), _c('option', [_vm._v("2014")]), _vm._v(" "), _c('option', [_vm._v("2013")])]) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-3 summoner2-form-wrapper"
+  }, [_c('div', {
+    staticClass: "summoner-form"
+  }, [_c('h2', [_vm._v("SUMMONER NAME: ")]), _vm._v(" "), _c('input', {
+    directives: [{
+      name: "model",
+      rawName: "v-model",
+      value: (_vm.summoner2Id),
+      expression: "summoner2Id"
+    }],
+    attrs: {
+      "placeholder": "Summoner Name"
+    },
+    domProps: {
+      "value": _vm._s(_vm.summoner2Id)
+    },
+    on: {
+      "keyup": function($event) {
+        if (_vm._k($event.keyCode, "enter", 13)) { return; }
+        _vm.getInfo(2)
+      },
+      "input": function($event) {
+        if ($event.target.composing) { return; }
+        _vm.summoner2Id = $event.target.value
+      }
+    }
+  })])]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-2 icon-wrapper"
+  }, [(_vm.summoner2Loaded) ? _c('div', {
+    staticClass: "icon"
+  }, [_c('img', {
+    attrs: {
+      "src": _vm.summoner2ProfileIconUrl
+    }
+  })]) : _vm._e()])]), _vm._v(" "), _c('div', {
     staticClass: "row main-tab"
-  }, [(_vm.summonerLoaded) ? _c('ul', {
+  }, [(_vm.summoner1Loaded || _vm.summoner2Loaded) ? _c('ul', {
     staticClass: "nav nav-tabs"
   }, _vm._l((_vm.mainMenuItems), function(menuItem) {
     return _c('li', {
@@ -33035,10 +33441,10 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_vm._v(_vm._s(menuItem))])])
   })) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "row sub-tab"
-  }, [(_vm.currentMenu == 'Summary') ? _c('ul', {
+  }, [(_vm.currentMenuItem == 'Summary') ? _c('ul', {
     staticClass: "nav nav-tabs"
-  }, _vm._l((_vm.summonerSummaryData), function(value, key) {
-    return _c('li', {
+  }, _vm._l((_vm.summaryStatsSubMenuItems), function(stat) {
+    return (_vm.loading == false) ? _c('li', {
       attrs: {
         "role": "presentation"
       }
@@ -33048,11 +33454,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       },
       on: {
         "click": function($event) {
-          _vm.changeSubMenu(value.playerStatSummaryType)
+          _vm.changeSubMenu(stat)
         }
       }
-    }, [_vm._v(_vm._s(value.playerStatSummaryType))])])
-  })) : _vm._e(), _vm._v(" "), (_vm.currentMenu == 'Ranked') ? _c('ul', {
+    }, [_vm._v(_vm._s(stat))])]) : _vm._e()
+  })) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Ranked') ? _c('ul', {
     staticClass: "nav nav-tabs"
   }, _vm._l((_vm.rankedSubMenuItems), function(item) {
     return _c('li', {
@@ -33069,7 +33475,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }, [_vm._v(_vm._s(item))])])
-  })) : _vm._e(), _vm._v(" "), (_vm.currentMenu == 'Champions') ? _c('ul', {
+  })) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Champions') ? _c('ul', {
     staticClass: "nav nav-tabs"
   }, _vm._l((_vm.summonerRankedData), function(item) {
     return _c('li', {
@@ -33086,39 +33492,50 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }
     }, [_vm._v(_vm._s(_vm.staticChampion(item.id)))])])
-  })) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "row main-content-wrapper"
-  }, [(_vm.currentMenu == 'Summary' && _vm.currentSubMenu != '') ? _c('div', {
-    staticClass: "main-content row"
-  }, [_c('summarycontents', {
-    attrs: {
-      "type": _vm.currentSubMenu,
-      "summaryData": _vm.summonerSummaryData
-    }
-  })], 1) : _vm._e(), _vm._v(" "), (_vm.currentMenu == 'Ranked' && _vm.currentSubMenu != '') ? _c('div', {
-    staticClass: "main-content row"
-  }, _vm._l((_vm.matchlist), function(match) {
-    return _c('div', [_c('matchcard', {
+  })) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Stats') ? _c('ul', {
+    staticClass: "nav nav-tabs"
+  }, _vm._l((_vm.statsSubMenuItems), function(item) {
+    return _c('li', {
       attrs: {
-        "match": match
+        "role": "presentation"
       }
-    })], 1)
-  })) : _vm._e(), _vm._v(" "), (_vm.currentMenu == 'Champions' && _vm.currentSubMenu != '') ? _c('div', {
+    }, [_c('a', {
+      attrs: {
+        "href": "#"
+      },
+      on: {
+        "click": function($event) {
+          _vm.changeSubMenu(item)
+        }
+      }
+    }, [_vm._v(_vm._s(item))])])
+  })) : _vm._e()]), _vm._v(" "), (_vm.loading == false) ? _c('div', {
+    staticClass: "row main-content-wrapper"
+  }, [(_vm.currentMenuItem == 'Summary' && _vm.currentSubMenuItem != '') ? _c('div', {
+    staticClass: "main-content row"
+  }, [_c('summarycontents')], 1) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Ranked' && _vm.currentSubMenuItem != '') ? _c('div', {
+    staticClass: "main-content row"
+  }, [_c('rankedmatchlistview')], 1) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Champions' && _vm.currentSubMenuItem != '') ? _c('div', {
     staticClass: "main-content row"
   }, [_c('championcard', {
     attrs: {
       "currentSubMenu": _vm.currentSubMenu,
       "championStats": _vm.summonerRankedData
     }
-  })], 1) : _vm._e(), _vm._v(" "), (_vm.currentMenu == 'Recent Games') ? _c('div', {
+  })], 1) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Recent Games') ? _c('div', {
     staticClass: "main-content row"
-  }, [_c('div', [_c('recentgamesview', {
+  }, [_c('recentgamesview', {
     attrs: {
       "recentGames": _vm.recentGames
     }
-  })], 1)]) : _vm._e()]), _vm._v(" "), (_vm.currentMenu == 'Stats') ? _c('div', {
+  })], 1) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Stats' && _vm.currentSubMenuItem != '') ? _c('div', {
     staticClass: "main-content row"
-  }) : _vm._e()])
+  }, [_c('statsview', {
+    attrs: {
+      "currentSubMenu": _vm.currentSubMenu,
+      "averageData": _vm.summonerAverageData
+    }
+  })], 1) : _vm._e()]) : _vm._e()])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -44243,6 +44660,301 @@ module.exports = function(module) {
 __webpack_require__(14);
 module.exports = __webpack_require__(15);
 
+
+/***/ }),
+/* 75 */,
+/* 76 */,
+/* 77 */,
+/* 78 */,
+/* 79 */,
+/* 80 */,
+/* 81 */,
+/* 82 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(86)
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(83),
+  /* template */
+  __webpack_require__(85),
+  /* scopeId */
+  "data-v-673d1315",
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/dakotawashok/NinjaDev/www/lolDashboard/resources/assets/js/components/StatsView.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] StatsView.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-673d1315", Component.options)
+  } else {
+    hotAPI.reload("data-v-673d1315", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 83 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store__ = __webpack_require__(5);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = {
+    props: ['currentSubMenu', 'averageData'],
+    data: function data() {
+        return {};
+    },
+    computed: {},
+    methods: {},
+    mounted: function mounted() {}
+};
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.average-stats[data-v-673d1315] {\n    list-style: none;\n    text-align: left;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 85 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "stats-view-wrapper"
+  }, [_c('h3', [_vm._v(_vm._s(_vm.currentSubMenu))]), _vm._v(" "), _c('ul', {
+    staticClass: "average-stats"
+  }, _vm._l((_vm.averageData), function(key, value) {
+    return _c('li', [_vm._v(_vm._s(value) + " : " + _vm._s(key))])
+  }))])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-673d1315", module.exports)
+  }
+}
+
+/***/ }),
+/* 86 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(84);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(3)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-673d1315&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./StatsView.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-673d1315&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./StatsView.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 87 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(91)
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(88),
+  /* template */
+  __webpack_require__(89),
+  /* scopeId */
+  "data-v-6db676a4",
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/dakotawashok/NinjaDev/www/lolDashboard/resources/assets/js/components/RankedMatchListView.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] RankedMatchListView.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6db676a4", Component.options)
+  } else {
+    hotAPI.reload("data-v-6db676a4", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 88 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(5);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = {
+    props: [],
+    methods: {},
+    data: function data() {
+        return {};
+    },
+    computed: {
+        summoner1RankedMatchList: function summoner1RankedMatchList() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedMatchList.matches;
+        },
+        summoner2RankedMatchList: function summoner2RankedMatchList() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedMatchList.matches;
+        },
+
+        summoner1Loaded: function summoner1Loaded() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded;
+        },
+        summoner2Loaded: function summoner2Loaded() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded;
+        }
+    },
+    mounted: function mounted() {}
+};
+
+/***/ }),
+/* 89 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "ranked-matchlist-wrapper container-fluid"
+  }, [_c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-sm-6 summoner1-ranked-matchlist"
+  }, _vm._l((_vm.summoner1RankedMatchList), function(match) {
+    return _c('div', [_c('matchcard', {
+      attrs: {
+        "match": match
+      }
+    })], 1)
+  })), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-6 summoner2-ranked-matchlist"
+  }, _vm._l((_vm.summoner2RankedMatchList), function(match) {
+    return _c('div', [_c('matchcard', {
+      attrs: {
+        "match": match
+      }
+    })], 1)
+  }))])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-6db676a4", module.exports)
+  }
+}
+
+/***/ }),
+/* 90 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 91 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(90);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(3)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6db676a4&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./RankedMatchListView.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6db676a4&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./RankedMatchListView.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
 
 /***/ })
 /******/ ]);
