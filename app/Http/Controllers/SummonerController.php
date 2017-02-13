@@ -14,6 +14,7 @@ use App\Summoner;
 use App\SummaryStats;
 
 use LeagueWrap\Api;
+use Symfony\Component\Console\Exception\InvalidArgumentException;
 
 class SummonerController extends Controller
 {
@@ -126,14 +127,44 @@ class SummonerController extends Controller
             $api = new Api('RGAPI-0b8ccaa3-1745-41be-ae90-90a60dc315ef');
 
             if ($rankedQueue == null && $season == null) {
-                $matchlist = $api->matchlist()->matchlist($id)->raw();
+                $matchlist = $api->matchlist()->matchlist($id);
             } else if ($rankedQueue != null && $season == null) {
-                $matchlist = $api->matchlist()->matchlist($id, $rankedQueue)->raw();
+                $matchlist = $api->matchlist()->matchlist($id, $rankedQueue);
             } else if ($rankedQueue == null && $season != null) {
-                $matchlist = $api->matchlist()->matchlist($id, null, $season)->raw();
+                // temporary work around for bug with RIOT Api where seasons marked SEASON2017 or PRESEASON2017 don't work
+                if ($season == "SEASON2017" || $season == "PRESEASON2017") {
+                    $matchlist = $api->matchlist()->matchlist($id, null, null, null, null, null, $beginTime = 1481108400000, $endTime = null);
+                    $i = 0;
+                    foreach ($matchlist as $match) {
+                        if ($match->season != $season) {
+                            unset($matchlist[$i]);
+                        }
+                        $i++;
+                    }
+                } else {
+                    $matchlist = $api->matchlist()->matchlist($id, null, $season);
+                }
             } else {
-                $matchlist = $api->matchlist()->matchlist($id, $rankedQueue, $season)->raw();
+                $matchlist = $api->matchlist()->matchlist($id, $rankedQueue, $season);
             }
+
+            foreach($matchlist as $match) {
+                $tempMatch = new Match;
+                $tempMatch->region = $match->region;
+                $tempMatch->platformId = $match->platformId;
+                $tempMatch->matchId = strval($match->matchId);
+                $tempMatch->champion = $match->champion;
+                $tempMatch->queue = $match->queue;
+                $tempMatch->timestamp = strval($match->timestamp);
+                $tempMatch->lane = $match->lane;
+                $tempMatch->role = $match->role;
+                $tempMatch->season = $match->season;
+                $tempMatch->summonerId = $id;
+
+                $tempMatch->save();
+            }
+
+            $matchlist = $matchlist->raw();
 
             $tempMatchList = new MatchList;
             $tempMatchList->summonerId = $id;
@@ -143,7 +174,33 @@ class SummonerController extends Controller
             $tempMatchList->matches = json_encode($matchlist);
             $tempMatchList->save();
 
-            return response()->json(json_encode($matchlist));
+            $returnMatchList = json_encode($matchlist);
+
+            return response()->json($returnMatchList);
+        }
+    }
+
+    public function getMatchData($id, $matchId) {
+        try {
+            $match = Match::where('matchId', $matchId)->where('summonerId', $id)->firstOrFail();
+            if (is_null($match->data)) {
+                throw new InvalidArgumentException;
+            }
+
+            return response()->json($match->data);
+        } catch(ModelNotFoundException $e) {
+            return response($e);
+
+        } catch (InvalidArgumentException $e) {
+            $api = new Api('RGAPI-0b8ccaa3-1745-41be-ae90-90a60dc315ef');
+
+            $match = $api->match()->match($matchId)->raw();
+
+            $tempMatch = Match::where('matchId', $matchId)->where('summonerId', $id)->firstOrFail();
+            $tempMatch->data = json_encode($match);
+            $tempMatch->save();
+
+            return response()->json(json_encode($match));
         }
     }
 }

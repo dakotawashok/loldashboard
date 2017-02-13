@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "./";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 74);
+/******/ 	return __webpack_require__(__webpack_require__.s = 84);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -705,6 +705,122 @@ function applyToTag(styleElement, obj) {
 
 /***/ }),
 /* 4 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+var Vuex = __webpack_require__(82);
+
+var store = new Vuex.Store({
+    state: {
+        staticInfo: {
+            champions: []
+        },
+        summoner1: {
+            loaded: false,
+            matchLoaded: false,
+            summoner: {},
+            summaryData: {},
+            rankedData: {},
+            rankedMatchList: {},
+            selectedMatch: {},
+            recentGameList: {},
+            averageData: {}
+        },
+        summoner2: {
+            loaded: false,
+            matchLoaded: false,
+            summoner: {},
+            summaryData: {},
+            rankedData: {},
+            rankedMatchList: {},
+            selectedMatch: {},
+            recentGameList: {},
+            averageData: {}
+        },
+        currentMenuItem: "",
+        currentSubMenuItem: "",
+        currentYear: "2017",
+
+        loading: false
+    },
+    mutations: {
+        assignChampions: function assignChampions(state, championsList) {
+            state.staticInfo.champions = championsList;
+        },
+        assignSummoner1Summoner: function assignSummoner1Summoner(state, summoner) {
+            state.summoner1.summoner = summoner;
+        },
+        assignSummoner2Summoner: function assignSummoner2Summoner(state, summoner) {
+            state.summoner2.summoner = summoner;
+        },
+        assignSummoner1SummaryData: function assignSummoner1SummaryData(state, summaryData) {
+            state.summoner1.summaryData = summaryData;
+        },
+        assignSummoner2SummaryData: function assignSummoner2SummaryData(state, summaryData) {
+            state.summoner2.summaryData = summaryData;
+        },
+        assignSummoner1RankedData: function assignSummoner1RankedData(state, rankedData) {
+            state.summoner1.rankedData = rankedData;
+        },
+        assignSummoner2RankedData: function assignSummoner2RankedData(state, rankedData) {
+            state.summoner2.rankedData = rankedData;
+        },
+        assignSummoner1RankedMatchList: function assignSummoner1RankedMatchList(state, rankedMatchList) {
+            state.summoner1.rankedMatchList = rankedMatchList;
+        },
+        assignSummoner2RankedMatchList: function assignSummoner2RankedMatchList(state, rankedMatchList) {
+            state.summoner2.rankedMatchList = rankedMatchList;
+        },
+        assignSummoner1RecentGameList: function assignSummoner1RecentGameList(state, recentGameList) {
+            state.summoner1.recentGameList = recentGameList;
+        },
+        assignSummoner2RecentGameList: function assignSummoner2RecentGameList(state, recentGameList) {
+            state.summoner2.recentGameList = recentGameList;
+        },
+        assignSummoner1AverageData: function assignSummoner1AverageData(state, averageData) {
+            state.summoner1.averageData = averageData;
+        },
+        assignSummoner2AverageData: function assignSummoner2AverageData(state, averageData) {
+            state.summoner2.averageData = averageData;
+        },
+        assignSummoner1Loaded: function assignSummoner1Loaded(state, loaded) {
+            state.summoner1.loaded = loaded;
+        },
+        assignSummoner2Loaded: function assignSummoner2Loaded(state, loaded) {
+            state.summoner2.loaded = loaded;
+        },
+        assignSummoner1MatchLoaded: function assignSummoner1MatchLoaded(state, loaded) {
+            state.summoner1.matchLoaded = loaded;
+        },
+        assignSummoner2MatchLoaded: function assignSummoner2MatchLoaded(state, loaded) {
+            state.summoner2.matchLoaded = loaded;
+        },
+        assignSummoner1SelectedMatch: function assignSummoner1SelectedMatch(state, match) {
+            state.summoner1.selectedMatch = match;
+        },
+        assignSummoner2SelectedMatch: function assignSummoner2SelectedMatch(state, match) {
+            state.summoner2.selectedMatch = match;
+        },
+        assignCurrentMenuItem: function assignCurrentMenuItem(state, menuItem) {
+            state.currentMenuItem = menuItem;
+        },
+        assignCurrentSubMenuItem: function assignCurrentSubMenuItem(state, menuItem) {
+            state.currentSubMenuItem = menuItem;
+        },
+        assignCurrentYear: function assignCurrentYear(state, year) {
+            state.currentYear = year;
+        },
+        assignLoading: function assignLoading(state, loading) {
+            state.loading = loading;
+        }
+    }
+});
+
+/* harmony default export */ __webpack_exports__["default"] = store;
+
+/***/ }),
+/* 5 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;/*!
@@ -10931,106 +11047,6 @@ return jQuery;
 
 
 /***/ }),
-/* 5 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-var Vuex = __webpack_require__(72);
-
-var store = new Vuex.Store({
-    state: {
-        staticInfo: {
-            champions: []
-        },
-        summoner1: {
-            loaded: false,
-            summoner: {},
-            summaryData: {},
-            rankedData: {},
-            rankedMatchList: {},
-            recentGameList: {},
-            averageData: {}
-        },
-        summoner2: {
-            loaded: false,
-            summoner: {},
-            summaryData: {},
-            rankedData: {},
-            rankedMatchList: {},
-            recentGameList: {},
-            averageData: {}
-        },
-        currentMenuItem: "",
-        currentSubMenuItem: "",
-        currentYear: "2017",
-
-        loading: false
-    },
-    mutations: {
-        assignChampions: function assignChampions(state, championsList) {
-            state.staticInfo.champions = championsList;
-        },
-        assignSummoner1Summoner: function assignSummoner1Summoner(state, summoner) {
-            state.summoner1.summoner = summoner;
-        },
-        assignSummoner2Summoner: function assignSummoner2Summoner(state, summoner) {
-            state.summoner2.summoner = summoner;
-        },
-        assignSummoner1SummaryData: function assignSummoner1SummaryData(state, summaryData) {
-            state.summoner1.summaryData = summaryData;
-        },
-        assignSummoner2SummaryData: function assignSummoner2SummaryData(state, summaryData) {
-            state.summoner2.summaryData = summaryData;
-        },
-        assignSummoner1RankedData: function assignSummoner1RankedData(state, rankedData) {
-            state.summoner1.rankedData = rankedData;
-        },
-        assignSummoner2RankedData: function assignSummoner2RankedData(state, rankedData) {
-            state.summoner2.rankedData = rankedData;
-        },
-        assignSummoner1RankedMatchList: function assignSummoner1RankedMatchList(state, rankedMatchList) {
-            state.summoner1.rankedMatchList = rankedMatchList;
-        },
-        assignSummoner2RankedMatchList: function assignSummoner2RankedMatchList(state, rankedMatchList) {
-            state.summoner2.rankedMatchList = rankedMatchList;
-        },
-        assignSummoner1RecentGameList: function assignSummoner1RecentGameList(state, recentGameList) {
-            state.summoner1.recentGameList = recentGameList;
-        },
-        assignSummoner2RecentGameList: function assignSummoner2RecentGameList(state, recentGameList) {
-            state.summoner2.recentGameList = recentGameList;
-        },
-        assignSummoner1AverageData: function assignSummoner1AverageData(state, averageData) {
-            state.summoner1.averageData = averageData;
-        },
-        assignSummoner2AverageData: function assignSummoner2AverageData(state, averageData) {
-            state.summoner2.averageData = averageData;
-        },
-        assignSummoner1Loaded: function assignSummoner1Loaded(state, loaded) {
-            state.summoner1.loaded = loaded;
-        },
-        assignSummoner2Loaded: function assignSummoner2Loaded(state, loaded) {
-            state.summoner2.loaded = loaded;
-        },
-        assignCurrentMenuItem: function assignCurrentMenuItem(state, menuItem) {
-            state.currentMenuItem = menuItem;
-        },
-        assignCurrentSubMenuItem: function assignCurrentSubMenuItem(state, menuItem) {
-            state.currentSubMenuItem = menuItem;
-        },
-        assignCurrentYear: function assignCurrentYear(state, year) {
-            state.currentYear = year;
-        },
-        assignLoading: function assignLoading(state, loading) {
-            state.loading = loading;
-        }
-    }
-});
-
-/* harmony default export */ __webpack_exports__["default"] = store;
-
-/***/ }),
 /* 6 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -11620,7 +11636,7 @@ module.exports = g;
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(41);
+__webpack_require__(43);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -11630,20 +11646,20 @@ __webpack_require__(41);
  *
  */
 
-Vue.component('example', __webpack_require__(52));
-Vue.component('dashboard', __webpack_require__(51));
-Vue.component('matchcard', __webpack_require__(53));
-Vue.component('rankedmatchlistview', __webpack_require__(87));
-Vue.component('recentgamecard', __webpack_require__(54));
-Vue.component('recentgamesview', __webpack_require__(55));
-Vue.component('summarycontents', __webpack_require__(56));
-Vue.component('championcard', __webpack_require__(50));
-Vue.component('statsview', __webpack_require__(82));
+Vue.component('example', __webpack_require__(56));
+Vue.component('dashboard', __webpack_require__(55));
+Vue.component('matchcard', __webpack_require__(57));
+Vue.component('rankedmatchlistview', __webpack_require__(58));
+Vue.component('recentgamecard', __webpack_require__(59));
+Vue.component('recentgamesview', __webpack_require__(60));
+Vue.component('summarycontents', __webpack_require__(62));
+Vue.component('championcard', __webpack_require__(54));
+Vue.component('statsview', __webpack_require__(61));
 
-var VueResource = __webpack_require__(64);
+var VueResource = __webpack_require__(72);
 
 Vue.use(VueResource);
-var store = __webpack_require__(5);
+var store = __webpack_require__(4);
 
 var app = new Vue({
   el: '#app',
@@ -12503,7 +12519,7 @@ module.exports = function spread(callback) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(4);
 //
 //
 //
@@ -12555,7 +12571,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(4);
 //
 //
 //
@@ -12865,8 +12881,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         getInfo: function getInfo(summonerNumber) {
-            var _this3 = this;
-
             this.findSummoner(summonerNumber).then(function (response) {
                 if (summonerNumber == "1") {
                     __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1Summoner', JSON.parse(response.body));
@@ -12875,14 +12889,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2Summoner', JSON.parse(response.body));
                     __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2Loaded', true);
                 }
-                _this3.summoner = JSON.parse(response.body);
-                _this3.summonerLoaded = true;
-                return _this3.findRecentGames(_this3.summoner.id);
-            }).then(function (response) {
-                _this3.recentGames = response.body.games;
-                return _this3.findSummonerRankedData(_this3.summoner.id);
-            }).then(function (response) {
-                _this3.summonerRankedData = JSON.parse(response.body);
             }).catch(function (response) {
                 console.log(response);
             });
@@ -12936,6 +12942,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     //load the summary data;
                     break;
                 case "Ranked":
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1MatchLoaded', false);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2MatchLoaded', false);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1SelectedMatch', {});
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2SelectedMatch', {});
                     this.assignRankedMatchList();
                     break;
                 case "Champions":
@@ -12950,18 +12960,18 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     watch: {
         summoner: function summoner(newSummoner) {
-            var _this4 = this;
+            var _this3 = this;
 
             this.changeMenu("");
             this.findSummonerSummaryData(newSummoner.id).then(function (response) {
-                _this4.summonerSummaryData = JSON.parse(response.body);
-                _this4.summonerSummaryData = _this4.summonerSummaryData.playerStatSummaries;
+                _this3.summonerSummaryData = JSON.parse(response.body);
+                _this3.summonerSummaryData = _this3.summonerSummaryData.playerStatSummaries;
             }).catch(function (response) {
                 console.log(response);
             });
         },
         currentYear: function currentYear(newYear) {
-            var _this5 = this;
+            var _this4 = this;
 
             __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentYear', newYear);
             __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentSubMenuItem', "");
@@ -12977,8 +12987,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     break;
                 case "Champions":
                     this.findSummonerRankedData(this.summoner.id).then(function (response) {
-                        _this5.summonerRankedData = JSON.parse(response.body);
-                        _this5.summonerRankedData = _this5.summonerRankedData.champions;
+                        _this4.summonerRankedData = JSON.parse(response.body);
+                        _this4.summonerRankedData = _this4.summonerRankedData.champions;
                     });
                     break;
                 case "Recent Games":
@@ -12986,11 +12996,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     break;
                 case "Stats":
                     this.findSummonerRankedData(this.summoner.id).then(function (response) {
-                        _this5.summonerAverageData = JSON.parse(response.body);
-                        _this5.summonerAverageData = _this5.summonerAverageData.champions;
-                        for (var championData in _this5.summonerAverageData) {
-                            if (_this5.summonerAverageData[championData].id == "0") {
-                                _this5.summonerAverageData = _this5.summonerAverageData[championData].stats;
+                        _this4.summonerAverageData = JSON.parse(response.body);
+                        _this4.summonerAverageData = _this4.summonerAverageData.champions;
+                        for (var championData in _this4.summonerAverageData) {
+                            if (_this4.summonerAverageData[championData].id == "0") {
+                                _this4.summonerAverageData = _this4.summonerAverageData[championData].stats;
                                 break;
                             }
                         }
@@ -13000,30 +13010,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
         },
         currentSubMenu: function currentSubMenu(newMenuItem) {
-            var _this6 = this;
+            var _this5 = this;
 
             if (this.currentMenu == "Ranked" && this.currentSubMenu != "") {
                 this.findMatchList(this.summoner.id, this.currentSubMenu).then(function (response) {
-                    _this6.matchlist = JSON.parse(response.body);
-                    _this6.matchlist = _this6.matchlist.matches;
+                    _this5.matchlist = JSON.parse(response.body);
+                    _this5.matchlist = _this5.matchlist.matches;
                 });
             }
         },
         currentMenu: function currentMenu(newMenuItem) {
-            var _this7 = this;
+            var _this6 = this;
 
             if (this.currentMenu == "Champions") {
                 this.findSummonerRankedData(this.summoner.id).then(function (response) {
-                    _this7.summonerRankedData = JSON.parse(response.body);
-                    _this7.summonerRankedData = _this7.summonerRankedData.champions;
+                    _this6.summonerRankedData = JSON.parse(response.body);
+                    _this6.summonerRankedData = _this6.summonerRankedData.champions;
                 });
             } else if (this.currentMenu == "Stats") {
                 this.findSummonerRankedData(this.summoner.id).then(function (response) {
-                    _this7.summonerAverageData = JSON.parse(response.body);
-                    _this7.summonerAverageData = _this7.summonerAverageData.champions;
-                    for (var championData in _this7.summonerAverageData) {
-                        if (_this7.summonerAverageData[championData].id == "0") {
-                            _this7.summonerAverageData = _this7.summonerAverageData[championData].stats;
+                    _this6.summonerAverageData = JSON.parse(response.body);
+                    _this6.summonerAverageData = _this6.summonerAverageData.champions;
+                    for (var championData in _this6.summonerAverageData) {
+                        if (_this6.summonerAverageData[championData].id == "0") {
+                            _this6.summonerAverageData = _this6.summonerAverageData[championData].stats;
                             break;
                         }
                     }
@@ -13032,7 +13042,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         }
     }
 };
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(5)))
 
 /***/ }),
 /* 36 */
@@ -13069,6 +13079,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(4);
 //
 //
 //
@@ -13078,8 +13089,29 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 
+
+
 /* harmony default export */ __webpack_exports__["default"] = {
-    props: ["match"],
+    props: ["match", "summonerId"],
+    methods: {
+        logMatchData: function logMatchData(matchId) {
+            var _this = this;
+
+            this.$http.get('/summoner/' + this.summonerId + '/match/' + matchId).then(function (response) {
+                if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id == _this.summonerId) {
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1SelectedMatch', JSON.parse(response.body));
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1MatchLoaded', true);
+                } else if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id == _this.summonerId) {
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2SelectedMatch', JSON.parse(response.body));
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2MatchLoaded', true);
+                } else {
+                    console.log("something fucked up when doing matchcard shit");
+                }
+            }, function (response) {
+                console.log('match failure');
+            });
+        }
+    },
     mounted: function mounted() {},
 
     data: function data() {
@@ -13096,6 +13128,92 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /***/ }),
 /* 38 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(4);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = {
+    props: [],
+    methods: {},
+    data: function data() {
+        return {};
+    },
+    computed: {
+        summoner1RankedMatchList: function summoner1RankedMatchList() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedMatchList.matches;
+        },
+        summoner2RankedMatchList: function summoner2RankedMatchList() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedMatchList.matches;
+        },
+
+        summoner1Loaded: function summoner1Loaded() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded;
+        },
+        summoner2Loaded: function summoner2Loaded() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded;
+        },
+
+        summoner1Id: function summoner1Id() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id;
+        },
+        summoner2Id: function summoner2Id() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id;
+        },
+
+        matchLoaded: function matchLoaded() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.matchLoaded || __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.matchLoaded;
+        },
+        summoner1MatchLoaded: function summoner1MatchLoaded() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.matchLoaded;
+        },
+        summoner2MatchLoaded: function summoner2MatchLoaded() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.matchLoaded;
+        },
+
+        summoner1Match: function summoner1Match() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.selectedMatch;
+        },
+        summoner2Match: function summoner2Match() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.selectedMatch;
+        }
+    },
+    mounted: function mounted() {}
+};
+
+/***/ }),
+/* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13144,12 +13262,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 };
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(4);
 //
 //
 //
@@ -13194,12 +13312,41 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 };
 
 /***/ }),
-/* 40 */
+/* 41 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store__ = __webpack_require__(4);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = {
+    props: ['currentSubMenu', 'averageData'],
+    data: function data() {
+        return {};
+    },
+    computed: {},
+    methods: {},
+    mounted: function mounted() {}
+};
+
+/***/ }),
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(jQuery) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(4);
 //
 //
 //
@@ -13305,14 +13452,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     mounted: function mounted() {}
 };
-/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(5)))
 
 /***/ }),
-/* 41 */
+/* 43 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_provided_window_dot_jQuery) {
-window._ = __webpack_require__(49);
+window._ = __webpack_require__(53);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -13320,9 +13467,9 @@ window._ = __webpack_require__(49);
  * code may be modified to fit the specific needs of your application.
  */
 
-window.$ = __webpack_provided_window_dot_jQuery = __webpack_require__(4);
+window.$ = __webpack_provided_window_dot_jQuery = __webpack_require__(5);
 
-__webpack_require__(42);
+__webpack_require__(44);
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces
@@ -13330,7 +13477,7 @@ __webpack_require__(42);
  * and simple, leaving you to focus on building your next great project.
  */
 
-window.Vue = __webpack_require__(71);
+window.Vue = __webpack_require__(81);
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -13356,10 +13503,10 @@ window.axios.defaults.headers.common = {
 //     broadcaster: 'pusher',
 //     key: 'your-pusher-key'
 // });
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
-/* 42 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/*!
@@ -15740,10 +15887,10 @@ if (typeof jQuery === 'undefined') {
 
 }(jQuery);
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(4)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
-/* 43 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 exports = module.exports = __webpack_require__(2)();
@@ -15757,34 +15904,6 @@ exports.push([module.i, "\na[data-v-1fa40288] {\n    border-style: solid;\n    b
 
 
 /***/ }),
-/* 44 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.match-card[data-v-6b5eb526] {\n    height: 150px;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 45 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.summary-list[data-v-7263195e] {\n    text-align: left;\n    list-style: none;\n}\n.summary-list2[data-v-7263195e] {\n    text-align: right;\n    list-style: none;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
 /* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -15793,7 +15912,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\n.champion-stats-list[data-v-759efbf8] {\n    text-align: left;\n    list-style: none;\n}\n", ""]);
+exports.push([module.i, "\n.average-stats[data-v-673d1315] {\n    list-style: none;\n    text-align: left;\n}\n", ""]);
 
 // exports
 
@@ -15807,7 +15926,7 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\n.summoner2-form-wrapper[data-v-cb31cc76] {\n    text-align: right;\n}\n.summoner2-form-wrapper > input[data-v-cb31cc76] {\n    float: right;\n}\n.form-control[data-v-cb31cc76] {\n    margin-top: 60px;\n    background-color: transparent;\n    color: ghostwhite;\n}\n.main-tab[data-v-cb31cc76], .sub-tab[data-v-cb31cc76] {\n    outline-style: solid;\n    outline-width: 1px;\n    outline-color: #2e3436;\n}\n.sub-tab[data-v-cb31cc76] {\n    display: none;\n}\n.main-tab > ul > *[data-v-cb31cc76] {\n    width: 20%;\n}\n.header-row[data-v-cb31cc76] {\n    margin-bottom: 20px;\n    margin-top: 15px;\n}\n.main-content > *[data-v-cb31cc76] {\n    color: ghostwhite;\n    text-align: center;\n}\ninput[data-v-cb31cc76] {\n    background-color: #404040;\n    color: ghostwhite;\n    width: 65%;\n    border-width: 1px;\n\n    height: 34px;\n    text-align: center;\n}\nbutton.btn[data-v-cb31cc76] {\n    width: 33%;\n    float: right;\n}\n.well[data-v-cb31cc76] {\n    display: none;\n    margin-top: 10px;\n    color: #2e3436;\n}\n.icon-wrapper[data-v-cb31cc76] {\n    margin-top: 30px;\n}\n\n", ""]);
+exports.push([module.i, "\n.match-card[data-v-6b5eb526] {\n    height: 150px;\n}\n", ""]);
 
 // exports
 
@@ -15821,13 +15940,69 @@ exports = module.exports = __webpack_require__(2)();
 
 
 // module
-exports.push([module.i, "\n.recent-game[data-v-d58b0448], .recent-games-cards[data-v-d58b0448] {\n    display: inline-block;\n    width: 100%;\n}\n.recent-game-stats[data-v-d58b0448] {\n    list-style: none;\n    text-align: left;\n}\n", ""]);
+exports.push([module.i, "\n.ranked-match-view[data-v-6db676a4] {\n    margin-bottom: 30px;\n}\nli[data-v-6db676a4] {\n    list-style: none;\n    text-align: left;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
 /* 49 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.summary-list[data-v-7263195e] {\n    text-align: left;\n    list-style: none;\n}\n.summary-list2[data-v-7263195e] {\n    text-align: right;\n    list-style: none;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 50 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.champion-stats-list[data-v-759efbf8] {\n    text-align: left;\n    list-style: none;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 51 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.summoner2-form-wrapper[data-v-cb31cc76] {\n    text-align: right;\n}\n.summoner2-form-wrapper > input[data-v-cb31cc76] {\n    float: right;\n}\n.form-control[data-v-cb31cc76] {\n    margin-top: 60px;\n    background-color: transparent;\n    color: ghostwhite;\n}\n.main-tab[data-v-cb31cc76], .sub-tab[data-v-cb31cc76] {\n    outline-style: solid;\n    outline-width: 1px;\n    outline-color: #2e3436;\n}\n.sub-tab[data-v-cb31cc76] {\n    display: none;\n}\n.main-tab > ul > *[data-v-cb31cc76] {\n    width: 20%;\n}\n.header-row[data-v-cb31cc76] {\n    margin-bottom: 20px;\n    margin-top: 15px;\n}\n.main-content > *[data-v-cb31cc76] {\n    color: ghostwhite;\n    text-align: center;\n}\ninput[data-v-cb31cc76] {\n    background-color: #404040;\n    color: ghostwhite;\n    width: 65%;\n    border-width: 1px;\n\n    height: 34px;\n    text-align: center;\n}\nbutton.btn[data-v-cb31cc76] {\n    width: 33%;\n    float: right;\n}\n.well[data-v-cb31cc76] {\n    display: none;\n    margin-top: 10px;\n    color: #2e3436;\n}\n.icon-wrapper[data-v-cb31cc76] {\n    margin-top: 30px;\n}\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 52 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(2)();
+// imports
+
+
+// module
+exports.push([module.i, "\n.recent-game[data-v-d58b0448], .recent-games-cards[data-v-d58b0448] {\n    display: inline-block;\n    width: 100%;\n}\n.recent-game-stats[data-v-d58b0448] {\n    list-style: none;\n    text-align: left;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 53 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -32916,21 +33091,21 @@ exports.push([module.i, "\n.recent-game[data-v-d58b0448], .recent-games-cards[da
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13), __webpack_require__(73)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13), __webpack_require__(83)(module)))
 
 /***/ }),
-/* 50 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(68)
+__webpack_require__(78)
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(34),
   /* template */
-  __webpack_require__(61),
+  __webpack_require__(69),
   /* scopeId */
   "data-v-759efbf8",
   /* cssModules */
@@ -32957,18 +33132,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 51 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(69)
+__webpack_require__(79)
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(35),
   /* template */
-  __webpack_require__(62),
+  __webpack_require__(70),
   /* scopeId */
   "data-v-cb31cc76",
   /* cssModules */
@@ -32995,14 +33170,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 52 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(36),
   /* template */
-  __webpack_require__(58),
+  __webpack_require__(64),
   /* scopeId */
   null,
   /* cssModules */
@@ -33029,18 +33204,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 53 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(66)
+__webpack_require__(75)
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(37),
   /* template */
-  __webpack_require__(59),
+  __webpack_require__(66),
   /* scopeId */
   "data-v-6b5eb526",
   /* cssModules */
@@ -33067,18 +33242,56 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 54 */
+/* 58 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(65)
+__webpack_require__(76)
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(38),
   /* template */
-  __webpack_require__(57),
+  __webpack_require__(67),
+  /* scopeId */
+  "data-v-6db676a4",
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/dakotawashok/NinjaDev/www/lolDashboard/resources/assets/js/components/RankedMatchListView.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] RankedMatchListView.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6db676a4", Component.options)
+  } else {
+    hotAPI.reload("data-v-6db676a4", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 59 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(73)
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(39),
+  /* template */
+  __webpack_require__(63),
   /* scopeId */
   "data-v-1fa40288",
   /* cssModules */
@@ -33105,18 +33318,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 55 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(70)
+__webpack_require__(80)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(39),
+  __webpack_require__(40),
   /* template */
-  __webpack_require__(63),
+  __webpack_require__(71),
   /* scopeId */
   "data-v-d58b0448",
   /* cssModules */
@@ -33143,18 +33356,56 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 56 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(67)
+__webpack_require__(74)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(40),
+  __webpack_require__(41),
   /* template */
-  __webpack_require__(60),
+  __webpack_require__(65),
+  /* scopeId */
+  "data-v-673d1315",
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/dakotawashok/NinjaDev/www/lolDashboard/resources/assets/js/components/StatsView.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] StatsView.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-673d1315", Component.options)
+  } else {
+    hotAPI.reload("data-v-673d1315", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 62 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(77)
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(42),
+  /* template */
+  __webpack_require__(68),
   /* scopeId */
   "data-v-7263195e",
   /* cssModules */
@@ -33181,7 +33432,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 57 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33215,7 +33466,7 @@ if (false) {
 }
 
 /***/ }),
-/* 58 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33244,7 +33495,28 @@ if (false) {
 }
 
 /***/ }),
-/* 59 */
+/* 65 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "stats-view-wrapper"
+  }, [_c('h3', [_vm._v(_vm._s(_vm.currentSubMenu))]), _vm._v(" "), _c('ul', {
+    staticClass: "average-stats"
+  }, _vm._l((_vm.averageData), function(key, value) {
+    return _c('li', [_vm._v(_vm._s(value) + " : " + _vm._s(key))])
+  }))])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-673d1315", module.exports)
+  }
+}
+
+/***/ }),
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33253,6 +33525,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     style: (_vm.styleObject),
     attrs: {
       "href": "#"
+    },
+    on: {
+      "click": function($event) {
+        _vm.logMatchData(_vm.match.matchId)
+      }
     }
   }, [_vm._v("\n    " + _vm._s(_vm.match.lane) + "\n    " + _vm._s(_vm.match.role) + "\n    " + _vm._s(_vm.match.champion) + "\n")])
 },staticRenderFns: []}
@@ -33265,7 +33542,58 @@ if (false) {
 }
 
 /***/ }),
-/* 60 */
+/* 67 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "ranked-matchlist-wrapper container-fluid"
+  }, [(_vm.matchLoaded) ? _c('div', {
+    staticClass: "row ranked-match-view container-fluid col-sm-12"
+  }, [_c('h3', {
+    staticClass: "row"
+  }, [_vm._v("Match Data: ")]), _vm._v(" "), _c('div', {
+    staticClass: "row"
+  }, [(_vm.summoner1MatchLoaded) ? _c('div', {
+    staticClass: "summoner1-match col-sm-6"
+  }, [_c('ul', _vm._l((_vm.summoner1Match), function(stat) {
+    return _c('li', [_vm._v(_vm._s(stat))])
+  }))]) : _vm._e(), _vm._v(" "), (_vm.summoner2MatchLoaded) ? _c('div', {
+    staticClass: "summoner2-match col-sm-6"
+  }, [_c('ul', _vm._l((_vm.summoner2Match), function(stat) {
+    return _c('li', [_vm._v(_vm._s(stat))])
+  }))]) : _vm._e()])]) : _vm._e(), _vm._v(" "), _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-sm-6 summoner1-ranked-matchlist"
+  }, _vm._l((_vm.summoner1RankedMatchList), function(match) {
+    return _c('div', [_c('matchcard', {
+      attrs: {
+        "match": match,
+        "summonerId": _vm.summoner1Id
+      }
+    })], 1)
+  })), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-6 summoner2-ranked-matchlist"
+  }, _vm._l((_vm.summoner2RankedMatchList), function(match) {
+    return _c('div', [_c('matchcard', {
+      attrs: {
+        "match": match,
+        "summonerId": _vm.summoner2Id
+      }
+    })], 1)
+  }))])])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-6db676a4", module.exports)
+  }
+}
+
+/***/ }),
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33275,13 +33603,13 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "row"
   }, [_c('div', {
     staticClass: "col-sm-6 summoner1-stats"
-  }, [(_vm.summoner1NoData) ? _c('h5', [_vm._v("No stats found for this Queue for the current selected year")]) : _vm._e(), _vm._v(" "), _c('h6', [_vm._v("Wins: " + _vm._s(_vm.summoner1Wins))]), _vm._v(" "), _c('ul', {
+  }, [(_vm.summoner1NoData) ? _c('h5', [_vm._v("No stats found for this Queue for the current selected year")]) : _vm._e(), _vm._v(" "), (!_vm.summoner1NoData) ? _c('h6', [_vm._v("Wins: " + _vm._s(_vm.summoner1Wins))]) : _vm._e(), _vm._v(" "), _c('ul', {
     staticClass: "summary-list"
   }, _vm._l((_vm.summoner1SummaryData), function(key, value) {
     return _c('li', [_vm._v("\n                    " + _vm._s(value) + " : " + _vm._s(key) + "\n                ")])
   }))]), _vm._v(" "), _c('div', {
     staticClass: "col-sm-6 summoner2-stats"
-  }, [(_vm.summoner2NoData) ? _c('h5', [_vm._v("No stats found for this Queue for the current selected year")]) : _vm._e(), _vm._v(" "), _c('h6', [_vm._v("Wins: " + _vm._s(_vm.summoner2Wins))]), _vm._v(" "), _c('ul', {
+  }, [(_vm.summoner2NoData) ? _c('h5', [_vm._v("No stats found for this Queue for the current selected year")]) : _vm._e(), _vm._v(" "), (!_vm.summoner2NoData) ? _c('h6', [_vm._v("Wins: " + _vm._s(_vm.summoner2Wins))]) : _vm._e(), _vm._v(" "), _c('ul', {
     staticClass: "summary-list2"
   }, _vm._l((_vm.summoner2SummaryData), function(key, value) {
     return _c('li', [_vm._v("\n                    " + _vm._s(value) + " : " + _vm._s(key) + "\n                ")])
@@ -33300,7 +33628,7 @@ if (false) {
 }
 
 /***/ }),
-/* 61 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33319,7 +33647,7 @@ if (false) {
 }
 
 /***/ }),
-/* 62 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33364,7 +33692,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }
   })])]), _vm._v(" "), _c('div', {
     staticClass: "col-sm-2"
-  }, [(_vm.summonerLoaded) ? _c('select', {
+  }, [(_vm.summoner1Loaded || _vm.summoner2Loaded) ? _c('select', {
     directives: [{
       name: "model",
       rawName: "v-model",
@@ -33546,7 +33874,7 @@ if (false) {
 }
 
 /***/ }),
-/* 63 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33582,7 +33910,7 @@ if (false) {
 }
 
 /***/ }),
-/* 64 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35083,13 +35411,13 @@ module.exports = plugin;
 
 
 /***/ }),
-/* 65 */
+/* 73 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(43);
+var content = __webpack_require__(45);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -35109,13 +35437,39 @@ if(false) {
 }
 
 /***/ }),
-/* 66 */
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(44);
+var content = __webpack_require__(46);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(3)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-673d1315&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./StatsView.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-673d1315&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./StatsView.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 75 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(47);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -35135,13 +35489,39 @@ if(false) {
 }
 
 /***/ }),
-/* 67 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(45);
+var content = __webpack_require__(48);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(3)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6db676a4&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./RankedMatchListView.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6db676a4&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./RankedMatchListView.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 77 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(49);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -35161,13 +35541,13 @@ if(false) {
 }
 
 /***/ }),
-/* 68 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(46);
+var content = __webpack_require__(50);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -35187,13 +35567,13 @@ if(false) {
 }
 
 /***/ }),
-/* 69 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(47);
+var content = __webpack_require__(51);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -35213,13 +35593,13 @@ if(false) {
 }
 
 /***/ }),
-/* 70 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(48);
+var content = __webpack_require__(52);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
 var update = __webpack_require__(3)(content, {});
@@ -35239,7 +35619,7 @@ if(false) {
 }
 
 /***/ }),
-/* 71 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -43815,7 +44195,7 @@ module.exports = Vue$3;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(13)))
 
 /***/ }),
-/* 72 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44626,7 +45006,7 @@ return index;
 
 
 /***/ }),
-/* 73 */
+/* 83 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -44654,307 +45034,12 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 74 */
+/* 84 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(14);
 module.exports = __webpack_require__(15);
 
-
-/***/ }),
-/* 75 */,
-/* 76 */,
-/* 77 */,
-/* 78 */,
-/* 79 */,
-/* 80 */,
-/* 81 */,
-/* 82 */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-/* styles */
-__webpack_require__(86)
-
-var Component = __webpack_require__(1)(
-  /* script */
-  __webpack_require__(83),
-  /* template */
-  __webpack_require__(85),
-  /* scopeId */
-  "data-v-673d1315",
-  /* cssModules */
-  null
-)
-Component.options.__file = "/Users/dakotawashok/NinjaDev/www/lolDashboard/resources/assets/js/components/StatsView.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] StatsView.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-673d1315", Component.options)
-  } else {
-    hotAPI.reload("data-v-673d1315", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 83 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store__ = __webpack_require__(5);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = {
-    props: ['currentSubMenu', 'averageData'],
-    data: function data() {
-        return {};
-    },
-    computed: {},
-    methods: {},
-    mounted: function mounted() {}
-};
-
-/***/ }),
-/* 84 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-// imports
-
-
-// module
-exports.push([module.i, "\n.average-stats[data-v-673d1315] {\n    list-style: none;\n    text-align: left;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 85 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "stats-view-wrapper"
-  }, [_c('h3', [_vm._v(_vm._s(_vm.currentSubMenu))]), _vm._v(" "), _c('ul', {
-    staticClass: "average-stats"
-  }, _vm._l((_vm.averageData), function(key, value) {
-    return _c('li', [_vm._v(_vm._s(value) + " : " + _vm._s(key))])
-  }))])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-673d1315", module.exports)
-  }
-}
-
-/***/ }),
-/* 86 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(84);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(3)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-673d1315&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./StatsView.vue", function() {
-			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-673d1315&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./StatsView.vue");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
-/* 87 */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-/* styles */
-__webpack_require__(91)
-
-var Component = __webpack_require__(1)(
-  /* script */
-  __webpack_require__(88),
-  /* template */
-  __webpack_require__(89),
-  /* scopeId */
-  "data-v-6db676a4",
-  /* cssModules */
-  null
-)
-Component.options.__file = "/Users/dakotawashok/NinjaDev/www/lolDashboard/resources/assets/js/components/RankedMatchListView.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] RankedMatchListView.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6db676a4", Component.options)
-  } else {
-    hotAPI.reload("data-v-6db676a4", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 88 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(5);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = {
-    props: [],
-    methods: {},
-    data: function data() {
-        return {};
-    },
-    computed: {
-        summoner1RankedMatchList: function summoner1RankedMatchList() {
-            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedMatchList.matches;
-        },
-        summoner2RankedMatchList: function summoner2RankedMatchList() {
-            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedMatchList.matches;
-        },
-
-        summoner1Loaded: function summoner1Loaded() {
-            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded;
-        },
-        summoner2Loaded: function summoner2Loaded() {
-            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded;
-        }
-    },
-    mounted: function mounted() {}
-};
-
-/***/ }),
-/* 89 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "ranked-matchlist-wrapper container-fluid"
-  }, [_c('div', {
-    staticClass: "row"
-  }, [_c('div', {
-    staticClass: "col-sm-6 summoner1-ranked-matchlist"
-  }, _vm._l((_vm.summoner1RankedMatchList), function(match) {
-    return _c('div', [_c('matchcard', {
-      attrs: {
-        "match": match
-      }
-    })], 1)
-  })), _vm._v(" "), _c('div', {
-    staticClass: "col-sm-6 summoner2-ranked-matchlist"
-  }, _vm._l((_vm.summoner2RankedMatchList), function(match) {
-    return _c('div', [_c('matchcard', {
-      attrs: {
-        "match": match
-      }
-    })], 1)
-  }))])])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-6db676a4", module.exports)
-  }
-}
-
-/***/ }),
-/* 90 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-// imports
-
-
-// module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 91 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(90);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(3)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6db676a4&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./RankedMatchListView.vue", function() {
-			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6db676a4&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./RankedMatchListView.vue");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
 
 /***/ })
 /******/ ]);

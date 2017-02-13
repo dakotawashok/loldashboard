@@ -14,8 +14,10 @@ class CreateMatchesTable extends Migration
     public function up()
     {
         Schema::create('matches', function (Blueprint $table) {
-            $table->increments('matchId');
-            $table->timestamp('timestamp');
+            $table->increments('id');
+            $table->string('matchId');
+            $table->integer('summonerId');
+            $table->string('timestamp');
             $table->integer('champion');
             $table->string('region');
             $table->string('queue');
@@ -23,6 +25,8 @@ class CreateMatchesTable extends Migration
             $table->string('role');
             $table->string('platformId');
             $table->string('lane');
+            $table->longText('data')->nullable();
+            $table->timestamps();
         });
     }
 

@@ -13,7 +13,7 @@
                 </div>
             </div>
             <div class="col-sm-2">
-                <select v-if="summonerLoaded" v-model="currentYear" class="form-control" id="currentYear">
+                <select v-if="summoner1Loaded || summoner2Loaded" v-model="currentYear" class="form-control" id="currentYear">
                     <option>2017</option>
                     <option>2016</option>
                     <option>2015</option>
@@ -327,18 +327,6 @@
                             store.commit('assignSummoner2Summoner', JSON.parse(response.body));
                             store.commit('assignSummoner2Loaded', true);
                         }
-                        this.summoner = JSON.parse(response.body);
-                        this.summonerLoaded = true;
-                        return this.findRecentGames(this.summoner.id);
-                    }
-                ).then(
-                    response => {
-                        this.recentGames = response.body.games;
-                        return this.findSummonerRankedData(this.summoner.id);
-                    }
-                ).then(
-                    response => {
-                        this.summonerRankedData = JSON.parse(response.body);
                     }
                 ).catch(
                     response => {
@@ -397,6 +385,10 @@
                         //load the summary data;
                         break;
                     case "Ranked" :
+                        store.commit('assignSummoner1MatchLoaded', false);
+                        store.commit('assignSummoner2MatchLoaded', false);
+                        store.commit('assignSummoner1SelectedMatch', {});
+                        store.commit('assignSummoner2SelectedMatch', {});
                         this.assignRankedMatchList();
                         break;
                     case "Champions" :

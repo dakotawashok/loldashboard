@@ -7,7 +7,7 @@
         <div class="row">
             <div class="col-sm-6 summoner1-stats">
                 <h5 v-if="summoner1NoData">No stats found for this Queue for the current selected year</h5>
-                <h6>Wins: {{summoner1Wins}}</h6>
+                <h6 v-if="!summoner1NoData">Wins: {{summoner1Wins}}</h6>
                 <ul class="summary-list">
                     <li v-for="(key, value) in summoner1SummaryData">
                         {{value}} : {{key}}
@@ -16,7 +16,7 @@
             </div>
             <div class="col-sm-6 summoner2-stats">
                 <h5 v-if="summoner2NoData">No stats found for this Queue for the current selected year</h5>
-                <h6>Wins: {{summoner2Wins}}</h6>
+                <h6 v-if="!summoner2NoData">Wins: {{summoner2Wins}}</h6>
                 <ul class="summary-list2">
                     <li v-for="(key, value) in summoner2SummaryData">
                         {{value}} : {{key}}

@@ -30,17 +30,7 @@ Route::get('summoner/{identifier}/matchlist', 'SummonerController@getMatchList')
 
 Route::get('summoner/{identifier}/matchlist/{season}', 'SummonerController@getMatchList');
 
-Route::get('summoner/{identifier}/match/{matchId}', function($identifier, $matchId) {
-    $api = new Api('RGAPI-0b8ccaa3-1745-41be-ae90-90a60dc315ef');
-
-    $summoner = $api->summoner();
-    $returnSummoner = $summoner->info($identifier);
-
-    $matchApi = $api->match();
-    $match = $matchApi->match($matchId)->raw();
-
-    return $match;
-});
+Route::get('summoner/{identifier}/match/{matchId}', 'SummonerController@getMatchData');
 
 Route::get('summoner/{identifier}/recentgames', function($identifier) {
     $api = new Api('RGAPI-0b8ccaa3-1745-41be-ae90-90a60dc315ef');

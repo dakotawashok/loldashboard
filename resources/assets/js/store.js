@@ -7,19 +7,23 @@ var store = new Vuex.Store({
         },
         summoner1 : {
             loaded : false,
+            matchLoaded : false,
             summoner : {},
             summaryData : {},
             rankedData : {},
             rankedMatchList : {},
+            selectedMatch : {},
             recentGameList : {},
             averageData : {}
         },
         summoner2 : {
             loaded : false,
+            matchLoaded : false,
             summoner : {},
             summaryData : {},
             rankedData : {},
             rankedMatchList : {},
+            selectedMatch : {},
             recentGameList : {},
             averageData : {}
         },
@@ -69,22 +73,16 @@ var store = new Vuex.Store({
         assignSummoner2AverageData (state, averageData) {
             state.summoner2.averageData = averageData;
         },
-        assignSummoner1Loaded (state, loaded) {
-            state.summoner1.loaded = loaded;
-        },
-        assignSummoner2Loaded (state, loaded) {
-            state.summoner2.loaded = loaded;
-        },
+        assignSummoner1Loaded (state, loaded) { state.summoner1.loaded = loaded; },
+        assignSummoner2Loaded (state, loaded) { state.summoner2.loaded = loaded; },
+        assignSummoner1MatchLoaded (state, loaded) { state.summoner1.matchLoaded = loaded; },
+        assignSummoner2MatchLoaded (state, loaded) { state.summoner2.matchLoaded = loaded; },
+        assignSummoner1SelectedMatch (state, match) { state.summoner1.selectedMatch = match; },
+        assignSummoner2SelectedMatch (state, match) { state.summoner2.selectedMatch = match; },
 
-        assignCurrentMenuItem (state, menuItem) {
-            state.currentMenuItem = menuItem;
-        },
-        assignCurrentSubMenuItem(state, menuItem) {
-            state.currentSubMenuItem = menuItem;
-        },
-        assignCurrentYear(state, year) {
-            state.currentYear = year;
-        },
+        assignCurrentMenuItem (state, menuItem) { state.currentMenuItem = menuItem; },
+        assignCurrentSubMenuItem(state, menuItem) { state.currentSubMenuItem = menuItem; },
+        assignCurrentYear(state, year) { state.currentYear = year; },
         assignLoading(state, loading ) { state.loading = loading; }
     }
 });
