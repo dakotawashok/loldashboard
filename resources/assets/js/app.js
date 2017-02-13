@@ -24,6 +24,7 @@ Vue.component('recentgamesview', require('./components/RecentGamesView.vue'));
 Vue.component('summarycontents', require('./components/SummaryContents.vue'));
 Vue.component('championcard', require('./components/ChampionCard.vue'));
 Vue.component('statsview', require('./components/StatsView.vue'));
+Vue.component('championstatsview', require('./components/ChampionStatsView.vue'));
 
 var VueResource = require('vue-resource');
 

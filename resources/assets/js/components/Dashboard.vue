@@ -45,9 +45,6 @@
             <ul class="nav nav-tabs" v-if="currentMenuItem == 'Ranked'">
                 <li role="presentation" v-for="item in rankedSubMenuItems"><a href="#" v-on:click="changeSubMenu(item)">{{item}}</a></li>
             </ul>
-            <ul class="nav nav-tabs" v-if="currentMenuItem == 'Champions'">
-                <li role="presentation" v-for="item in summonerRankedData"><a href="#" v-on:click="changeSubMenu(item.id)">{{staticChampion(item.id)}}</a></li>
-            </ul>
             <ul class="nav nav-tabs" v-if="currentMenuItem == 'Stats'">
                 <li role="presentation" v-for="item in statsSubMenuItems"><a href="#" v-on:click="changeSubMenu(item)">{{item}}</a></li>
             </ul>
@@ -55,7 +52,7 @@
         <div class="row main-content-wrapper" v-if="loading == false">
             <div class="main-content row" v-if="currentMenuItem == 'Summary' && currentSubMenuItem != ''"><summarycontents></summarycontents></div>
             <div class="main-content row" v-if="currentMenuItem == 'Ranked' && currentSubMenuItem !=''"><rankedmatchlistview></rankedmatchlistview></div>
-            <div class="main-content row" v-if="currentMenuItem == 'Champions' && currentSubMenuItem !=''"><championcard v-bind:currentSubMenu="currentSubMenu" v-bind:championStats="summonerRankedData"></championcard></div>
+            <div class="main-content row" v-if="currentMenuItem == 'Champions'"><championstatsview></championstatsview></div>
             <div class="main-content row" v-if="currentMenuItem == 'Recent Games'"><recentgamesview v-bind:recentGames="recentGames"></recentgamesview></div>
             <div class="main-content row" v-if="currentMenuItem == 'Stats' && currentSubMenuItem != ''"><statsview v-bind:currentSubMenu="currentSubMenu" v-bind:averageData="summonerAverageData"></statsview></div>
         </div>
@@ -74,21 +71,8 @@
                 summoner1Id : "",
                 summoner2Id : "",
 
-                summonerLoaded : false,
-                summoner : {},
-
-                summonerRankedData : {},
-                summonerSummaryData : {},
-                summonerAverageData : {},
-
-                currentMenu : "",
-                currentSubMenu : "",
-                identifier : "",
                 currentYear : 2017,
 
-                matchlist : {},
-                matches : {},
-                recentGames : {},
                 mainMenuItems : [
                     'Summary',
                     'Ranked',
@@ -114,6 +98,7 @@
         computed : {
             summoner1ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.2.1/img/profileicon/" + this.summoner1.profileIconId + ".png"; },
             summoner2ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.2.1/img/profileicon/" + this.summoner2.profileIconId + ".png"; },
+
             summaryStatsSubMenuItems : function() {
                 var tempMenuItems = [];
                 if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
@@ -178,10 +163,10 @@
                     return this.$http.get('/summoner/' + this.summoner2Id);
                 }
             },
-
-            findSummonerSummaryData : function(identifier) {
-                return this.$http.get('/summoner/' + identifier + '/summary/data/' + this.currentYear);
-            },
+            findSummonerSummaryData : function(identifier) { return this.$http.get('/summoner/' + identifier + '/summary/data/' + this.currentYear); },
+            findSummonerRankedData : function(identifier) { return this.$http.get('/summoner/' + identifier + '/ranked/data/' + this.currentYear); },
+            findRecentGames : function(id) { return this.$http.get('summoner/' + id + '/recentgames'); },
+            findMatchList : function(identifier, season) { return this.$http.get('/summoner/' + identifier + '/matchlist/' + season); },
 
             // if only the first summoner is loaded, load the data for just the first summoner
             // if only the second summoner is loaded, load the data for just the second summoner
@@ -225,38 +210,78 @@
                         }
                     ).catch(
                         response => {
-                            console.log("Error in Dashboard!");
                             console.log(response);
                             store.commit('assignLoading', false);
                         }
                     );
                 }
             },
-
-            findSummonerRankedData : function(identifier) { return this.$http.get('/summoner/' + identifier + '/ranked/data/' + this.currentYear); },
-
-            assignRankedMatchList : function() {
-                console.log("Loading...");
+            assignChampionData : function() {
                 store.commit('assignLoading', true);
                 if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
-                    console.log("Loading Ranked Match List for Summoner 1 only");
+                    this.findSummonerRankedData(store.state.summoner1.summoner.id).then(
+                        response => {
+                            var tempSummonerRankedData = JSON.parse(response.body);
+                            store.commit('assignSummoner1RankedData', tempSummonerRankedData);
+                        }
+                    ).catch(
+                        response => {
+                            console.log("Error in Ranked Champions Data!");
+                            console.log(response);
+                        }
+                    )
+                } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
+                    this.findSummonerRankedData(store.state.summoner2.summoner.id).then(
+                        response => {
+                            var tempSummonerRankedData = JSON.parse(response.body);
+                            store.commit('assignSummoner2RankedData', tempSummonerRankedData);
+                        }
+                    ).catch(
+                        response => {
+                            console.log("Error in Ranked Champions Data!");
+                            console.log(response);
+                        }
+                    )
+                } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
+                    // I make temporary variables like this so that I can commit both of them at the same time which fixes
+                    // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
+                    var tempRankedChampionData1 = {};
+                    var tempRankedChampionData2 = {};
+                    this.findSummonerRankedData(store.state.summoner1.summoner.id).then(
+                        response => {
+                            tempRankedChampionData1 = JSON.parse(response.body);
+                            return this.findSummonerRankedData(store.state.summoner2.summoner.id);
+                        }
+                    ).then(
+                        response => {
+                            tempRankedChampionData2 = JSON.parse(response.body);
+                            store.commit('assignSummoner1RankedData', tempRankedChampionData1);
+                            store.commit('assignSummoner2RankedData', tempRankedChampionData2);
+                        }
+                    ).catch(
+                        response => {
+                            console.log("Error in Ranked Champions Data!");
+                            console.log(response);
+                        }
+                    )
+                }
+                store.commit('assignLoading', false);
+            },
+            assignRankedMatchList : function() {
+                store.commit('assignLoading', true);
+                if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
                     this.findMatchList(store.state.summoner1.summoner.id, store.state.currentSubMenuItem).then(
                         response => {
                             var tempRankedMatchList = JSON.parse(response.body);
-                            console.log(tempRankedMatchList);
                             store.commit('assignSummoner1RankedMatchList', tempRankedMatchList);
-                            console.log("Done loading!");
                             store.commit('assignLoading', false);
                         }
                     );
                 } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    console.log("Loading Ranked Match List for Summoner 2 only");
                     this.findMatchList(store.state.summoner2.summoner.id, store.state.currentSubMenuItem).then(
                         response => {
                             var tempRankedMatchList = JSON.parse(response.body);
-                            console.log(tempRankedMatchList);
                             store.commit('assignSummoner2RankedMatchList', tempRankedMatchList);
-                            console.log("Done loading!");
                             store.commit('assignLoading', false);
                         }
                     );
@@ -265,7 +290,6 @@
                     // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
                     var tempRankedMatchList1 = {};
                     var tempRankedMatchList2 = {};
-                    console.log("Loading Ranked Match List for Summoner 1 & Summoner 2");
                     this.findMatchList(store.state.summoner1.summoner.id, store.state.currentSubMenuItem).then(
                         response => {
                             tempRankedMatchList1 = JSON.parse(response.body);
@@ -276,37 +300,15 @@
                             tempRankedMatchList2 = JSON.parse(response.body);
                             store.commit('assignSummoner1RankedMatchList', tempRankedMatchList1);
                             store.commit('assignSummoner2RankedMatchList', tempRankedMatchList2);
-                            console.log("Done loading!");
                             store.commit('assignLoading', false);
                         }
                     ).catch(
                         response => {
-                            console.log("Error in Dashboard!");
                             console.log(response);
-                            console.log("Done loading!");
                             store.commit('assignLoading', false);
                         }
                     );
                 }
-            },
-
-            findMatchList : function(identifier, season) {
-                return this.$http.get('/summoner/' + identifier + '/matchlist/' + season);
-            },
-
-            findMatch : function(matchId) {
-                this.$http.get('/summoner/' + this.identifier + '/match/' + matchId).then(
-                    response => {
-                        return response.body;
-                    },
-                    response => {
-                        console.log('match failure');
-                    }
-                );
-            },
-
-            findRecentGames : function(id) {
-                return this.$http.get('summoner/' + id + '/recentgames');
             },
 
             staticChampion : function(id) {
@@ -371,10 +373,12 @@
                         break;
                     case "Ranked" :
                         break;
+                    case "Champions" :
+                        this.assignChampionData();
+                        break;
                 }
                 $('.sub-tab').show();
             },
-
             changeSubMenu : function(menuItem) {
                 // Change the sub menu in the current state, then, depending on what the menu item is, load the data for that item
                 this.currentSubMenu = menuItem;
@@ -402,24 +406,10 @@
 
         },
         watch : {
-            summoner : function(newSummoner) {
-                this.changeMenu("");
-                this.findSummonerSummaryData(newSummoner.id).then(
-                    response => {
-                        this.summonerSummaryData = JSON.parse(response.body);
-                        this.summonerSummaryData = this.summonerSummaryData.playerStatSummaries;
-                    }
-                ).catch(
-                    response => {
-                        console.log(response);
-                    }
-                );
-            },
             currentYear : function(newYear) {
                 store.commit('assignCurrentYear', newYear);
                 store.commit('assignCurrentSubMenuItem', "");
                 store.commit('assignLoading', true);
-                console.log('loading year' + newYear);
 
                 switch (store.state.currentMenuItem) {
                     case "Summary" :
@@ -429,12 +419,7 @@
 
                         break;
                     case "Champions" :
-                        this.findSummonerRankedData(this.summoner.id).then(
-                            response => {
-                                this.summonerRankedData = JSON.parse(response.body);
-                                this.summonerRankedData = this.summonerRankedData.champions;
-                            }
-                        );
+                        this.assignChampionData();
                         break;
                     case "Recent Games" :
 
@@ -455,42 +440,7 @@
                         break;
                 }
                 store.commit('assignLoading', false);
-
-
             },
-            currentSubMenu : function(newMenuItem) {
-                if (this.currentMenu == "Ranked" && this.currentSubMenu != "") {
-                    this.findMatchList(this.summoner.id, this.currentSubMenu).then(
-                        response => {
-                            this.matchlist = JSON.parse(response.body);
-                            this.matchlist = this.matchlist.matches;
-                        }
-                    );
-                }
-            },
-            currentMenu : function(newMenuItem) {
-                if (this.currentMenu == "Champions") {
-                    this.findSummonerRankedData(this.summoner.id).then(
-                        response => {
-                            this.summonerRankedData = JSON.parse(response.body);
-                            this.summonerRankedData = this.summonerRankedData.champions;
-                        }
-                    );
-                } else if (this.currentMenu == "Stats") {
-                    this.findSummonerRankedData(this.summoner.id).then(
-                        response => {
-                            this.summonerAverageData = JSON.parse(response.body);
-                            this.summonerAverageData = this.summonerAverageData.champions;
-                            for (var championData in this.summonerAverageData) {
-                                if (this.summonerAverageData[championData].id == "0") {
-                                    this.summonerAverageData = this.summonerAverageData[championData].stats;
-                                    break;
-                                }
-                            }
-                        }
-                    );
-                }
-            }
         }
     }
 </script>
