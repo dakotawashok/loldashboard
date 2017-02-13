@@ -203,4 +203,12 @@ class SummonerController extends Controller
             return response()->json(json_encode($match));
         }
     }
+
+    public function getRecentGames($id) {
+        $api = new Api('RGAPI-0b8ccaa3-1745-41be-ae90-90a60dc315ef');
+
+        $games = $api->game()->recent($id)->raw();
+
+        return response()->json(json_encode($games));
+    }
 }

@@ -12871,6 +12871,47 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 });
             }
         },
+        assignRecentGames: function assignRecentGames() {
+            var _this4 = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', true);
+            if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && !__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
+                this.findRecentGames(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id).then(function (response) {
+                    var tempSummonerRecentGames = JSON.parse(response.body);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1RecentGameList', tempSummonerRecentGames);
+                }).catch(function (response) {
+                    console.log("Error in Recent Games Data!");
+                    console.log(response);
+                });
+            } else if (!__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
+                this.findRecentGames(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id).then(function (response) {
+                    var tempSummonerRecentGames = JSON.parse(response.body);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2RecentGameList', tempSummonerRecentGames);
+                }).catch(function (response) {
+                    console.log("Error in Recent Games Data!");
+                    console.log(response);
+                });
+            } else if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
+                // I make temporary variables like this so that I can commit both of them at the same time which fixes
+                // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
+                var tempRecentGames1 = {};
+                var tempRecentGames2 = {};
+                this.findRecentGames(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id).then(function (response) {
+                    tempRecentGames1 = JSON.parse(response.body);
+                    return _this4.findRecentGames(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id);
+                }).then(function (response) {
+                    tempRecentGames2 = JSON.parse(response.body);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1RecentGameList', tempRecentGames1);
+                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2RecentGameList', tempRecentGames2);
+                    console.log("Done loading after shit was cached or whatever");
+                }).catch(function (response) {
+                    console.log("Error in Ranked Champions Data!");
+                    console.log(response);
+                });
+            }
+            console.log("Done loading full steam ahead!");
+            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
+        },
 
         staticChampion: function staticChampion(id) {
             for (var champion in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions) {
@@ -12931,6 +12972,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 case "Champions":
                     this.assignChampionData();
                     break;
+                case "Recent Games":
+                    this.assignRecentGames();
+                    break;
             }
             $('.sub-tab').show();
         },
@@ -12962,7 +13006,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     watch: {
         currentYear: function currentYear(newYear) {
-            var _this4 = this;
+            var _this5 = this;
 
             __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentYear', newYear);
             __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentSubMenuItem', "");
@@ -12979,15 +13023,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     this.assignChampionData();
                     break;
                 case "Recent Games":
-
+                    this.assignRecentGames();
                     break;
                 case "Stats":
                     this.findSummonerRankedData(this.summoner.id).then(function (response) {
-                        _this4.summonerAverageData = JSON.parse(response.body);
-                        _this4.summonerAverageData = _this4.summonerAverageData.champions;
-                        for (var championData in _this4.summonerAverageData) {
-                            if (_this4.summonerAverageData[championData].id == "0") {
-                                _this4.summonerAverageData = _this4.summonerAverageData[championData].stats;
+                        _this5.summonerAverageData = JSON.parse(response.body);
+                        _this5.summonerAverageData = _this5.summonerAverageData.champions;
+                        for (var championData in _this5.summonerAverageData) {
+                            if (_this5.summonerAverageData[championData].id == "0") {
+                                _this5.summonerAverageData = _this5.summonerAverageData[championData].stats;
                                 break;
                             }
                         }

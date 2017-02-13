@@ -310,6 +310,59 @@
                     );
                 }
             },
+            assignRecentGames : function() {
+                store.commit('assignLoading', true);
+                if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
+                    this.findRecentGames(store.state.summoner1.summoner.id).then(
+                        response => {
+                            var tempSummonerRecentGames = JSON.parse(response.body);
+                            store.commit('assignSummoner1RecentGameList', tempSummonerRecentGames);
+                        }
+                    ).catch(
+                        response => {
+                            console.log("Error in Recent Games Data!");
+                            console.log(response);
+                        }
+                    )
+                } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
+                    this.findRecentGames(store.state.summoner2.summoner.id).then(
+                        response => {
+                            var tempSummonerRecentGames = JSON.parse(response.body);
+                            store.commit('assignSummoner2RecentGameList', tempSummonerRecentGames);
+                        }
+                    ).catch(
+                        response => {
+                            console.log("Error in Recent Games Data!");
+                            console.log(response);
+                        }
+                    )
+                } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
+                    // I make temporary variables like this so that I can commit both of them at the same time which fixes
+                    // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
+                    var tempRecentGames1 = {};
+                    var tempRecentGames2 = {};
+                    this.findRecentGames(store.state.summoner1.summoner.id).then(
+                        response => {
+                            tempRecentGames1 = JSON.parse(response.body);
+                            return this.findRecentGames(store.state.summoner2.summoner.id);
+                        }
+                    ).then(
+                        response => {
+                            tempRecentGames2 = JSON.parse(response.body);
+                            store.commit('assignSummoner1RecentGameList', tempRecentGames1);
+                            store.commit('assignSummoner2RecentGameList', tempRecentGames2);
+                            console.log("Done loading after shit was cached or whatever");
+                        }
+                    ).catch(
+                        response => {
+                            console.log("Error in Ranked Champions Data!");
+                            console.log(response);
+                        }
+                    )
+                }
+                console.log("Done loading full steam ahead!");
+                store.commit('assignLoading', false);
+            },
 
             staticChampion : function(id) {
                 for (var champion in store.state.staticInfo.champions) {
@@ -376,6 +429,9 @@
                     case "Champions" :
                         this.assignChampionData();
                         break;
+                    case "Recent Games" :
+                        this.assignRecentGames();
+                        break;
                 }
                 $('.sub-tab').show();
             },
@@ -422,7 +478,7 @@
                         this.assignChampionData();
                         break;
                     case "Recent Games" :
-
+                        this.assignRecentGames();
                         break;
                     case "Stats" :
                         this.findSummonerRankedData(this.summoner.id).then(
