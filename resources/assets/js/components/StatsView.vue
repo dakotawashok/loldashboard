@@ -1,9 +1,18 @@
 <template>
-    <div class="stats-view-wrapper">
+    <div class="stats-view-wrapper container-fluid">
         <h3>{{currentSubMenu}}</h3>
-        <ul class="average-stats">
-            <li v-for="(key, value) in averageData">{{value}} : {{key}}</li>
-        </ul>
+        <div class="row">
+            <div class="col-sm-6 summoner1">
+                <ul class="average-stats">
+                    <li v-for="(key, value) in summoner1AverageRankedData">{{value}} : {{key}}</li>
+                </ul>
+            </div>
+            <div class="col-sm-6 summoner2">
+                <ul class="average-stats">
+                    <li v-for="(key, value) in summoner2AverageRankedData">{{value}} : {{key}}</li>
+                </ul>
+            </div>
+        </div>
     </div>
 </template>
 
@@ -12,8 +21,7 @@
 
     export default {
         props : [
-            'currentSubMenu',
-            'averageData',
+
         ],
         data : function() {
             return {
@@ -21,7 +29,10 @@
             }
         },
         computed : {
+            summoner1AverageRankedData : function() { return store.state.summoner1.stats.rankedStats; },
+            summoner2AverageRankedData : function() { return store.state.summoner2.stats.rankedStats; },
 
+            currentSubMenu : function() { return store.state.currentSubMenuItem; },
         },
         methods : {
 
@@ -33,8 +44,13 @@
 </script>
 
 <style scoped>
-    .average-stats {
+    .summoner1 > .average-stats {
         list-style: none;
         text-align: left;
+    }
+
+    .summoner2 > .average-stats {
+        list-style: none;
+        text-align: right;
     }
 </style>

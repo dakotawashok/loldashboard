@@ -15,7 +15,11 @@ var store = new Vuex.Store({
             selectedMatch : {},
             recentGameList : {},
             selectedGame : {},
-            averageData : {}
+            stats : {
+                rankedStats : {},
+                normalGameStats : {},
+                friendStats : {},
+            },
         },
         summoner2 : {
             loaded : false,
@@ -27,7 +31,11 @@ var store = new Vuex.Store({
             selectedMatch : {},
             recentGameList : {},
             selectedGame : {},
-            averageData : {}
+            stats : {
+                rankedStats : {},
+                normalGameStats : {},
+                friendStats : {},
+            },
         },
         currentMenuItem : "",
         currentSubMenuItem : "",
@@ -70,10 +78,10 @@ var store = new Vuex.Store({
             state.summoner2.recentGameList = recentGameList;
         },
         assignSummoner1AverageData (state, averageData) {
-            state.summoner1.averageData = averageData;
+            state.summoner1.stats.rankedStats = averageData;
         },
         assignSummoner2AverageData (state, averageData) {
-            state.summoner2.averageData = averageData;
+            state.summoner2.stats.rankedStats = averageData;
         },
         assignSummoner1Loaded (state, loaded) { state.summoner1.loaded = loaded; },
         assignSummoner2Loaded (state, loaded) { state.summoner2.loaded = loaded; },

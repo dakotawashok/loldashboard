@@ -223,11 +223,13 @@
                         response => {
                             var tempSummonerRankedData = JSON.parse(response.body);
                             store.commit('assignSummoner1RankedData', tempSummonerRankedData);
+                            store.commit('assignLoading', false);
                         }
                     ).catch(
                         response => {
                             console.log("Error in Ranked Champions Data!");
                             console.log(response);
+                            store.commit('assignLoading', false);
                         }
                     )
                 } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
@@ -235,11 +237,13 @@
                         response => {
                             var tempSummonerRankedData = JSON.parse(response.body);
                             store.commit('assignSummoner2RankedData', tempSummonerRankedData);
+                            store.commit('assignLoading', false);
                         }
                     ).catch(
                         response => {
                             console.log("Error in Ranked Champions Data!");
                             console.log(response);
+                            store.commit('assignLoading', false);
                         }
                     )
                 } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
@@ -257,15 +261,16 @@
                             tempRankedChampionData2 = JSON.parse(response.body);
                             store.commit('assignSummoner1RankedData', tempRankedChampionData1);
                             store.commit('assignSummoner2RankedData', tempRankedChampionData2);
+                            store.commit('assignLoading', false);
                         }
                     ).catch(
                         response => {
                             console.log("Error in Ranked Champions Data!");
                             console.log(response);
+                            store.commit('assignLoading', false);
                         }
                     )
                 }
-                store.commit('assignLoading', false);
             },
             assignRankedMatchList : function() {
                 store.commit('assignLoading', true);
@@ -317,11 +322,15 @@
                         response => {
                             var tempSummonerRecentGames = JSON.parse(response.body);
                             store.commit('assignSummoner1RecentGameList', tempSummonerRecentGames);
+                            store.commit('assignLoading', false);
+
                         }
                     ).catch(
                         response => {
                             console.log("Error in Recent Games Data!");
                             console.log(response);
+                            store.commit('assignLoading', false);
+
                         }
                     )
                 } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
@@ -329,11 +338,15 @@
                         response => {
                             var tempSummonerRecentGames = JSON.parse(response.body);
                             store.commit('assignSummoner2RecentGameList', tempSummonerRecentGames);
+                            store.commit('assignLoading', false);
+
                         }
                     ).catch(
                         response => {
                             console.log("Error in Recent Games Data!");
                             console.log(response);
+                            store.commit('assignLoading', false);
+
                         }
                     )
                 } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
@@ -343,11 +356,7 @@
                     var tempRecentGames2 = {};
                     this.findRecentGames(store.state.summoner1.summoner.id).then(
                         response => {
-                            console.log('Before Parsing: ');
-                            console.log(response.body);
                             tempRecentGames1 = JSON.parse(response.body);
-                            console.log('After Parsing: ');
-                            console.log(tempRecentGames1);
                             return this.findRecentGames(store.state.summoner2.summoner.id);
                         }
                     ).then(
@@ -355,17 +364,94 @@
                             tempRecentGames2 = JSON.parse(response.body);
                             store.commit('assignSummoner1RecentGameList', tempRecentGames1);
                             store.commit('assignSummoner2RecentGameList', tempRecentGames2);
+                            store.commit('assignLoading', false);
+
                             console.log("Done loading after shit was cached or whatever");
                         }
                     ).catch(
                         response => {
                             console.log("Error in Ranked Champions Data!");
                             console.log(response);
+                            store.commit('assignLoading', false);
+
                         }
                     )
                 }
-                console.log("Done loading full steam ahead!");
-                store.commit('assignLoading', false);
+            },
+            assignAverageStats : function() {
+                store.commit('assignLoading', true);
+                if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
+                    this.findSummonerRankedData(store.state.summoner1.summoner.id).then(
+                        response => {
+                            var tempSummonerRankedData = JSON.parse(response.body);
+                            store.commit('assignSummoner1RankedData', tempSummonerRankedData);
+                            var tempAverageData = store.state.summoner1.rankedData.champions[store.state.summoner1.rankedData.champions.length - 1];
+                            store.commit('assignSummoner1AverageData', tempAverageData.stats);
+                            store.commit('assignLoading', false);
+                        }
+                    ).catch(
+                        response => {
+                            console.log("Error in Ranked Champions Data!");
+                            console.log(response);
+                            store.commit('assignLoading', false);
+                        }
+                    )
+                } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
+                    this.findSummonerRankedData(store.state.summoner2.summoner.id).then(
+                        response => {
+                            var tempSummonerRankedData = JSON.parse(response.body);
+                            store.commit('assignSummoner2RankedData', tempSummonerRankedData);
+                            tempAverageData = store.state.summoner2.rankedData.champions[store.state.summoner2.rankedData.champions.length - 1];
+                            store.commit('assignSummoner2AverageData', tempAverageData.stats);
+                            store.commit('assignLoading', false);
+                        }
+                    ).catch(
+                        response => {
+                            console.log("Error in Ranked Champions Data!");
+                            console.log(response);
+                            store.commit('assignLoading', false);
+                        }
+                    )
+                } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
+                    // I make temporary variables like this so that I can commit both of them at the same time which fixes
+                    // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
+                    var tempRankedChampionData1 = {};
+                    var tempRankedChampionData2 = {};
+                    this.findSummonerRankedData(store.state.summoner1.summoner.id).then(
+                        response => {
+                            tempRankedChampionData1 = JSON.parse(response.body);
+                            return this.findSummonerRankedData(store.state.summoner2.summoner.id);
+                        }
+                    ).then(
+                        response => {
+                            tempRankedChampionData2 = JSON.parse(response.body);
+                            store.commit('assignSummoner1RankedData', tempRankedChampionData1);
+                            store.commit('assignSummoner2RankedData', tempRankedChampionData2);
+
+                            var tempChamps = store.state.summoner1.rankedData.champions;
+                            for (var statEntry in tempChamps) {
+                                if (tempChamps[statEntry].id == 0) {
+                                    store.commit('assignSummoner1AverageData', tempChamps[statEntry].stats);
+                                    break;
+                                }
+                            }
+                            tempChamps = store.state.summoner2.rankedData.champions;
+                            for (var statEntry in tempChamps) {
+                                if (tempChamps[statEntry].id == 0) {
+                                    store.commit('assignSummoner2AverageData', tempChamps[statEntry].stats);
+                                    break;
+                                }
+                            }
+                            store.commit('assignLoading', false);
+                        }
+                    ).catch(
+                        response => {
+                            console.log("Error in Ranked Champions Data!");
+                            console.log(response);
+                            store.commit('assignLoading', false);
+                        }
+                    )
+                }
             },
 
             staticChampion : function(id) {
@@ -436,6 +522,9 @@
                     case "Recent Games" :
                         this.assignRecentGames();
                         break;
+                    case "Stats" :
+                        this.assignAverageStats();
+                        break;
                 }
                 $('.sub-tab').show();
             },
@@ -469,7 +558,6 @@
             currentYear : function(newYear) {
                 store.commit('assignCurrentYear', newYear);
                 store.commit('assignCurrentSubMenuItem', "");
-                store.commit('assignLoading', true);
 
                 switch (store.state.currentMenuItem) {
                     case "Summary" :
@@ -485,21 +573,9 @@
                         this.assignRecentGames();
                         break;
                     case "Stats" :
-                        this.findSummonerRankedData(this.summoner.id).then(
-                            response => {
-                                this.summonerAverageData = JSON.parse(response.body);
-                                this.summonerAverageData = this.summonerAverageData.champions;
-                                for (var championData in this.summonerAverageData) {
-                                    if (this.summonerAverageData[championData].id == "0") {
-                                        this.summonerAverageData = this.summonerAverageData[championData].stats;
-                                        break;
-                                    }
-                                }
-                            }
-                        );
+                        this.assignAverageStats();
                         break;
                 }
-                store.commit('assignLoading', false);
             },
         }
     }

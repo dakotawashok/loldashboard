@@ -211,7 +211,7 @@ class SummonerController extends Controller
         try {
             $recentGamesList = RecentGamesList::where('summonerId', $id)->firstOrFail();
             $now = time();
-            if ($recentGamesList->updated_at->timestamp < ($now - (60 * 60 * 24))) {
+            if ($recentGamesList->updated_at->timestamp < ($now - (60 * 60))) {
                 throw new InvalidArgumentException;
             } else {
                 return response()->json($recentGamesList->games);
