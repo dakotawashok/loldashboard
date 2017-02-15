@@ -13028,7 +13028,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var tempRecentGames1 = {};
                 var tempRecentGames2 = {};
                 this.findRecentGames(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id).then(function (response) {
+                    console.log('Before Parsing: ');
+                    console.log(response.body);
                     tempRecentGames1 = JSON.parse(response.body);
+                    console.log('After Parsing: ');
+                    console.log(tempRecentGames1);
                     return _this4.findRecentGames(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id);
                 }).then(function (response) {
                     tempRecentGames2 = JSON.parse(response.body);
@@ -13444,10 +13448,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     computed: {
         summoner1RecentGames: function summoner1RecentGames() {
-            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.recentGameList.games;
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.recentGameList;
         },
         summoner2RecentGames: function summoner2RecentGames() {
-            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.recentGameList.games;
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.recentGameList;
         },
 
         summoner1SelectedGame: function summoner1SelectedGame() {
@@ -13461,7 +13465,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         changeCurrentGameId: function changeCurrentGameId(summonerNumber, gameId) {
             if (summonerNumber == "1") {
                 this.summoner1GameId = gameId;
-                var tempList = __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.recentGameList.games;
+                var tempList = __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.recentGameList;
                 for (var game in tempList) {
                     if (tempList[game].gameId === gameId) {
                         __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1SelectedGame', tempList[game]);
@@ -13470,7 +13474,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 }
             } else {
                 this.summoner2GameId = gameId;
-                var tempList = __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.recentGameList.games;
+                var tempList = __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.recentGameList;
                 for (var game in tempList) {
                     if (tempList[game].gameId == gameId) {
                         __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2SelectedGame', tempList[game]);

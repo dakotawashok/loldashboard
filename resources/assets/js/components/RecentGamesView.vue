@@ -44,8 +44,8 @@
             }
         },
         computed : {
-            summoner1RecentGames : function() { return store.state.summoner1.recentGameList.games; },
-            summoner2RecentGames : function() { return store.state.summoner2.recentGameList.games; },
+            summoner1RecentGames : function() { return store.state.summoner1.recentGameList; },
+            summoner2RecentGames : function() { return store.state.summoner2.recentGameList; },
 
             summoner1SelectedGame : function() { return store.state.summoner1.selectedGame; },
             summoner2SelectedGame : function() { return store.state.summoner2.selectedGame; },
@@ -54,7 +54,7 @@
             changeCurrentGameId : function(summonerNumber, gameId) {
                 if (summonerNumber == "1") {
                     this.summoner1GameId = gameId;
-                    var tempList = store.state.summoner1.recentGameList.games;
+                    var tempList = store.state.summoner1.recentGameList;
                     for(var game in tempList) {
                         if (tempList[game].gameId === gameId) {
                             store.commit('assignSummoner1SelectedGame', tempList[game]);
@@ -63,7 +63,7 @@
                     }
                 } else {
                     this.summoner2GameId = gameId;
-                    var tempList = store.state.summoner2.recentGameList.games;
+                    var tempList = store.state.summoner2.recentGameList;
                     for(var game in tempList) {
                         if (tempList[game].gameId == gameId) {
                             store.commit('assignSummoner2SelectedGame', tempList[game]);

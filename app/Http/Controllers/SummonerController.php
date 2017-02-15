@@ -5,6 +5,8 @@ namespace App\Http\Controllers;
 use App\Match;
 use App\MatchList;
 use App\RankedStats;
+use App\RecentGame;
+use App\RecentGamesList;
 use Illuminate\Http\Request;
 use Illuminate\Http\Response;
 
@@ -13,6 +15,7 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use App\Summoner;
 use App\SummaryStats;
 
+use Illuminate\Validation\ValidationException;
 use LeagueWrap\Api;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 
@@ -205,10 +208,93 @@ class SummonerController extends Controller
     }
 
     public function getRecentGames($id) {
-        $api = new Api('RGAPI-0b8ccaa3-1745-41be-ae90-90a60dc315ef');
+        try {
+            $recentGamesList = RecentGamesList::where('summonerId', $id)->firstOrFail();
+            $now = time();
+            if ($recentGamesList->updated_at->timestamp < ($now - (60 * 60 * 24))) {
+                throw new InvalidArgumentException;
+            } else {
+                return response()->json($recentGamesList->games);
+            }
+        } catch (ModelNotFoundException $e) {
+            $api = new Api('RGAPI-0b8ccaa3-1745-41be-ae90-90a60dc315ef');
 
-        $games = $api->game()->recent($id)->raw();
+            $recentGamesList = $api->game()->recent($id);
 
-        return response()->json(json_encode($games));
+            foreach($recentGamesList->games as $recentGame) {
+                $recentGame = $recentGame->raw();
+
+                $tempRecentGame = new RecentGame;
+                $tempRecentGame->championId = $recentGame['championId'];
+                $tempRecentGame->summonerId = strval($id);
+                $tempRecentGame->gameId = strval($recentGame['gameId']);
+                $tempRecentGame->fellowPlayers = json_encode($recentGame['fellowPlayers']);
+                $tempRecentGame->spell1 = $recentGame['spell1'];
+                $tempRecentGame->spell2 = $recentGame['spell2'];
+                $tempRecentGame->stats = json_encode($recentGame['stats']);
+                $tempRecentGame->mapId = $recentGame['mapId'];
+                $tempRecentGame->invalid = $recentGame['invalid'];
+                $tempRecentGame->gameMode = $recentGame['gameMode'];
+                $tempRecentGame->level = $recentGame['level'];
+                $tempRecentGame->ipEarned = $recentGame['ipEarned'];
+                $tempRecentGame->gameType = $recentGame['gameType'];
+                $tempRecentGame->subType = $recentGame['subType'];
+                $tempRecentGame->teamId = $recentGame['teamId'];
+                $tempRecentGame->createDate = strval($recentGame['createDate']);
+
+                $tempRecentGame->save();
+            }
+
+            $recentGamesList = $recentGamesList->raw();
+
+            $tempGamesList = new RecentGamesList;
+            $tempGamesList->games = json_encode($recentGamesList['games']);
+            $tempGamesList->summonerId = $id;
+            $tempGamesList->save();
+
+            return response()->json(json_encode($recentGamesList['games']));
+        } catch (InvalidArgumentException $e) {
+            // This branch is called when there is a recent games list already in the database, but it more than a day old.
+            // It will go through the new gameList from the api, check to see if each recentgame is in the database, and if it's
+            // not, put it there. Then it will update the recentgameslist in our database and return a response
+            $api = new Api('RGAPI-0b8ccaa3-1745-41be-ae90-90a60dc315ef');
+
+            $apiGamesList = $api->game()->recent($id);
+            foreach($apiGamesList->games as $recentGame) {
+                try {
+                     $tempRecentGame = RecentGame::where('summonerId', strval($id))->where('gameId', strval($recentGame->gameId))->firstOrFail();
+                } catch (ModelNotFoundException $e) {
+                    $recentGame = $recentGame->raw();
+
+                    $tempRecentGame = new RecentGame;
+                    $tempRecentGame->championId = $recentGame['championId'];
+                    $tempRecentGame->summonerId = strval($id);
+                    $tempRecentGame->gameId = strval($recentGame['gameId']);
+                    $tempRecentGame->fellowPlayers = json_encode($recentGame['fellowPlayers']);
+                    $tempRecentGame->spell1 = $recentGame['spell1'];
+                    $tempRecentGame->spell2 = $recentGame['spell2'];
+                    $tempRecentGame->stats = json_encode($recentGame['stats']);
+                    $tempRecentGame->mapId = $recentGame['mapId'];
+                    $tempRecentGame->invalid = $recentGame['invalid'];
+                    $tempRecentGame->gameMode = $recentGame['gameMode'];
+                    $tempRecentGame->level = $recentGame['level'];
+                    $tempRecentGame->ipEarned = $recentGame['ipEarned'];
+                    $tempRecentGame->gameType = $recentGame['gameType'];
+                    $tempRecentGame->subType = $recentGame['subType'];
+                    $tempRecentGame->teamId = $recentGame['teamId'];
+                    $tempRecentGame->createDate = strval($recentGame['createDate']);
+
+                    $tempRecentGame->save();
+                }
+            }
+
+            $apiGamesList = $apiGamesList->raw();
+
+            $recentGamesList = RecentGamesList::where('summonerId', $id)->firstOrFail();
+            $recentGamesList->games = json_encode($apiGamesList['games']);
+            $recentGamesList->save();
+
+            return response()->json(json_encode($apiGamesList['games']));
+        }
     }
 }

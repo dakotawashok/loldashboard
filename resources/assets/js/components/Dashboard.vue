@@ -343,7 +343,11 @@
                     var tempRecentGames2 = {};
                     this.findRecentGames(store.state.summoner1.summoner.id).then(
                         response => {
+                            console.log('Before Parsing: ');
+                            console.log(response.body);
                             tempRecentGames1 = JSON.parse(response.body);
+                            console.log('After Parsing: ');
+                            console.log(tempRecentGames1);
                             return this.findRecentGames(store.state.summoner2.summoner.id);
                         }
                     ).then(
