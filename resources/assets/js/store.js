@@ -14,6 +14,7 @@ var store = new Vuex.Store({
             rankedMatchList : {},
             selectedMatch : {},
             recentGameList : {},
+            selectedGame : {},
             averageData : {}
         },
         summoner2 : {
@@ -25,6 +26,7 @@ var store = new Vuex.Store({
             rankedMatchList : {},
             selectedMatch : {},
             recentGameList : {},
+            selectedGame : {},
             averageData : {}
         },
         currentMenuItem : "",
@@ -79,6 +81,8 @@ var store = new Vuex.Store({
         assignSummoner2MatchLoaded (state, loaded) { state.summoner2.matchLoaded = loaded; },
         assignSummoner1SelectedMatch (state, match) { state.summoner1.selectedMatch = match; },
         assignSummoner2SelectedMatch (state, match) { state.summoner2.selectedMatch = match; },
+        assignSummoner1SelectedGame (state, game) { state.summoner1.selectedGame = game; },
+        assignSummoner2SelectedGame (state, game) { state.summoner2.selectedGame = game; },
 
         assignCurrentMenuItem (state, menuItem) { state.currentMenuItem = menuItem; },
         assignCurrentSubMenuItem(state, menuItem) { state.currentSubMenuItem = menuItem; },

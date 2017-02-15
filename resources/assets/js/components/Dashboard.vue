@@ -53,8 +53,8 @@
             <div class="main-content row" v-if="currentMenuItem == 'Summary' && currentSubMenuItem != ''"><summarycontents></summarycontents></div>
             <div class="main-content row" v-if="currentMenuItem == 'Ranked' && currentSubMenuItem !=''"><rankedmatchlistview></rankedmatchlistview></div>
             <div class="main-content row" v-if="currentMenuItem == 'Champions'"><championstatsview></championstatsview></div>
-            <div class="main-content row" v-if="currentMenuItem == 'Recent Games'"><recentgamesview v-bind:recentGames="recentGames"></recentgamesview></div>
-            <div class="main-content row" v-if="currentMenuItem == 'Stats' && currentSubMenuItem != ''"><statsview v-bind:currentSubMenu="currentSubMenu" v-bind:averageData="summonerAverageData"></statsview></div>
+            <div class="main-content row" v-if="currentMenuItem == 'Recent Games'"><recentgamesview></recentgamesview></div>
+            <div class="main-content row" v-if="currentMenuItem == 'Stats' && currentSubMenuItem != ''"><statsview></statsview></div>
         </div>
     </div>
 </template>

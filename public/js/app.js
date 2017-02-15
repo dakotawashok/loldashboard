@@ -63,7 +63,7 @@
 /******/ 	__webpack_require__.p = "./";
 
 /******/ 	// Load entry module and return exports
-/******/ 	return __webpack_require__(__webpack_require__.s = 84);
+/******/ 	return __webpack_require__(__webpack_require__.s = 89);
 /******/ })
 /************************************************************************/
 /******/ ([
@@ -427,6 +427,130 @@ module.exports = function normalizeComponent (
 
 /***/ }),
 /* 2 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+var Vuex = __webpack_require__(87);
+
+var store = new Vuex.Store({
+    state: {
+        staticInfo: {
+            champions: []
+        },
+        summoner1: {
+            loaded: false,
+            matchLoaded: false,
+            summoner: {},
+            summaryData: {},
+            rankedData: {},
+            rankedMatchList: {},
+            selectedMatch: {},
+            recentGameList: {},
+            selectedGame: {},
+            averageData: {}
+        },
+        summoner2: {
+            loaded: false,
+            matchLoaded: false,
+            summoner: {},
+            summaryData: {},
+            rankedData: {},
+            rankedMatchList: {},
+            selectedMatch: {},
+            recentGameList: {},
+            selectedGame: {},
+            averageData: {}
+        },
+        currentMenuItem: "",
+        currentSubMenuItem: "",
+        currentYear: "2017",
+
+        loading: false
+    },
+    mutations: {
+        assignChampions: function assignChampions(state, championsList) {
+            state.staticInfo.champions = championsList;
+        },
+        assignSummoner1Summoner: function assignSummoner1Summoner(state, summoner) {
+            state.summoner1.summoner = summoner;
+        },
+        assignSummoner2Summoner: function assignSummoner2Summoner(state, summoner) {
+            state.summoner2.summoner = summoner;
+        },
+        assignSummoner1SummaryData: function assignSummoner1SummaryData(state, summaryData) {
+            state.summoner1.summaryData = summaryData;
+        },
+        assignSummoner2SummaryData: function assignSummoner2SummaryData(state, summaryData) {
+            state.summoner2.summaryData = summaryData;
+        },
+        assignSummoner1RankedData: function assignSummoner1RankedData(state, rankedData) {
+            state.summoner1.rankedData = rankedData;
+        },
+        assignSummoner2RankedData: function assignSummoner2RankedData(state, rankedData) {
+            state.summoner2.rankedData = rankedData;
+        },
+        assignSummoner1RankedMatchList: function assignSummoner1RankedMatchList(state, rankedMatchList) {
+            state.summoner1.rankedMatchList = rankedMatchList;
+        },
+        assignSummoner2RankedMatchList: function assignSummoner2RankedMatchList(state, rankedMatchList) {
+            state.summoner2.rankedMatchList = rankedMatchList;
+        },
+        assignSummoner1RecentGameList: function assignSummoner1RecentGameList(state, recentGameList) {
+            state.summoner1.recentGameList = recentGameList;
+        },
+        assignSummoner2RecentGameList: function assignSummoner2RecentGameList(state, recentGameList) {
+            state.summoner2.recentGameList = recentGameList;
+        },
+        assignSummoner1AverageData: function assignSummoner1AverageData(state, averageData) {
+            state.summoner1.averageData = averageData;
+        },
+        assignSummoner2AverageData: function assignSummoner2AverageData(state, averageData) {
+            state.summoner2.averageData = averageData;
+        },
+        assignSummoner1Loaded: function assignSummoner1Loaded(state, loaded) {
+            state.summoner1.loaded = loaded;
+        },
+        assignSummoner2Loaded: function assignSummoner2Loaded(state, loaded) {
+            state.summoner2.loaded = loaded;
+        },
+        assignSummoner1MatchLoaded: function assignSummoner1MatchLoaded(state, loaded) {
+            state.summoner1.matchLoaded = loaded;
+        },
+        assignSummoner2MatchLoaded: function assignSummoner2MatchLoaded(state, loaded) {
+            state.summoner2.matchLoaded = loaded;
+        },
+        assignSummoner1SelectedMatch: function assignSummoner1SelectedMatch(state, match) {
+            state.summoner1.selectedMatch = match;
+        },
+        assignSummoner2SelectedMatch: function assignSummoner2SelectedMatch(state, match) {
+            state.summoner2.selectedMatch = match;
+        },
+        assignSummoner1SelectedGame: function assignSummoner1SelectedGame(state, game) {
+            state.summoner1.selectedGame = game;
+        },
+        assignSummoner2SelectedGame: function assignSummoner2SelectedGame(state, game) {
+            state.summoner2.selectedGame = game;
+        },
+        assignCurrentMenuItem: function assignCurrentMenuItem(state, menuItem) {
+            state.currentMenuItem = menuItem;
+        },
+        assignCurrentSubMenuItem: function assignCurrentSubMenuItem(state, menuItem) {
+            state.currentSubMenuItem = menuItem;
+        },
+        assignCurrentYear: function assignCurrentYear(state, year) {
+            state.currentYear = year;
+        },
+        assignLoading: function assignLoading(state, loading) {
+            state.loading = loading;
+        }
+    }
+});
+
+/* harmony default export */ __webpack_exports__["default"] = store;
+
+/***/ }),
+/* 3 */
 /***/ (function(module, exports) {
 
 /*
@@ -482,7 +606,7 @@ module.exports = function() {
 
 
 /***/ }),
-/* 3 */
+/* 4 */
 /***/ (function(module, exports) {
 
 /*
@@ -702,122 +826,6 @@ function applyToTag(styleElement, obj) {
 	}
 }
 
-
-/***/ }),
-/* 4 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-var Vuex = __webpack_require__(82);
-
-var store = new Vuex.Store({
-    state: {
-        staticInfo: {
-            champions: []
-        },
-        summoner1: {
-            loaded: false,
-            matchLoaded: false,
-            summoner: {},
-            summaryData: {},
-            rankedData: {},
-            rankedMatchList: {},
-            selectedMatch: {},
-            recentGameList: {},
-            averageData: {}
-        },
-        summoner2: {
-            loaded: false,
-            matchLoaded: false,
-            summoner: {},
-            summaryData: {},
-            rankedData: {},
-            rankedMatchList: {},
-            selectedMatch: {},
-            recentGameList: {},
-            averageData: {}
-        },
-        currentMenuItem: "",
-        currentSubMenuItem: "",
-        currentYear: "2017",
-
-        loading: false
-    },
-    mutations: {
-        assignChampions: function assignChampions(state, championsList) {
-            state.staticInfo.champions = championsList;
-        },
-        assignSummoner1Summoner: function assignSummoner1Summoner(state, summoner) {
-            state.summoner1.summoner = summoner;
-        },
-        assignSummoner2Summoner: function assignSummoner2Summoner(state, summoner) {
-            state.summoner2.summoner = summoner;
-        },
-        assignSummoner1SummaryData: function assignSummoner1SummaryData(state, summaryData) {
-            state.summoner1.summaryData = summaryData;
-        },
-        assignSummoner2SummaryData: function assignSummoner2SummaryData(state, summaryData) {
-            state.summoner2.summaryData = summaryData;
-        },
-        assignSummoner1RankedData: function assignSummoner1RankedData(state, rankedData) {
-            state.summoner1.rankedData = rankedData;
-        },
-        assignSummoner2RankedData: function assignSummoner2RankedData(state, rankedData) {
-            state.summoner2.rankedData = rankedData;
-        },
-        assignSummoner1RankedMatchList: function assignSummoner1RankedMatchList(state, rankedMatchList) {
-            state.summoner1.rankedMatchList = rankedMatchList;
-        },
-        assignSummoner2RankedMatchList: function assignSummoner2RankedMatchList(state, rankedMatchList) {
-            state.summoner2.rankedMatchList = rankedMatchList;
-        },
-        assignSummoner1RecentGameList: function assignSummoner1RecentGameList(state, recentGameList) {
-            state.summoner1.recentGameList = recentGameList;
-        },
-        assignSummoner2RecentGameList: function assignSummoner2RecentGameList(state, recentGameList) {
-            state.summoner2.recentGameList = recentGameList;
-        },
-        assignSummoner1AverageData: function assignSummoner1AverageData(state, averageData) {
-            state.summoner1.averageData = averageData;
-        },
-        assignSummoner2AverageData: function assignSummoner2AverageData(state, averageData) {
-            state.summoner2.averageData = averageData;
-        },
-        assignSummoner1Loaded: function assignSummoner1Loaded(state, loaded) {
-            state.summoner1.loaded = loaded;
-        },
-        assignSummoner2Loaded: function assignSummoner2Loaded(state, loaded) {
-            state.summoner2.loaded = loaded;
-        },
-        assignSummoner1MatchLoaded: function assignSummoner1MatchLoaded(state, loaded) {
-            state.summoner1.matchLoaded = loaded;
-        },
-        assignSummoner2MatchLoaded: function assignSummoner2MatchLoaded(state, loaded) {
-            state.summoner2.matchLoaded = loaded;
-        },
-        assignSummoner1SelectedMatch: function assignSummoner1SelectedMatch(state, match) {
-            state.summoner1.selectedMatch = match;
-        },
-        assignSummoner2SelectedMatch: function assignSummoner2SelectedMatch(state, match) {
-            state.summoner2.selectedMatch = match;
-        },
-        assignCurrentMenuItem: function assignCurrentMenuItem(state, menuItem) {
-            state.currentMenuItem = menuItem;
-        },
-        assignCurrentSubMenuItem: function assignCurrentSubMenuItem(state, menuItem) {
-            state.currentSubMenuItem = menuItem;
-        },
-        assignCurrentYear: function assignCurrentYear(state, year) {
-            state.currentYear = year;
-        },
-        assignLoading: function assignLoading(state, loading) {
-            state.loading = loading;
-        }
-    }
-});
-
-/* harmony default export */ __webpack_exports__["default"] = store;
 
 /***/ }),
 /* 5 */
@@ -11636,7 +11644,7 @@ module.exports = g;
  * building robust, powerful web applications using Vue and Laravel.
  */
 
-__webpack_require__(43);
+__webpack_require__(44);
 
 /**
  * Next, we will create a fresh Vue application instance and attach it to
@@ -11646,21 +11654,21 @@ __webpack_require__(43);
  *
  */
 
-Vue.component('example', __webpack_require__(56));
-Vue.component('dashboard', __webpack_require__(55));
-Vue.component('matchcard', __webpack_require__(57));
-Vue.component('rankedmatchlistview', __webpack_require__(58));
-Vue.component('recentgamecard', __webpack_require__(59));
-Vue.component('recentgamesview', __webpack_require__(60));
-Vue.component('summarycontents', __webpack_require__(62));
-Vue.component('championcard', __webpack_require__(54));
-Vue.component('statsview', __webpack_require__(61));
-Vue.component('championstatsview', __webpack_require__(94));
+Vue.component('example', __webpack_require__(59));
+Vue.component('dashboard', __webpack_require__(58));
+Vue.component('matchcard', __webpack_require__(60));
+Vue.component('rankedmatchlistview', __webpack_require__(61));
+Vue.component('recentgamecard', __webpack_require__(62));
+Vue.component('recentgamesview', __webpack_require__(63));
+Vue.component('summarycontents', __webpack_require__(65));
+Vue.component('championcard', __webpack_require__(56));
+Vue.component('statsview', __webpack_require__(64));
+Vue.component('championstatsview', __webpack_require__(57));
 
-var VueResource = __webpack_require__(72);
+var VueResource = __webpack_require__(76);
 
 Vue.use(VueResource);
-var store = __webpack_require__(4);
+var store = __webpack_require__(2);
 
 var app = new Vue({
   el: '#app',
@@ -12520,7 +12528,7 @@ module.exports = function spread(callback) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(2);
 //
 //
 //
@@ -12571,8 +12579,131 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(2);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = {
+    props: [],
+    methods: {
+        staticChampion: function staticChampion(id) {
+            for (var champion in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions) {
+                if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions[champion].key == id) {
+                    return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions[champion].id;
+                }
+            }
+        },
+
+        championImageUrl: function championImageUrl(id) {
+            return "http://ddragon.leagueoflegends.com/cdn/7.3.1/img/champion/" + id + ".png";
+        },
+
+        selectChampion: function selectChampion(id) {
+            this.champSelected = id;
+        }
+    },
+    data: function data() {
+        return {
+            champSelected: -1
+        };
+    },
+    computed: {
+        championList: function championList() {
+            var tempChampionList = [];
+            for (var champion in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions) {
+                if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions[champion].id != 0) {
+                    tempChampionList.push(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions[champion].id);
+                }
+            }
+            for (var champion in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions) {
+                var found = false;
+                for (var summoner1Champ in tempChampionList) {
+                    if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions[champion].id == tempChampionList[summoner1Champ]) {
+                        found = true;
+                    }
+                }
+                if (!found && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions[champion].id != 0) {
+                    tempChampionList.push(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions[champion].id);
+                }
+            }
+            for (var champion in tempChampionList) {
+                var tempChampId = tempChampionList[champion];
+                tempChampionList[champion] = {
+                    'champId': tempChampId,
+                    'champName': this.staticChampion(tempChampionList[champion])
+                };
+            }
+
+            tempChampionList.sort(function (champA, champB) {
+                if (champA.champName > champB.champName) {
+                    return 1;
+                } else {
+                    return -1;
+                }
+            });
+
+            var champList = tempChampionList;
+            return champList;
+        },
+
+        loading: function loading() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.loading;
+        },
+
+        summoner1ChampionStats: function summoner1ChampionStats() {
+            var tempChampStats = {};
+            for (var tempChamp in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions) {
+                if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions[tempChamp].id == this.champSelected) {
+                    return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions[tempChamp].stats;
+                }
+            }
+            return null;
+        },
+        summoner2ChampionStats: function summoner2ChampionStats() {
+            var tempChampStats = {};
+            for (var tempChamp in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions) {
+                if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions[tempChamp].id == this.champSelected) {
+                    return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions[tempChamp].stats;
+                }
+            }
+            return null;
+        }
+    },
+    mounted: function mounted() {}
+};
+
+/***/ }),
+/* 36 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
 /* WEBPACK VAR INJECTION */(function($) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(2);
 //
 //
 //
@@ -13045,7 +13176,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(5)))
 
 /***/ }),
-/* 36 */
+/* 37 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13074,12 +13205,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 };
 
 /***/ }),
-/* 37 */
+/* 38 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(2);
 //
 //
 //
@@ -13127,12 +13258,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 };
 
 /***/ }),
-/* 38 */
+/* 39 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(2);
 //
 //
 //
@@ -13213,7 +13344,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 };
 
 /***/ }),
-/* 39 */
+/* 40 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
@@ -13262,12 +13393,30 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 };
 
 /***/ }),
-/* 40 */
+/* 41 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(2);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -13286,38 +13435,61 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = {
-    props: ['recentGames'],
+    props: [],
     data: function data() {
         return {
-            currentGameId: -1
+            summoner1GameId: -1,
+            summoner2GameId: -1
         };
     },
     computed: {
-        currentGame: function currentGame() {
-            if (this.currentGameId != 0) {
-                for (var tempGame in this.recentGames) {
-                    if (this.recentGames[tempGame].gameId == this.currentGameId) {
-                        return this.recentGames[tempGame];
-                    }
-                }
-            }
+        summoner1RecentGames: function summoner1RecentGames() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.recentGameList.games;
+        },
+        summoner2RecentGames: function summoner2RecentGames() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.recentGameList.games;
+        },
+
+        summoner1SelectedGame: function summoner1SelectedGame() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.selectedGame;
+        },
+        summoner2SelectedGame: function summoner2SelectedGame() {
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.selectedGame;
         }
     },
     methods: {
-        changeCurrentGameId: function changeCurrentGameId(id) {
-            this.currentGameId = id;
+        changeCurrentGameId: function changeCurrentGameId(summonerNumber, gameId) {
+            if (summonerNumber == "1") {
+                this.summoner1GameId = gameId;
+                var tempList = __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.recentGameList.games;
+                for (var game in tempList) {
+                    if (tempList[game].gameId === gameId) {
+                        __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1SelectedGame', tempList[game]);
+                        break;
+                    }
+                }
+            } else {
+                this.summoner2GameId = gameId;
+                var tempList = __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.recentGameList.games;
+                for (var game in tempList) {
+                    if (tempList[game].gameId == gameId) {
+                        __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2SelectedGame', tempList[game]);
+                        break;
+                    }
+                }
+            }
         }
     },
     mounted: function mounted() {}
 };
 
 /***/ }),
-/* 41 */
+/* 42 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store__ = __webpack_require__(2);
 //
 //
 //
@@ -13341,12 +13513,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 };
 
 /***/ }),
-/* 42 */
+/* 43 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function(jQuery) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(4);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(2);
 //
 //
 //
@@ -13455,11 +13627,11 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(5)))
 
 /***/ }),
-/* 43 */
+/* 44 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(__webpack_provided_window_dot_jQuery) {
-window._ = __webpack_require__(53);
+window._ = __webpack_require__(55);
 
 /**
  * We'll load jQuery and the Bootstrap jQuery plugin which provides support
@@ -13469,7 +13641,7 @@ window._ = __webpack_require__(53);
 
 window.$ = __webpack_provided_window_dot_jQuery = __webpack_require__(5);
 
-__webpack_require__(44);
+__webpack_require__(45);
 
 /**
  * Vue is a modern JavaScript library for building interactive web interfaces
@@ -13477,7 +13649,7 @@ __webpack_require__(44);
  * and simple, leaving you to focus on building your next great project.
  */
 
-window.Vue = __webpack_require__(81);
+window.Vue = __webpack_require__(86);
 
 /**
  * We'll load the axios HTTP library which allows us to easily issue requests
@@ -13506,7 +13678,7 @@ window.axios.defaults.headers.common = {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
-/* 44 */
+/* 45 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(jQuery) {/*!
@@ -15890,10 +16062,10 @@ if (typeof jQuery === 'undefined') {
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(5)))
 
 /***/ }),
-/* 45 */
+/* 46 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)();
+exports = module.exports = __webpack_require__(3)();
 // imports
 
 
@@ -15904,10 +16076,10 @@ exports.push([module.i, "\na[data-v-1fa40288] {\n    border-style: solid;\n    b
 
 
 /***/ }),
-/* 46 */
+/* 47 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)();
+exports = module.exports = __webpack_require__(3)();
 // imports
 
 
@@ -15918,10 +16090,10 @@ exports.push([module.i, "\n.average-stats[data-v-673d1315] {\n    list-style: no
 
 
 /***/ }),
-/* 47 */
+/* 48 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)();
+exports = module.exports = __webpack_require__(3)();
 // imports
 
 
@@ -15932,10 +16104,10 @@ exports.push([module.i, "\n.match-card[data-v-6b5eb526] {\n    height: 150px;\n}
 
 
 /***/ }),
-/* 48 */
+/* 49 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)();
+exports = module.exports = __webpack_require__(3)();
 // imports
 
 
@@ -15946,10 +16118,10 @@ exports.push([module.i, "\n.ranked-match-view[data-v-6db676a4] {\n    margin-bot
 
 
 /***/ }),
-/* 49 */
+/* 50 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)();
+exports = module.exports = __webpack_require__(3)();
 // imports
 
 
@@ -15960,10 +16132,10 @@ exports.push([module.i, "\n.summary-list[data-v-7263195e] {\n    text-align: lef
 
 
 /***/ }),
-/* 50 */
+/* 51 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)();
+exports = module.exports = __webpack_require__(3)();
 // imports
 
 
@@ -15974,10 +16146,24 @@ exports.push([module.i, "\n.champion-stats-list[data-v-759efbf8] {\n    text-ali
 
 
 /***/ }),
-/* 51 */
+/* 52 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)();
+exports = module.exports = __webpack_require__(3)();
+// imports
+
+
+// module
+exports.push([module.i, "\nimg[data-v-92b86fa8] {\n    height: 75px;\n    width: 75px;\n    margin: 5px;\n    padding: 0px;\n}\nli[data-v-92b86fa8] {\n    list-style: none;\n    text-align: left;\n}\nli.summoner2[data-v-92b86fa8] {\n    text-align: right;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 53 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)();
 // imports
 
 
@@ -15988,21 +16174,21 @@ exports.push([module.i, "\n.summoner2-form-wrapper[data-v-cb31cc76] {\n    text-
 
 
 /***/ }),
-/* 52 */
+/* 54 */
 /***/ (function(module, exports, __webpack_require__) {
 
-exports = module.exports = __webpack_require__(2)();
+exports = module.exports = __webpack_require__(3)();
 // imports
 
 
 // module
-exports.push([module.i, "\n.recent-game[data-v-d58b0448], .recent-games-cards[data-v-d58b0448] {\n    display: inline-block;\n    width: 100%;\n}\n.recent-game-stats[data-v-d58b0448] {\n    list-style: none;\n    text-align: left;\n}\n", ""]);
+exports.push([module.i, "\n.recent-game[data-v-d58b0448], .recent-games-cards[data-v-d58b0448] {\n    display: inline-block;\n    width: 100%;\n}\n.recent-game-stats[data-v-d58b0448] {\n    list-style: none;\n    text-align: left;\n}\n.recent-game-stats2[data-v-d58b0448] {\n    list-style: none;\n    text-align: right;\n}\n", ""]);
 
 // exports
 
 
 /***/ }),
-/* 53 */
+/* 55 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /* WEBPACK VAR INJECTION */(function(global, module) {var __WEBPACK_AMD_DEFINE_RESULT__;/**
@@ -33091,21 +33277,21 @@ exports.push([module.i, "\n.recent-game[data-v-d58b0448], .recent-games-cards[da
   }
 }.call(this));
 
-/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13), __webpack_require__(83)(module)))
+/* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(13), __webpack_require__(88)(module)))
 
 /***/ }),
-/* 54 */
+/* 56 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(78)
+__webpack_require__(82)
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(34),
   /* template */
-  __webpack_require__(69),
+  __webpack_require__(72),
   /* scopeId */
   "data-v-759efbf8",
   /* cssModules */
@@ -33132,18 +33318,56 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 55 */
+/* 57 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(79)
+__webpack_require__(83)
 
 var Component = __webpack_require__(1)(
   /* script */
   __webpack_require__(35),
   /* template */
-  __webpack_require__(70),
+  __webpack_require__(73),
+  /* scopeId */
+  "data-v-92b86fa8",
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/dakotawashok/NinjaDev/www/lolDashboard/resources/assets/js/components/ChampionStatsView.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] ChampionStatsView.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-92b86fa8", Component.options)
+  } else {
+    hotAPI.reload("data-v-92b86fa8", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 58 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(84)
+
+var Component = __webpack_require__(1)(
+  /* script */
+  __webpack_require__(36),
+  /* template */
+  __webpack_require__(74),
   /* scopeId */
   "data-v-cb31cc76",
   /* cssModules */
@@ -33170,14 +33394,14 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 56 */
+/* 59 */
 /***/ (function(module, exports, __webpack_require__) {
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(36),
+  __webpack_require__(37),
   /* template */
-  __webpack_require__(64),
+  __webpack_require__(67),
   /* scopeId */
   null,
   /* cssModules */
@@ -33204,18 +33428,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 57 */
+/* 60 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(75)
+__webpack_require__(79)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(37),
+  __webpack_require__(38),
   /* template */
-  __webpack_require__(66),
+  __webpack_require__(69),
   /* scopeId */
   "data-v-6b5eb526",
   /* cssModules */
@@ -33242,18 +33466,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 58 */
+/* 61 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(76)
+__webpack_require__(80)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(38),
+  __webpack_require__(39),
   /* template */
-  __webpack_require__(67),
+  __webpack_require__(70),
   /* scopeId */
   "data-v-6db676a4",
   /* cssModules */
@@ -33280,18 +33504,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 59 */
+/* 62 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(73)
+__webpack_require__(77)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(39),
+  __webpack_require__(40),
   /* template */
-  __webpack_require__(63),
+  __webpack_require__(66),
   /* scopeId */
   "data-v-1fa40288",
   /* cssModules */
@@ -33318,18 +33542,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 60 */
+/* 63 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(80)
+__webpack_require__(85)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(40),
+  __webpack_require__(41),
   /* template */
-  __webpack_require__(71),
+  __webpack_require__(75),
   /* scopeId */
   "data-v-d58b0448",
   /* cssModules */
@@ -33356,18 +33580,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 61 */
+/* 64 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(74)
+__webpack_require__(78)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(41),
+  __webpack_require__(42),
   /* template */
-  __webpack_require__(65),
+  __webpack_require__(68),
   /* scopeId */
   "data-v-673d1315",
   /* cssModules */
@@ -33394,18 +33618,18 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 62 */
+/* 65 */
 /***/ (function(module, exports, __webpack_require__) {
 
 
 /* styles */
-__webpack_require__(77)
+__webpack_require__(81)
 
 var Component = __webpack_require__(1)(
   /* script */
-  __webpack_require__(42),
+  __webpack_require__(43),
   /* template */
-  __webpack_require__(68),
+  __webpack_require__(71),
   /* scopeId */
   "data-v-7263195e",
   /* cssModules */
@@ -33432,12 +33656,12 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 63 */
+/* 66 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "wrapper col-sm-3 col-md-2",
+    staticClass: "wrapper col-sm-4 col-md-3",
     on: {
       "click": function($event) {
         _vm.changeCurrentGameId(_vm.game.gameId)
@@ -33466,7 +33690,7 @@ if (false) {
 }
 
 /***/ }),
-/* 64 */
+/* 67 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33495,7 +33719,7 @@ if (false) {
 }
 
 /***/ }),
-/* 65 */
+/* 68 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33516,7 +33740,7 @@ if (false) {
 }
 
 /***/ }),
-/* 66 */
+/* 69 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33542,7 +33766,7 @@ if (false) {
 }
 
 /***/ }),
-/* 67 */
+/* 70 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33593,7 +33817,7 @@ if (false) {
 }
 
 /***/ }),
-/* 68 */
+/* 71 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33628,7 +33852,7 @@ if (false) {
 }
 
 /***/ }),
-/* 69 */
+/* 72 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33647,7 +33871,56 @@ if (false) {
 }
 
 /***/ }),
-/* 70 */
+/* 73 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "champion-stats-view-wrapper"
+  }, [_c('h4', [_vm._v("Champion Stats:")]), _vm._v(" "), (!_vm.loading) ? _c('div', {
+    staticClass: "container-fluid"
+  }, [_c('div', {
+    staticClass: "row"
+  }, _vm._l((_vm.championList), function(champion) {
+    return _c('a', {
+      staticClass: "col-sm-1",
+      attrs: {
+        "href": "#"
+      },
+      on: {
+        "click": function($event) {
+          _vm.selectChampion(champion.champId)
+        }
+      }
+    }, [_c('img', {
+      attrs: {
+        "src": _vm.championImageUrl(champion.champName)
+      }
+    })])
+  })), _vm._v(" "), (_vm.champSelected != -1) ? _c('div', {
+    staticClass: "row"
+  }, [_c('h4', [_vm._v("Stats for " + _vm._s(_vm.staticChampion(_vm.champSelected)))]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-6"
+  }, [_c('ul', _vm._l((_vm.summoner1ChampionStats), function(key, value) {
+    return _c('li', [_vm._v(_vm._s(value) + " : " + _vm._s(key))])
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-6"
+  }, [_c('ul', _vm._l((_vm.summoner2ChampionStats), function(key, value) {
+    return _c('li', {
+      staticClass: "summoner2"
+    }, [_vm._v(_vm._s(value) + " : " + _vm._s(key))])
+  }))])]) : _vm._e()]) : _vm._e()])
+},staticRenderFns: []}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-92b86fa8", module.exports)
+  }
+}
+
+/***/ }),
+/* 74 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
@@ -33830,18 +34103,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "main-content row"
   }, [_c('championstatsview')], 1) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Recent Games') ? _c('div', {
     staticClass: "main-content row"
-  }, [_c('recentgamesview', {
-    attrs: {
-      "recentGames": _vm.recentGames
-    }
-  })], 1) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Stats' && _vm.currentSubMenuItem != '') ? _c('div', {
+  }, [_c('recentgamesview')], 1) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Stats' && _vm.currentSubMenuItem != '') ? _c('div', {
     staticClass: "main-content row"
-  }, [_c('statsview', {
-    attrs: {
-      "currentSubMenu": _vm.currentSubMenu,
-      "averageData": _vm.summonerAverageData
-    }
-  })], 1) : _vm._e()]) : _vm._e()])
+  }, [_c('statsview')], 1) : _vm._e()]) : _vm._e()])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -33852,32 +34116,61 @@ if (false) {
 }
 
 /***/ }),
-/* 71 */
+/* 75 */
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "recent-games-wrapper"
+    staticClass: "recent-games-wrapper container-fluid"
+  }, [_c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-sm-6"
   }, [_c('div', {
     staticClass: "recent-games-cards"
-  }, _vm._l((_vm.recentGames), function(game) {
+  }, _vm._l((_vm.summoner1RecentGames), function(game) {
     return _c('div', [_c('recentgamecard', {
       attrs: {
         "game": game
       },
       on: {
         "changeCurrentGameId": function($event) {
-          _vm.changeCurrentGameId(arguments[0])
+          _vm.changeCurrentGameId('1', arguments[0])
         }
       }
     })], 1)
-  })), _c('br'), _vm._v(" "), (_vm.currentGameId != 0) ? _c('div', {
-    staticClass: "recent-game"
-  }, [_c('h3', [_vm._v("Game:")]), _vm._v(" "), _c('ul', {
+  }))]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-6"
+  }, [_c('div', {
+    staticClass: "recent-games-cards"
+  }, _vm._l((_vm.summoner2RecentGames), function(game) {
+    return _c('div', [_c('recentgamecard', {
+      attrs: {
+        "game": game
+      },
+      on: {
+        "changeCurrentGameId": function($event) {
+          _vm.changeCurrentGameId('2', arguments[0])
+        }
+      }
+    })], 1)
+  }))])]), _vm._v(" "), _c('div', {
+    staticClass: "recent-game container-fluid"
+  }, [_c('h3', [_vm._v("Game:")]), _vm._v(" "), _c('div', {
+    staticClass: "row"
+  }, [_c('div', {
+    staticClass: "col-md-6 summoner1"
+  }, [(_vm.summoner1GameId != -1) ? _c('ul', {
     staticClass: "recent-game-stats"
-  }, _vm._l((_vm.currentGame), function(key, value) {
+  }, _vm._l((_vm.summoner1SelectedGame), function(key, value) {
     return _c('li', [_vm._v(_vm._s(value) + " : " + _vm._s(key))])
-  }))]) : _vm._e()])
+  })) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "col-sm-6 summoner2"
+  }, [(_vm.summoner2GameId != -1) ? _c('ul', {
+    staticClass: "recent-game-stats2"
+  }, _vm._l((_vm.summoner2SelectedGame), function(key, value) {
+    return _c('li', [_vm._v(_vm._s(value) + " : " + _vm._s(key))])
+  })) : _vm._e()])])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -33888,7 +34181,7 @@ if (false) {
 }
 
 /***/ }),
-/* 72 */
+/* 76 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -35389,16 +35682,16 @@ module.exports = plugin;
 
 
 /***/ }),
-/* 73 */
+/* 77 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(45);
+var content = __webpack_require__(46);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(3)(content, {});
+var update = __webpack_require__(4)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -35415,16 +35708,16 @@ if(false) {
 }
 
 /***/ }),
-/* 74 */
+/* 78 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(46);
+var content = __webpack_require__(47);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(3)(content, {});
+var update = __webpack_require__(4)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -35441,16 +35734,16 @@ if(false) {
 }
 
 /***/ }),
-/* 75 */
+/* 79 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(47);
+var content = __webpack_require__(48);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(3)(content, {});
+var update = __webpack_require__(4)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -35467,16 +35760,16 @@ if(false) {
 }
 
 /***/ }),
-/* 76 */
+/* 80 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(48);
+var content = __webpack_require__(49);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(3)(content, {});
+var update = __webpack_require__(4)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -35493,16 +35786,16 @@ if(false) {
 }
 
 /***/ }),
-/* 77 */
+/* 81 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(49);
+var content = __webpack_require__(50);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(3)(content, {});
+var update = __webpack_require__(4)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -35519,16 +35812,16 @@ if(false) {
 }
 
 /***/ }),
-/* 78 */
+/* 82 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(50);
+var content = __webpack_require__(51);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(3)(content, {});
+var update = __webpack_require__(4)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -35545,16 +35838,42 @@ if(false) {
 }
 
 /***/ }),
-/* 79 */
+/* 83 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(51);
+var content = __webpack_require__(52);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(3)(content, {});
+var update = __webpack_require__(4)(content, {});
+if(content.locals) module.exports = content.locals;
+// Hot Module Replacement
+if(false) {
+	// When the styles change, update the <style> tags
+	if(!content.locals) {
+		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-92b86fa8&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChampionStatsView.vue", function() {
+			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-92b86fa8&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChampionStatsView.vue");
+			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+			update(newContent);
+		});
+	}
+	// When the module is disposed, remove the <style> tags
+	module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 84 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(53);
+if(typeof content === 'string') content = [[module.i, content, '']];
+// add the styles to the DOM
+var update = __webpack_require__(4)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -35571,16 +35890,16 @@ if(false) {
 }
 
 /***/ }),
-/* 80 */
+/* 85 */
 /***/ (function(module, exports, __webpack_require__) {
 
 // style-loader: Adds some css to the DOM by adding a <style> tag
 
 // load the styles
-var content = __webpack_require__(52);
+var content = __webpack_require__(54);
 if(typeof content === 'string') content = [[module.i, content, '']];
 // add the styles to the DOM
-var update = __webpack_require__(3)(content, {});
+var update = __webpack_require__(4)(content, {});
 if(content.locals) module.exports = content.locals;
 // Hot Module Replacement
 if(false) {
@@ -35597,7 +35916,7 @@ if(false) {
 }
 
 /***/ }),
-/* 81 */
+/* 86 */
 /***/ (function(module, exports, __webpack_require__) {
 
 "use strict";
@@ -44173,7 +44492,7 @@ module.exports = Vue$3;
 /* WEBPACK VAR INJECTION */}.call(exports, __webpack_require__(7), __webpack_require__(13)))
 
 /***/ }),
-/* 82 */
+/* 87 */
 /***/ (function(module, exports, __webpack_require__) {
 
 /**
@@ -44984,7 +45303,7 @@ return index;
 
 
 /***/ }),
-/* 83 */
+/* 88 */
 /***/ (function(module, exports) {
 
 module.exports = function(module) {
@@ -45012,269 +45331,12 @@ module.exports = function(module) {
 
 
 /***/ }),
-/* 84 */
+/* 89 */
 /***/ (function(module, exports, __webpack_require__) {
 
 __webpack_require__(14);
 module.exports = __webpack_require__(15);
 
-
-/***/ }),
-/* 85 */,
-/* 86 */,
-/* 87 */,
-/* 88 */,
-/* 89 */,
-/* 90 */,
-/* 91 */,
-/* 92 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(4);
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-
-
-/* harmony default export */ __webpack_exports__["default"] = {
-    props: [],
-    methods: {
-        staticChampion: function staticChampion(id) {
-            for (var champion in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions) {
-                if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions[champion].key == id) {
-                    return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions[champion].id;
-                }
-            }
-        },
-
-        championImageUrl: function championImageUrl(id) {
-            return "http://ddragon.leagueoflegends.com/cdn/7.3.1/img/champion/" + id + ".png";
-        },
-
-        selectChampion: function selectChampion(id) {
-            this.champSelected = id;
-        }
-    },
-    data: function data() {
-        return {
-            champSelected: -1
-        };
-    },
-    computed: {
-        championList: function championList() {
-            var tempChampionList = [];
-            for (var champion in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions) {
-                if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions[champion].id != 0) {
-                    tempChampionList.push(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions[champion].id);
-                }
-            }
-            for (var champion in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions) {
-                var found = false;
-                for (var summoner1Champ in tempChampionList) {
-                    if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions[champion].id == tempChampionList[summoner1Champ]) {
-                        found = true;
-                    }
-                }
-                if (!found && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions[champion].id != 0) {
-                    tempChampionList.push(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions[champion].id);
-                }
-            }
-            for (var champion in tempChampionList) {
-                var tempChampId = tempChampionList[champion];
-                tempChampionList[champion] = {
-                    'champId': tempChampId,
-                    'champName': this.staticChampion(tempChampionList[champion])
-                };
-            }
-
-            tempChampionList.sort(function (champA, champB) {
-                if (champA.champName > champB.champName) {
-                    return 1;
-                } else {
-                    return -1;
-                }
-            });
-
-            var champList = tempChampionList;
-            return champList;
-        },
-
-        loading: function loading() {
-            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.loading;
-        },
-
-        summoner1ChampionStats: function summoner1ChampionStats() {
-            var tempChampStats = {};
-            for (var tempChamp in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions) {
-                if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions[tempChamp].id == this.champSelected) {
-                    return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions[tempChamp].stats;
-                }
-            }
-            return null;
-        },
-        summoner2ChampionStats: function summoner2ChampionStats() {
-            var tempChampStats = {};
-            for (var tempChamp in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions) {
-                if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions[tempChamp].id == this.champSelected) {
-                    return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions[tempChamp].stats;
-                }
-            }
-            return null;
-        }
-    },
-    mounted: function mounted() {}
-};
-
-/***/ }),
-/* 93 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(2)();
-// imports
-
-
-// module
-exports.push([module.i, "\nimg[data-v-92b86fa8] {\n    height: 75px;\n    width: 75px;\n    margin: 5px;\n    padding: 0px;\n}\nli[data-v-92b86fa8] {\n    list-style: none;\n    text-align: left;\n}\nli.summoner2[data-v-92b86fa8] {\n    text-align: right;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
-/* 94 */
-/***/ (function(module, exports, __webpack_require__) {
-
-
-/* styles */
-__webpack_require__(96)
-
-var Component = __webpack_require__(1)(
-  /* script */
-  __webpack_require__(92),
-  /* template */
-  __webpack_require__(95),
-  /* scopeId */
-  "data-v-92b86fa8",
-  /* cssModules */
-  null
-)
-Component.options.__file = "/Users/dakotawashok/NinjaDev/www/lolDashboard/resources/assets/js/components/ChampionStatsView.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] ChampionStatsView.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-92b86fa8", Component.options)
-  } else {
-    hotAPI.reload("data-v-92b86fa8", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
-/* 95 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "champion-stats-view-wrapper"
-  }, [_c('h4', [_vm._v("Champion Stats:")]), _vm._v(" "), (!_vm.loading) ? _c('div', {
-    staticClass: "container-fluid"
-  }, [_c('div', {
-    staticClass: "row"
-  }, _vm._l((_vm.championList), function(champion) {
-    return _c('a', {
-      staticClass: "col-sm-1",
-      attrs: {
-        "href": "#"
-      },
-      on: {
-        "click": function($event) {
-          _vm.selectChampion(champion.champId)
-        }
-      }
-    }, [_c('img', {
-      attrs: {
-        "src": _vm.championImageUrl(champion.champName)
-      }
-    })])
-  })), _vm._v(" "), (_vm.champSelected != -1) ? _c('div', {
-    staticClass: "row"
-  }, [_c('h4', [_vm._v("Stats for " + _vm._s(_vm.staticChampion(_vm.champSelected)))]), _vm._v(" "), _c('div', {
-    staticClass: "col-sm-6"
-  }, [_c('ul', _vm._l((_vm.summoner1ChampionStats), function(key, value) {
-    return _c('li', [_vm._v(_vm._s(value) + " : " + _vm._s(key))])
-  }))]), _vm._v(" "), _c('div', {
-    staticClass: "col-sm-6"
-  }, [_c('ul', _vm._l((_vm.summoner2ChampionStats), function(key, value) {
-    return _c('li', {
-      staticClass: "summoner2"
-    }, [_vm._v(_vm._s(value) + " : " + _vm._s(key))])
-  }))])]) : _vm._e()]) : _vm._e()])
-},staticRenderFns: []}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-92b86fa8", module.exports)
-  }
-}
-
-/***/ }),
-/* 96 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(93);
-if(typeof content === 'string') content = [[module.i, content, '']];
-// add the styles to the DOM
-var update = __webpack_require__(3)(content, {});
-if(content.locals) module.exports = content.locals;
-// Hot Module Replacement
-if(false) {
-	// When the styles change, update the <style> tags
-	if(!content.locals) {
-		module.hot.accept("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-92b86fa8&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChampionStatsView.vue", function() {
-			var newContent = require("!!./../../../../node_modules/css-loader/index.js!./../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-92b86fa8&scoped=true!./../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./ChampionStatsView.vue");
-			if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-			update(newContent);
-		});
-	}
-	// When the module is disposed, remove the <style> tags
-	module.hot.dispose(function() { update(); });
-}
 
 /***/ })
 /******/ ]);
