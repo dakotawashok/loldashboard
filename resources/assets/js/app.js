@@ -26,9 +26,13 @@ Vue.component('championcard', require('./components/ChampionCard.vue'));
 Vue.component('statsview', require('./components/StatsView.vue'));
 Vue.component('championstatsview', require('./components/ChampionStatsView.vue'));
 
-var VueResource = require('vue-resource');
+Vue.component('summarystatsgraph', require('./components/SummaryStatsGraph.vue'));
 
+var VueResource = require('vue-resource');
 Vue.use(VueResource);
+
+import VueCharts from 'vue-chartjs';
+
 var store = require('./store.js');
 
 const app = new Vue({
