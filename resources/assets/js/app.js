@@ -27,6 +27,7 @@ Vue.component('statsview', require('./components/StatsView.vue'));
 Vue.component('championstatsview', require('./components/ChampionStatsView.vue'));
 
 Vue.component('summarystatsgraph', require('./components/SummaryStatsGraph.vue'));
+Vue.component('rankedmatchlistgraph', require('./components/RankedMatchListGraph.vue'));
 
 var VueResource = require('vue-resource');
 Vue.use(VueResource);
