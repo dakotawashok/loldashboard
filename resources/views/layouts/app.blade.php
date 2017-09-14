@@ -13,6 +13,10 @@
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
 
+    <!-- Semantic UI -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/semantic.min.css') }}">
+    <script src="{{ asset('js/semantic.min.js') }}"></script>
+
     <!-- Scripts -->
     <script>
         window.Laravel = {!! json_encode([

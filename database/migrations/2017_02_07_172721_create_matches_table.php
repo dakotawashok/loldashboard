@@ -15,17 +15,16 @@ class CreateMatchesTable extends Migration
     {
         Schema::create('matches', function (Blueprint $table) {
             $table->increments('id');
-            $table->string('matchId');
-            $table->integer('summonerId');
-            $table->string('timestamp');
-            $table->integer('champion');
-            $table->string('region');
-            $table->string('queue');
-            $table->string('season');
-            $table->string('role');
+            $table->string('seasonId');
+            $table->string('queueId');
+            $table->longText('gameId');
+            $table->string('gameVersion');
             $table->string('platformId');
-            $table->string('lane');
-            $table->longText('data')->nullable();
+            $table->string('gameMode');
+            $table->string('mapId');
+            $table->string('gameType');
+            $table->string('gameDuration');
+            $table->longText('gameCreation');
             $table->timestamps();
         });
     }

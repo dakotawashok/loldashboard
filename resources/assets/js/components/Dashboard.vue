@@ -1,33 +1,35 @@
 <template>
-    <div class="container">
-        <div class="row header-row">
-            <div class="col-sm-2 icon-wrapper">
-                <div v-if="summoner1Loaded" class="icon">
+    <div class="ui grid">
+        <div class="three column row">
+            <div class="left floated column">
+                <div class="icon" v-if="summoner1Loaded">
                     <img :src="summoner1ProfileIconUrl" />
                 </div>
-            </div>
-            <div class="col-sm-3 summoner-form-wrapper">
                 <div class="summoner-form">
-                    <h2>SUMMONER NAME: </h2>
+                    <h2>SUMMONER NAME1: </h2>
                     <input v-model="summoner1Id" placeholder="Summoner Name" v-on:keyup.enter="getInfo(1)"/>
                 </div>
             </div>
-            <div class="col-sm-2">
-                <select v-if="summoner1Loaded || summoner2Loaded" v-model="currentYear" class="form-control" id="currentYear">
-                    <option>2017</option>
-                    <option>2016</option>
-                    <option>2015</option>
-                    <option>2014</option>
-                    <option>2013</option>
+            <div class="column">
+                <label></label>
+                <select v-if="summoner1Loaded || summoner2Loaded" v-model="currentYear" class="ui dropdown" id="currentYear">
+                    <option value="9">Season 2017</option>
+                    <option value="8">Pre-Season 2017</option>
+                    <option value="7">Season 2016</option>
+                    <option value="6">Pre-Season 2016</option>
+                    <option value="5">Season 2015</option>
+                    <option value="4">Pre-Season 2015</option>
+                    <option value="3">Season 2014</option>
+                    <option value="2">Pre-Season 2014</option>
+                    <option value="1">Season 3</option>
+                    <option value="0">Pre-Season 3</option>
                 </select>
             </div>
-            <div class="col-sm-3 summoner2-form-wrapper">
+            <div class="right floated column">
                 <div class="summoner-form">
-                    <h2>SUMMONER NAME: </h2>
+                    <h2>SUMMONER NAME2: </h2>
                     <input v-model="summoner2Id" placeholder="Summoner Name" v-on:keyup.enter="getInfo(2)"/>
                 </div>
-            </div>
-            <div class="col-sm-2 icon-wrapper">
                 <div v-if="summoner2Loaded" class="icon">
                     <img :src="summoner2ProfileIconUrl" />
                 </div>
@@ -39,9 +41,6 @@
             </ul>
         </div>
         <div class="row sub-tab" >
-            <ul class="nav nav-tabs" v-if="currentMenuItem == 'Summary'">
-                <li role="presentation" v-for="stat in summaryStatsSubMenuItems" v-if="loading == false"><a href="#" v-on:click="changeSubMenu(stat)">{{stat}}</a></li>
-            </ul>
             <ul class="nav nav-tabs" v-if="currentMenuItem == 'Ranked'">
                 <li role="presentation" v-for="item in rankedSubMenuItems"><a href="#" v-on:click="changeSubMenu(item)">{{item}}</a></li>
             </ul>
@@ -50,7 +49,7 @@
             </ul>
         </div>
         <div class="row main-content-wrapper" v-if="loading == false">
-            <div class="main-content row" v-if="currentMenuItem == 'Summary' && currentSubMenuItem != ''"><summarycontents></summarycontents></div>
+            <div class="main-content row" v-if="currentMenuItem == 'Summary'"><summarycontents></summarycontents></div>
             <div class="main-content row" v-if="currentMenuItem == 'Ranked' && currentSubMenuItem !=''"><rankedmatchlistview></rankedmatchlistview></div>
             <div class="main-content row" v-if="currentMenuItem == 'Champions'"><championstatsview></championstatsview></div>
             <div class="main-content row" v-if="currentMenuItem == 'Recent Games'"><recentgamesview></recentgamesview></div>
@@ -71,7 +70,7 @@
                 summoner1Id : "",
                 summoner2Id : "",
 
-                currentYear : 2017,
+                currentYear : 9,
 
                 mainMenuItems : [
                     'Summary',
@@ -96,8 +95,8 @@
             }
         },
         computed : {
-            summoner1ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.2.1/img/profileicon/" + this.summoner1.profileIconId + ".png"; },
-            summoner2ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.2.1/img/profileicon/" + this.summoner2.profileIconId + ".png"; },
+            summoner1ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.7.1/img/profileicon/" + this.summoner1.profileIconId + ".png"; },
+            summoner2ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.7.1/img/profileicon/" + this.summoner2.profileIconId + ".png"; },
 
             summaryStatsSubMenuItems : function() {
                 var tempMenuItems = [];
@@ -174,18 +173,24 @@
             assignSummonerSummaryData : function() {
                 store.commit('assignLoading', true);
                 if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
-                    this.findSummonerSummaryData(store.state.summoner1.summoner.id).then(
+                    this.findSummonerSummaryData(store.state.summoner1.summoner.accountId).then(
                         response => {
                             var tempSummaryData = JSON.parse(response.body);
-                            store.commit('assignSummoner1SummaryData', tempSummaryData.playerStatSummaries);
+                            tempSummaryData = {
+                                'championMastery': tempSummaryData.championMastery,
+                                'league': tempSummaryData.league,
+                                'masteries': tempSummaryData.masteries,
+                                'runes' : tempSummaryData.runes
+                            };
+                            store.commit('assignSummoner1SummaryData', tempSummaryData);
                             store.commit('assignLoading', false);
                         }
                     );
                 } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    this.findSummonerSummaryData(store.state.summoner2.summoner.id).then(
+                    this.findSummonerSummaryData(store.state.summoner2.summoner.accountId).then(
                         response => {
                             var tempSummaryData = JSON.parse(response.body);
-                            store.commit('assignSummoner2SummaryData', tempSummaryData.playerStatSummaries);
+                            store.commit('assignSummoner2SummaryData', tempSummaryData);
                             store.commit('assignLoading', false);
                         }
                     );
@@ -194,16 +199,28 @@
                     // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
                     var tempSummaryData1 = {};
                     var tempSummaryData2 = {};
-                    this.findSummonerSummaryData(store.state.summoner1.summoner.id).then(
+                    this.findSummonerSummaryData(store.state.summoner1.summoner.accountId).then(
                         response => {
                             var tempSummaryData = JSON.parse(response.body);
-                            tempSummaryData1 = tempSummaryData.playerStatSummaries;
-                            return this.findSummonerSummaryData(store.state.summoner2.summoner.id);
+                            tempSummaryData = {
+                                'championMastery': tempSummaryData.championMastery,
+                                'league': tempSummaryData.league,
+                                'masteries': tempSummaryData.masteries,
+                                'runes' : tempSummaryData.runes
+                            };
+                            tempSummaryData1 = tempSummaryData;
+                            return this.findSummonerSummaryData(store.state.summoner2.summoner.accountId);
                         }
                     ).then(
                         response => {
                             var tempSummaryData = JSON.parse(response.body);
-                            tempSummaryData2 = tempSummaryData.playerStatSummaries;
+                            tempSummaryData = {
+                                'championMastery': tempSummaryData.championMastery,
+                                'league': tempSummaryData.league,
+                                'masteries': tempSummaryData.masteries,
+                                'runes' : tempSummaryData.runes
+                            };
+                            tempSummaryData2 = tempSummaryData;
                             store.commit('assignSummoner1SummaryData', tempSummaryData1);
                             store.commit('assignSummoner2SummaryData', tempSummaryData2);
                             store.commit('assignLoading', false);
@@ -582,70 +599,5 @@
 </script>
 
 <style scoped>
-
-
-    .summoner2-form-wrapper {
-        text-align: right;
-    }
-
-    .summoner2-form-wrapper > input {
-        float: right;
-    }
-
-
-    .form-control {
-        margin-top: 60px;
-        background-color: transparent;
-        color: ghostwhite;
-    }
-
-    .main-tab, .sub-tab {
-        outline-style: solid;
-        outline-width: 1px;
-        outline-color: #2e3436;
-    }
-
-    .sub-tab {
-        display: none;
-    }
-
-    .main-tab > ul > * {
-        width: 20%;
-    }
-
-    .header-row {
-        margin-bottom: 20px;
-        margin-top: 15px;
-    }
-
-    .main-content > * {
-        color: ghostwhite;
-        text-align: center;
-    }
-
-    input {
-        background-color: #404040;
-        color: ghostwhite;
-        width: 65%;
-        border-width: 1px;
-
-        height: 34px;
-        text-align: center;
-    }
-
-    button.btn {
-        width: 33%;
-        float: right;
-    }
-
-    .well {
-        display: none;
-        margin-top: 10px;
-        color: #2e3436;
-    }
-
-    .icon-wrapper {
-        margin-top: 30px;
-    }
 
 </style>

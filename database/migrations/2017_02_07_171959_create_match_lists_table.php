@@ -16,7 +16,7 @@ class CreateMatchListsTable extends Migration
         Schema::create('match_lists', function (Blueprint $table) {
             $table->integer('summonerId');
             $table->string('season')->nullable();
-            $table->string('rankedQueue')->nullable();
+            $table->string('list_type')->nullable();
             $table->longText('matches');
             $table->timestamps();
         });

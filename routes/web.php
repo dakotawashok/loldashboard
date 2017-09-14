@@ -24,7 +24,7 @@ Route::get('/home', 'HomeController@index');
 
 Route::get('summoner/{id}', 'SummonerController@getSummoner');
 
-Route::get('summoner/{identifier}/{type}/data/{year}', 'SummonerController@getSummonerData');
+Route::get('summoner/{accountId}/{type}/data/{season}', 'SummonerController@getSummonerData');
 
 Route::get('summoner/{identifier}/matchlist', 'SummonerController@getMatchList');
 
