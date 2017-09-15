@@ -13,10 +13,6 @@
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
 
-    <!-- Semantic UI -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/semantic.min.css') }}">
-    <script src="{{ asset('js/semantic.min.js') }}"></script>
-
     <!-- Scripts -->
     <script>
         window.Laravel = {!! json_encode([
@@ -31,5 +27,10 @@
 
     <!-- Scripts -->
     <script src="/js/app.js"></script>
+
+    <!-- Semantic UI -->
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/semantic.min.css') }}">
+    <script src="https://code.jquery.com/jquery-2.1.4.min.js"></script>
+    <script src="{{ asset('js/semantic.min.js') }}"></script>
 </body>
 </html>

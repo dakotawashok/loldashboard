@@ -25,6 +25,12 @@ use riotapi;
 
 class SummonerController extends Controller
 {
+    public $api;
+
+    function __construct() {
+        $this->api = new riotapi('NA1');
+    }
+
     /**
      * Display the specified resource.
      *
@@ -60,6 +66,11 @@ class SummonerController extends Controller
 
             $summoner->save();
 
+            $this->assignMasteries($this->api, $summoner);
+            $this->assignRunes($this->api, $summoner);
+            $this->assignChampionMasteries($this->api, $summoner);
+            $this->assignLeagues($this->api, $summoner);
+
             $response = response()->json(json_encode($summoner));
 
             return $response;
@@ -67,217 +78,49 @@ class SummonerController extends Controller
 
     }
 
-    /**
-     * Display the statistics for a specified Summoner for the given year
-     *
-     * @param  string|int  $id
-     * @param  int  $season
-     * @return \Illuminate\Http\Response
-     */
-    public function getSummonerData($accountId, $type, $season) {
-        $api = new riotapi('NA1');
+    public function getMatchList(Request  $request, $summonerId) {
+        $matchlistType = $request->input('matchlistType');  // get the matchlisttype from the post request
+        $params = $request->input('params');                // get the params from the post request
+        parse_str($params, $parsedParams);                       // parse the request string into a usable array
+        $parsedParams['queue'] = str_getcsv($parsedParams['queue']);        // turn the csv string of queues into an array
+        $parsedParams['season'] = str_getcsv($parsedParams['season']);        // turn the csv string of queues into an array
 
-        $summoner = Summoner::where('accountId', $accountId)->firstOrFail();
-
-        /**
-         *  Summary data includes Runes, Masteries, champion masteries, and leagues?
-         */
-        if ($type == 'summary') {
-            $this->assignMasteries($api, $summoner);
-            $this->assignRunes($api, $summoner);
-            $this->assignChampionMasteries($api, $summoner);
-            $this->assignLeagues($api, $summoner);
-
-            $response = response()->json(json_encode($summoner));
-            return $response;
-        }
-    }
-
-    public function getMatchList($id, $season = null, $rankedQueue = null) {
         try {
-            if ($rankedQueue == null && $season == null) {
-                $matchList = MatchList::where('summonerId', $id)->firstOrFail();
-            } else if ($rankedQueue != null && $season == null) {
-                $matchList = MatchList::where('summonerId', $id)->where('rankedQueue', $rankedQueue)->firstOrFail();
-            } else if ($rankedQueue == null && $season != null) {
-                $matchList = MatchList::where('summonerId', $id)->where('season', $season)->firstOrFail();
+            $matchListAggregate = MatchList::where('summonerId',$summonerId)->get();
+            if (count($matchListAggregate) == 0) {
+                throw new ModelNotFoundException();
             } else {
-                $matchList = MatchList::where('summonerId', $id)->where('rankedQueue', $rankedQueue)->where('season', $season)->firstOrFail();
-            }
-
-            return response()->json($matchList->matches);
-
-        } catch (ModelNotFoundException $e) {
-            $api = new riotapi('na1');
-
-            if ($rankedQueue == null && $season == null) {
-                $matchlist = $api->matchlist()->matchlist($id);
-            } else if ($rankedQueue != null && $season == null) {
-                $matchlist = $api->matchlist()->matchlist($id, $rankedQueue);
-            } else if ($rankedQueue == null && $season != null) {
-                // temporary work around for bug with RIOT Api where seasons marked SEASON2017 or PRESEASON2017 don't work
-                if ($season == "SEASON2017" || $season == "PRESEASON2017") {
-                    $matchlist = $api->matchlist()->matchlist($id, null, null, null, null, null, $beginTime = 1481108400000, $endTime = null);
-                    $i = 0;
-                    foreach ($matchlist as $match) {
-                        if ($match->season != $season) {
-                            unset($matchlist[$i]);
-                        }
-                        $i++;
+                $found = false;
+                // go through all the matchlists found, then for each matchlist, compare it to the params we were sent
+                // if one of the matchlists matches the params sent in, return that, else we have to throw an exception
+                foreach($matchListAggregate as $matchListEntry) {
+                    // if it's the same season, same list type, and less than a day old
+                    if ($matchListEntry->season == json_encode($parsedParams['season']) &&
+                        $matchListEntry->list_type == $matchlistType &&
+                        strtotime($matchListEntry->updated_at) > (strtotime('-1 day'))) {
+                            $matchesObject = $matchListEntry;
+                            $found = true;
                     }
-                } else {
-                    $matchlist = $api->matchlist()->matchlist($id, null, $season);
                 }
-            } else {
-                $matchlist = $api->matchlist()->matchlist($id, $rankedQueue, $season);
-            }
-
-            foreach($matchlist as $match) {
-                $tempMatch = new Match;
-                $tempMatch->region = $match->region;
-                $tempMatch->platformId = $match->platformId;
-                $tempMatch->matchId = strval($match->matchId);
-                $tempMatch->champion = $match->champion;
-                $tempMatch->queue = $match->queue;
-                $tempMatch->timestamp = strval($match->timestamp);
-                $tempMatch->lane = $match->lane;
-                $tempMatch->role = $match->role;
-                $tempMatch->season = $match->season;
-                $tempMatch->summonerId = $id;
-
-                $tempMatch->save();
-            }
-
-            $matchlist = $matchlist->raw();
-
-            $tempMatchList = new MatchList;
-            $tempMatchList->summonerId = $id;
-            $tempMatchList->season = $season;
-            $tempMatchList->rankedQueue = $rankedQueue;
-
-            $tempMatchList->matches = json_encode($matchlist);
-            $tempMatchList->save();
-
-            $returnMatchList = json_encode($matchlist);
-
-            return response()->json($returnMatchList);
-        }
-    }
-
-    public function getMatchData($id, $matchId) {
-        try {
-            $match = Match::where('matchId', $matchId)->where('summonerId', $id)->firstOrFail();
-            if (is_null($match->data)) {
-                throw new InvalidArgumentException;
-            }
-
-            return response()->json($match->data);
-        } catch(ModelNotFoundException $e) {
-            return response($e);
-
-        } catch (InvalidArgumentException $e) {
-            $api = new riotapi('na1');
-
-            $match = $api->match()->match($matchId)->raw();
-
-            $tempMatch = Match::where('matchId', $matchId)->where('summonerId', $id)->firstOrFail();
-            $tempMatch->data = json_encode($match);
-            $tempMatch->save();
-
-            return response()->json(json_encode($match));
-        }
-    }
-
-    public function getRecentGames($id) {
-        try {
-            $recentGamesList = RecentGamesList::where('summonerId', $id)->firstOrFail();
-            $now = time();
-            if ($recentGamesList->updated_at->timestamp < ($now - (60 * 60))) {
-                throw new InvalidArgumentException;
-            } else {
-                return response()->json($recentGamesList->games);
+                // throw the exception since we couldn't find a matchlist that matches!
+                if (!$found) {
+                    throw new ModelNotFoundException();
+                }
             }
         } catch (ModelNotFoundException $e) {
-            $api = new riotapi('na1');
-
-            $recentGamesList = $api->game()->recent($id);
-
-            foreach($recentGamesList->games as $recentGame) {
-                $recentGame = $recentGame->raw();
-
-                $tempRecentGame = new RecentGame;
-                $tempRecentGame->championId = $recentGame['championId'];
-                $tempRecentGame->summonerId = strval($id);
-                $tempRecentGame->gameId = strval($recentGame['gameId']);
-                $tempRecentGame->fellowPlayers = json_encode($recentGame['fellowPlayers']);
-                $tempRecentGame->spell1 = $recentGame['spell1'];
-                $tempRecentGame->spell2 = $recentGame['spell2'];
-                $tempRecentGame->stats = json_encode($recentGame['stats']);
-                $tempRecentGame->mapId = $recentGame['mapId'];
-                $tempRecentGame->invalid = $recentGame['invalid'];
-                $tempRecentGame->gameMode = $recentGame['gameMode'];
-                $tempRecentGame->level = $recentGame['level'];
-                $tempRecentGame->ipEarned = $recentGame['ipEarned'];
-                $tempRecentGame->gameType = $recentGame['gameType'];
-                $tempRecentGame->subType = $recentGame['subType'];
-                $tempRecentGame->teamId = $recentGame['teamId'];
-                $tempRecentGame->createDate = strval($recentGame['createDate']);
-
-                $tempRecentGame->save();
-            }
-
-            $recentGamesList = $recentGamesList->raw();
-
-            $tempGamesList = new RecentGamesList;
-            $tempGamesList->games = json_encode($recentGamesList['games']);
-            $tempGamesList->summonerId = $id;
-            $tempGamesList->save();
-
-            return response()->json(json_encode($recentGamesList['games']));
-        } catch (InvalidArgumentException $e) {
-            // This branch is called when there is a recent games list already in the database, but it more than a day old.
-            // It will go through the new gameList from the api, check to see if each recentgame is in the database, and if it's
-            // not, put it there. Then it will update the recentgameslist in our database and return a response
-            $api = new riotapi('na1');
-
-            $apiGamesList = $api->game()->recent($id);
-            foreach($apiGamesList->games as $recentGame) {
-                try {
-                     $tempRecentGame = RecentGame::where('summonerId', strval($id))->where('gameId', strval($recentGame->gameId))->firstOrFail();
-                } catch (ModelNotFoundException $e) {
-                    $recentGame = $recentGame->raw();
-
-                    $tempRecentGame = new RecentGame;
-                    $tempRecentGame->championId = $recentGame['championId'];
-                    $tempRecentGame->summonerId = strval($id);
-                    $tempRecentGame->gameId = strval($recentGame['gameId']);
-                    $tempRecentGame->fellowPlayers = json_encode($recentGame['fellowPlayers']);
-                    $tempRecentGame->spell1 = $recentGame['spell1'];
-                    $tempRecentGame->spell2 = $recentGame['spell2'];
-                    $tempRecentGame->stats = json_encode($recentGame['stats']);
-                    $tempRecentGame->mapId = $recentGame['mapId'];
-                    $tempRecentGame->invalid = $recentGame['invalid'];
-                    $tempRecentGame->gameMode = $recentGame['gameMode'];
-                    $tempRecentGame->level = $recentGame['level'];
-                    $tempRecentGame->ipEarned = $recentGame['ipEarned'];
-                    $tempRecentGame->gameType = $recentGame['gameType'];
-                    $tempRecentGame->subType = $recentGame['subType'];
-                    $tempRecentGame->teamId = $recentGame['teamId'];
-                    $tempRecentGame->createDate = strval($recentGame['createDate']);
-
-                    $tempRecentGame->save();
-                }
-            }
-
-            $apiGamesList = $apiGamesList->raw();
-
-            $recentGamesList = RecentGamesList::where('summonerId', $id)->firstOrFail();
-            $recentGamesList->games = json_encode($apiGamesList['games']);
-            $recentGamesList->save();
-
-            return response()->json(json_encode($apiGamesList['games']));
+            $matches = $this->api->getMatchList($summonerId, $parsedParams);
+            $matchesObject = new MatchList;
+            $matchesObject->summonerId = $summonerId;
+            $matchesObject->season = json_encode($parsedParams['season']);
+            $matchesObject->list_type = $matchlistType;
+            $matchesObject->matches = json_encode($matches['matches']);
+            $matchesObject->save();
         }
+
+        $response = response()->json(json_encode($matchesObject));
+        return $response;
     }
+
 
     private function saveMatchListMatches(&$api, $matches) {
         // Now we have to go through each part of the matchlist and see if the match is in our database, if it isn't go find it...
@@ -361,7 +204,6 @@ class SummonerController extends Controller
     }
 
     private function createNormalMatchData($summonerId, $params = null) {
-        $api = new riotapi('na1');
         // if the summoner isn't in here, maybe we should build some stats for them?
         // First lets get a list of regular matches I guess then get a list of ranked matches?
         if (isset($params)) {
@@ -384,13 +226,13 @@ class SummonerController extends Controller
 
         try {
             $matchListFromDatabase = MatchList::where('summonerId', $summonerId)->where('list_type', 'normal')->firstOrFail();
-            if (strtotime($matchListFromDatabase->updated_at) < (strtotime('now') - 86400) || $overrideDateLimit) {
-                $matches = $api->getMatchList($summonerId, $normalParams);
+            if (strtotime($matchListFromDatabase->updated_at) < (strtotime('now') - 86400)) {
+                $matches = $this->api->getMatchList($summonerId, $normalParams);
                 $matchListFromDatabase->matches = json_encode($matches['matches']);
                 $matchListFromDatabase->save();
             }
         } catch (ModelNotFoundException $e) {
-            $matches = $api->getMatchList($summonerId, $normalParams);
+            $matches = $this->api->getMatchList($summonerId, $normalParams);
             $matchesObject = new MatchList;
             $matchesObject->summonerId = $summonerId;
             $matchesObject->season = 9;
@@ -398,12 +240,11 @@ class SummonerController extends Controller
             $matchesObject->matches = json_encode($matches['matches']);
             $matchesObject->save();
 
-            $this->saveMatchListMatches($api, $matches);
+            $this->saveMatchListMatches($this->api, $matches);
         }
     }
 
     private function createRankedMatchData($summonerId, $params = null) {
-        $api = new riotapi('na1');
         if (isset($params)) {
             $rankedParams = [
                 'queue' => (isset($params['queue']) ? $params['queue'] : ''),
@@ -421,7 +262,7 @@ class SummonerController extends Controller
             ];
         }
 
-        $matches = $api->getMatchList($summonerId, $rankedParams);
+        $matches = $this->api->getMatchList($summonerId, $rankedParams);
         $matchesObject = new MatchList;
         $matchesObject->summonerId = $summonerId;
         $matchesObject->season = 9;
@@ -429,7 +270,7 @@ class SummonerController extends Controller
         $matchesObject->matches = json_encode($matches['matches']);
         $matchesObject->save();
 
-        $this->saveMatchListMatches($api, $matches);
+        $this->saveMatchListMatches($this->api, $matches);
     }
 
     private function assignMasteries(&$api, &$summoner) {

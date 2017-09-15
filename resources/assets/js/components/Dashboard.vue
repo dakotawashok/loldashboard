@@ -1,67 +1,77 @@
 <template>
     <div class="ui grid">
-        <div class="three column row">
-            <div class="left floated column">
-                <div class="icon" v-if="summoner1Loaded">
-                    <img :src="summoner1ProfileIconUrl" />
+        <div class="two column row" id="main-grid-container">
+            <div class="left floated column summoner-column">
+                <div class="right-floated-icon">
+                    <img v-if="summoner1Loaded" :src="summoner1ProfileIconUrl" />
                 </div>
-                <div class="summoner-form">
+                <div class="summoner-form" style="float: right; text-align: right;">
                     <h2>SUMMONER NAME1: </h2>
                     <input v-model="summoner1Id" placeholder="Summoner Name" v-on:keyup.enter="getInfo(1)"/>
                 </div>
             </div>
-            <div class="column">
-                <label></label>
-                <select v-if="summoner1Loaded || summoner2Loaded" v-model="currentYear" class="ui dropdown" id="currentYear">
-                    <option value="9">Season 2017</option>
-                    <option value="8">Pre-Season 2017</option>
-                    <option value="7">Season 2016</option>
-                    <option value="6">Pre-Season 2016</option>
-                    <option value="5">Season 2015</option>
-                    <option value="4">Pre-Season 2015</option>
-                    <option value="3">Season 2014</option>
-                    <option value="2">Pre-Season 2014</option>
-                    <option value="1">Season 3</option>
-                    <option value="0">Pre-Season 3</option>
-                </select>
-            </div>
-            <div class="right floated column">
-                <div class="summoner-form">
-                    <h2>SUMMONER NAME2: </h2>
-                    <input v-model="summoner2Id" placeholder="Summoner Name" v-on:keyup.enter="getInfo(2)"/>
+            <div class="right floated column summoner-column">
+                <div class="ui two column grid">
+                    <div class="three wide column">
+                        <div class="left-floated-icon">
+                            <img class="ui fluid centered image" v-if="summoner2Loaded" :src="summoner2ProfileIconUrl" />
+                        </div>
+                    </div>
+                    <div class="thirteen wide column">
+                        <div class="ui raised segment" :class="{'loading': loading}">
+                            <h2>SUMMONER NAME2: </h2>
+                            <input v-model="summoner2Id" placeholder="Summoner Name" v-on:keyup.enter="getInfo(2)"/>
+                            <div v-if="summoner2Loaded" class="season-container">
+                                <span>Season 6: </span>
+                                <span>Season 5:  </span>
+                                <span>Season 4: </span>
+                            </div>
+                            <div v-if="summoner2Loaded" class="ui grid ranked-info-container">
+                                <div class="two column row">
+                                    <div class="four wide column">
+                                        <img class="ui centered small image" v-if="summoner2Loaded" :src="summoner2ProfileIconUrl" />
+                                    </div>
+                                    <div class="twelve wide column">
+                                        <p>Current Rank</p>
+                                        <p>LP / W / L</p>
+                                        <p>Win Ratio</p>
+                                        <p>League Name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="three wide column" v-if="summoner2Loaded">
+
+                    </div>
+                    <div class="thirteen wide column" v-if="summoner2Loaded && !loading">
+                        <div class="ui two item top attached menu">
+                            <a class="active item">Ranked Games</a>
+                            <a class="item">Normal Games</a>
+                        </div>
+                        <div class="ui bottom attached segments" >
+                            <matchcard v-for="match in summoner2MatchList" :match="match"></matchcard>
+                        </div>
+                    </div>
                 </div>
-                <div v-if="summoner2Loaded" class="icon">
-                    <img :src="summoner2ProfileIconUrl" />
-                </div>
             </div>
-        </div>
-        <div class="row main-tab">
-            <ul class="nav nav-tabs" v-if="summoner1Loaded || summoner2Loaded">
-                <li role="presentation" v-for="menuItem in mainMenuItems"><a href="#" v-on:click="changeMenu(menuItem)">{{menuItem}}</a></li>
-            </ul>
-        </div>
-        <div class="row sub-tab" >
-            <ul class="nav nav-tabs" v-if="currentMenuItem == 'Ranked'">
-                <li role="presentation" v-for="item in rankedSubMenuItems"><a href="#" v-on:click="changeSubMenu(item)">{{item}}</a></li>
-            </ul>
-            <ul class="nav nav-tabs" v-if="currentMenuItem == 'Stats'">
-                <li role="presentation" v-for="item in statsSubMenuItems"><a href="#" v-on:click="changeSubMenu(item)">{{item}}</a></li>
-            </ul>
-        </div>
-        <div class="row main-content-wrapper" v-if="loading == false">
-            <div class="main-content row" v-if="currentMenuItem == 'Summary'"><summarycontents></summarycontents></div>
-            <div class="main-content row" v-if="currentMenuItem == 'Ranked' && currentSubMenuItem !=''"><rankedmatchlistview></rankedmatchlistview></div>
-            <div class="main-content row" v-if="currentMenuItem == 'Champions'"><championstatsview></championstatsview></div>
-            <div class="main-content row" v-if="currentMenuItem == 'Recent Games'"><recentgamesview></recentgamesview></div>
-            <div class="main-content row" v-if="currentMenuItem == 'Stats' && currentSubMenuItem != ''"><statsview></statsview></div>
         </div>
     </div>
 </template>
 
 <script>
     import store from '../store.js';
+    import mixin from '../mixin.js';
+
+    import MatchCard from '../components/MatchCard.vue';
 
     export default {
+        mixins: [
+            mixin
+        ],
+        components: [
+            MatchCard,
+        ],
         mounted() {
             this.setStaticData();
         },
@@ -72,239 +82,71 @@
 
                 currentYear : 9,
 
-                mainMenuItems : [
-                    'Summary',
-                    'Ranked',
-                    'Champions',
-                    'Recent Games',
-                    'Stats',
-                ],
-                rankedSubMenuItems : [
-                    'SEASON2017',
-                    'PRESEASON2017',
-                    'SEASON2016',
-                    'PRESEASON2016',
-                    'SEASON2015',
-                ],
-                statsSubMenuItems : [
-                    'Current Year Ranked Stats',
-                    'Normal Game Stats',
-                    'Stats with Friends',
-
-                ],
+                currentlyViewedMatchList : 'ranked'
             }
         },
         computed : {
-            summoner1ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.7.1/img/profileicon/" + this.summoner1.profileIconId + ".png"; },
-            summoner2ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.7.1/img/profileicon/" + this.summoner2.profileIconId + ".png"; },
-
-            summaryStatsSubMenuItems : function() {
-                var tempMenuItems = [];
-                if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
-                    for (var stat in store.state.summoner1.summaryData) {
-                        tempMenuItems.push(store.state.summoner1.summaryData[stat].playerStatSummaryType);
-                    }
-                    return tempMenuItems;
-                } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    for (var stat in store.state.summoner2.summaryData) {
-                        tempMenuItems.push(store.state.summoner2.summaryData[stat].playerStatSummaryType);
-                    }
-                    return tempMenuItems;
-                } else {
-                    for (var stat in store.state.summoner1.summaryData) {
-                        tempMenuItems.push(store.state.summoner1.summaryData[stat].playerStatSummaryType);
-                    }
-                    for (var stat in store.state.summoner2.summaryData) {
-                        var found = false;
-                        for (var tempMenuItem in tempMenuItems) {
-                            if (store.state.summoner2.summaryData[stat].playerStatSummaryType == tempMenuItems[tempMenuItem]) {
-                                found = true;
-                            }
-                        }
-                        if (!found) {
-                            tempMenuItems.push(store.state.summoner2.summaryData[stat].playerStatSummaryType);
-                        }
-                    }
-                }
-                tempMenuItems.sort(function(a, b) {
-                    var itemA = a.toUpperCase();
-                    var itemB = b.toUpperCase();
-                    if (itemA < itemB) {
-                        return -1;
-                    } else {
-                        return 1;
-                    }
-                });
-                return tempMenuItems;
-            },
+            summoner1ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.7.1/img/profileicon/" + this.summoner1.summoner.profileIconId + ".png"; },
+            summoner2ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.7.1/img/profileicon/" + this.summoner2.summoner.profileIconId + ".png"; },
 
             staticInfo : function() { return store.state.staticInfo; },
             staticChampions : function() { return store.state.staticInfo.champions; },
 
-            summoner1 : function() { return store.state.summoner1.summoner; },
-            summoner2 : function() { return store.state.summoner2.summoner; },
+            summoner1 : function() { return store.state.summoner1; },
+            summoner2 : function() { return store.state.summoner2; },
 
             summoner1Loaded : function() { return store.state.summoner1.loaded; },
             summoner2Loaded : function() { return store.state.summoner2.loaded; },
 
-            currentMenuItem : function() { return store.state.currentMenuItem; },
-            currentSubMenuItem : function() { return store.state.currentSubMenuItem; },
+            summoner2MatchList : function() {
+                if (this.currentlyViewedMatchList === 'ranked') {
+                    return store.state.summoner2.rankedMatchList.matches;
+                } else {
+                    return store.state.summoner2.normalMatchList.matches;
+                }
+            },
 
             loading : function() { return store.state.loading; },
         },
         methods : {
             findSummoner : function(summonerNumber) {
                 if (summonerNumber == "1") {
-                    store.commit('assignSummoner1Loaded', false);
+                    store.commit('assignSummoner1Loaded', true);
                     return this.$http.get('/summoner/' + this.summoner1Id);
                 } else {
-                    store.commit('assignSummoner2Loaded', false);
+                    store.commit('assignSummoner2Loaded', true);
                     return this.$http.get('/summoner/' + this.summoner2Id);
                 }
             },
-            findSummonerSummaryData : function(identifier) { return this.$http.get('/summoner/' + identifier + '/summary/data/' + this.currentYear); },
-            findSummonerRankedData : function(identifier) { return this.$http.get('/summoner/' + identifier + '/ranked/data/' + this.currentYear); },
-            findRecentGames : function(id) { return this.$http.get('summoner/' + id + '/recentgames'); },
-            findMatchList : function(identifier, season) { return this.$http.get('/summoner/' + identifier + '/matchlist/' + season); },
+            findMatchList : function(identifier, matchlistType, parameters) {
+                var body = {'matchlistType': matchlistType, 'params' : parameters};
+                var headers = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
+                return this.$http.post('/summoner/' + identifier + '/matchlist', body, {headers: headers});
+            },
 
-            // if only the first summoner is loaded, load the data for just the first summoner
-            // if only the second summoner is loaded, load the data for just the second summoner
-            // if both summoners are loaded, load the data for both of the summoners
-            assignSummonerSummaryData : function() {
-                store.commit('assignLoading', true);
-                if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
-                    this.findSummonerSummaryData(store.state.summoner1.summoner.accountId).then(
-                        response => {
-                            var tempSummaryData = JSON.parse(response.body);
-                            tempSummaryData = {
-                                'championMastery': tempSummaryData.championMastery,
-                                'league': tempSummaryData.league,
-                                'masteries': tempSummaryData.masteries,
-                                'runes' : tempSummaryData.runes
-                            };
-                            store.commit('assignSummoner1SummaryData', tempSummaryData);
-                            store.commit('assignLoading', false);
-                        }
-                    );
-                } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    this.findSummonerSummaryData(store.state.summoner2.summoner.accountId).then(
-                        response => {
-                            var tempSummaryData = JSON.parse(response.body);
-                            store.commit('assignSummoner2SummaryData', tempSummaryData);
-                            store.commit('assignLoading', false);
-                        }
-                    );
-                } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    // I make temporary variables like this so that I can commit both of them at the same time which fixes
-                    // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
-                    var tempSummaryData1 = {};
-                    var tempSummaryData2 = {};
-                    this.findSummonerSummaryData(store.state.summoner1.summoner.accountId).then(
-                        response => {
-                            var tempSummaryData = JSON.parse(response.body);
-                            tempSummaryData = {
-                                'championMastery': tempSummaryData.championMastery,
-                                'league': tempSummaryData.league,
-                                'masteries': tempSummaryData.masteries,
-                                'runes' : tempSummaryData.runes
-                            };
-                            tempSummaryData1 = tempSummaryData;
-                            return this.findSummonerSummaryData(store.state.summoner2.summoner.accountId);
-                        }
-                    ).then(
-                        response => {
-                            var tempSummaryData = JSON.parse(response.body);
-                            tempSummaryData = {
-                                'championMastery': tempSummaryData.championMastery,
-                                'league': tempSummaryData.league,
-                                'masteries': tempSummaryData.masteries,
-                                'runes' : tempSummaryData.runes
-                            };
-                            tempSummaryData2 = tempSummaryData;
-                            store.commit('assignSummoner1SummaryData', tempSummaryData1);
-                            store.commit('assignSummoner2SummaryData', tempSummaryData2);
-                            store.commit('assignLoading', false);
-                        }
-                    ).catch(
-                        response => {
-                            console.log(response);
-                            store.commit('assignLoading', false);
-                        }
-                    );
-                }
-            },
-            assignChampionData : function() {
-                store.commit('assignLoading', true);
-                if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
-                    this.findSummonerRankedData(store.state.summoner1.summoner.id).then(
-                        response => {
-                            var tempSummonerRankedData = JSON.parse(response.body);
-                            store.commit('assignSummoner1RankedData', tempSummonerRankedData);
-                            store.commit('assignLoading', false);
-                        }
-                    ).catch(
-                        response => {
-                            console.log("Error in Ranked Champions Data!");
-                            console.log(response);
-                            store.commit('assignLoading', false);
-                        }
-                    )
-                } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    this.findSummonerRankedData(store.state.summoner2.summoner.id).then(
-                        response => {
-                            var tempSummonerRankedData = JSON.parse(response.body);
-                            store.commit('assignSummoner2RankedData', tempSummonerRankedData);
-                            store.commit('assignLoading', false);
-                        }
-                    ).catch(
-                        response => {
-                            console.log("Error in Ranked Champions Data!");
-                            console.log(response);
-                            store.commit('assignLoading', false);
-                        }
-                    )
-                } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    // I make temporary variables like this so that I can commit both of them at the same time which fixes
-                    // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
-                    var tempRankedChampionData1 = {};
-                    var tempRankedChampionData2 = {};
-                    this.findSummonerRankedData(store.state.summoner1.summoner.id).then(
-                        response => {
-                            tempRankedChampionData1 = JSON.parse(response.body);
-                            return this.findSummonerRankedData(store.state.summoner2.summoner.id);
-                        }
-                    ).then(
-                        response => {
-                            tempRankedChampionData2 = JSON.parse(response.body);
-                            store.commit('assignSummoner1RankedData', tempRankedChampionData1);
-                            store.commit('assignSummoner2RankedData', tempRankedChampionData2);
-                            store.commit('assignLoading', false);
-                        }
-                    ).catch(
-                        response => {
-                            console.log("Error in Ranked Champions Data!");
-                            console.log(response);
-                            store.commit('assignLoading', false);
-                        }
-                    )
-                }
-            },
+            // assignRankedMatchList()
+            //      gets the ranked matchlist, parses it, then puts it into the stored object
             assignRankedMatchList : function() {
-                store.commit('assignLoading', true);
+                // created the ranked parameters needed by the back-end
+                var tempParams = {'queue' : [410, 420, 440, 6, 41, 42], 'season' : [9], 'endIndex' : 20};
+                var params = [];
+                for (var key in tempParams) {params.push(key+'='+encodeURIComponent(tempParams[key]));}
+                params = params.join('&');
+
                 if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
-                    this.findMatchList(store.state.summoner1.summoner.id, store.state.currentSubMenuItem).then(
+                    this.findMatchList(store.state.summoner1.summoner.accountId, 'ranked', params).then(
                         response => {
                             var tempRankedMatchList = JSON.parse(response.body);
+                            tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
                             store.commit('assignSummoner1RankedMatchList', tempRankedMatchList);
-                            store.commit('assignLoading', false);
                         }
                     );
                 } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    this.findMatchList(store.state.summoner2.summoner.id, store.state.currentSubMenuItem).then(
+                    this.findMatchList(store.state.summoner2.summoner.accountId, 'ranked', params).then(
                         response => {
                             var tempRankedMatchList = JSON.parse(response.body);
+                            tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
                             store.commit('assignSummoner2RankedMatchList', tempRankedMatchList);
-                            store.commit('assignLoading', false);
                         }
                     );
                 } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
@@ -312,191 +154,51 @@
                     // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
                     var tempRankedMatchList1 = {};
                     var tempRankedMatchList2 = {};
-                    this.findMatchList(store.state.summoner1.summoner.id, store.state.currentSubMenuItem).then(
-                        response => {
-                            tempRankedMatchList1 = JSON.parse(response.body);
-                            return this.findMatchList(store.state.summoner2.summoner.id, store.state.currentSubMenuItem);
-                        }
-                    ).then(
-                        response => {
-                            tempRankedMatchList2 = JSON.parse(response.body);
-                            store.commit('assignSummoner1RankedMatchList', tempRankedMatchList1);
-                            store.commit('assignSummoner2RankedMatchList', tempRankedMatchList2);
-                            store.commit('assignLoading', false);
-                        }
-                    ).catch(
-                        response => {
-                            console.log(response);
-                            store.commit('assignLoading', false);
-                        }
-                    );
-                }
-            },
-            assignRecentGames : function() {
-                store.commit('assignLoading', true);
-                if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
-                    this.findRecentGames(store.state.summoner1.summoner.id).then(
-                        response => {
-                            var tempSummonerRecentGames = JSON.parse(response.body);
-                            store.commit('assignSummoner1RecentGameList', tempSummonerRecentGames);
-                            store.commit('assignLoading', false);
+                    this.findMatchList(this.summoner1.summoner.accountId, 'ranked', params).then(response => {
+                        var tempRankedMatchList = JSON.parse(response.body);
+                        tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
+                        tempRankedMatchList1 = tempRankedMatchList;
+                        return this.findMatchList(this.summoner2.summoner.accountId, 'ranked', params)
+                    }).then(resp => {
+                        var tempRankedMatchList = JSON.parse(response.body);
+                        tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
+                        tempRankedMatchList2 = tempRankedMatchList;
 
-                        }
-                    ).catch(
-                        response => {
-                            console.log("Error in Recent Games Data!");
-                            console.log(response);
-                            store.commit('assignLoading', false);
-
-                        }
-                    )
-                } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    this.findRecentGames(store.state.summoner2.summoner.id).then(
-                        response => {
-                            var tempSummonerRecentGames = JSON.parse(response.body);
-                            store.commit('assignSummoner2RecentGameList', tempSummonerRecentGames);
-                            store.commit('assignLoading', false);
-
-                        }
-                    ).catch(
-                        response => {
-                            console.log("Error in Recent Games Data!");
-                            console.log(response);
-                            store.commit('assignLoading', false);
-
-                        }
-                    )
-                } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    // I make temporary variables like this so that I can commit both of them at the same time which fixes
-                    // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
-                    var tempRecentGames1 = {};
-                    var tempRecentGames2 = {};
-                    this.findRecentGames(store.state.summoner1.summoner.id).then(
-                        response => {
-                            tempRecentGames1 = JSON.parse(response.body);
-                            return this.findRecentGames(store.state.summoner2.summoner.id);
-                        }
-                    ).then(
-                        response => {
-                            tempRecentGames2 = JSON.parse(response.body);
-                            store.commit('assignSummoner1RecentGameList', tempRecentGames1);
-                            store.commit('assignSummoner2RecentGameList', tempRecentGames2);
-                            store.commit('assignLoading', false);
-
-                            console.log("Done loading after shit was cached or whatever");
-                        }
-                    ).catch(
-                        response => {
-                            console.log("Error in Ranked Champions Data!");
-                            console.log(response);
-                            store.commit('assignLoading', false);
-
-                        }
-                    )
-                }
-            },
-            assignAverageStats : function() {
-                store.commit('assignLoading', true);
-                if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
-                    this.findSummonerRankedData(store.state.summoner1.summoner.id).then(
-                        response => {
-                            var tempSummonerRankedData = JSON.parse(response.body);
-                            store.commit('assignSummoner1RankedData', tempSummonerRankedData);
-                            var tempAverageData = store.state.summoner1.rankedData.champions[store.state.summoner1.rankedData.champions.length - 1];
-                            store.commit('assignSummoner1AverageData', tempAverageData.stats);
-                            store.commit('assignLoading', false);
-                        }
-                    ).catch(
-                        response => {
-                            console.log("Error in Ranked Champions Data!");
-                            console.log(response);
-                            store.commit('assignLoading', false);
-                        }
-                    )
-                } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    this.findSummonerRankedData(store.state.summoner2.summoner.id).then(
-                        response => {
-                            var tempSummonerRankedData = JSON.parse(response.body);
-                            store.commit('assignSummoner2RankedData', tempSummonerRankedData);
-                            tempAverageData = store.state.summoner2.rankedData.champions[store.state.summoner2.rankedData.champions.length - 1];
-                            store.commit('assignSummoner2AverageData', tempAverageData.stats);
-                            store.commit('assignLoading', false);
-                        }
-                    ).catch(
-                        response => {
-                            console.log("Error in Ranked Champions Data!");
-                            console.log(response);
-                            store.commit('assignLoading', false);
-                        }
-                    )
-                } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    // I make temporary variables like this so that I can commit both of them at the same time which fixes
-                    // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
-                    var tempRankedChampionData1 = {};
-                    var tempRankedChampionData2 = {};
-                    this.findSummonerRankedData(store.state.summoner1.summoner.id).then(
-                        response => {
-                            tempRankedChampionData1 = JSON.parse(response.body);
-                            return this.findSummonerRankedData(store.state.summoner2.summoner.id);
-                        }
-                    ).then(
-                        response => {
-                            tempRankedChampionData2 = JSON.parse(response.body);
-                            store.commit('assignSummoner1RankedData', tempRankedChampionData1);
-                            store.commit('assignSummoner2RankedData', tempRankedChampionData2);
-
-                            var tempChamps = store.state.summoner1.rankedData.champions;
-                            for (var statEntry in tempChamps) {
-                                if (tempChamps[statEntry].id == 0) {
-                                    store.commit('assignSummoner1AverageData', tempChamps[statEntry].stats);
-                                    break;
-                                }
-                            }
-                            tempChamps = store.state.summoner2.rankedData.champions;
-                            for (var statEntry in tempChamps) {
-                                if (tempChamps[statEntry].id == 0) {
-                                    store.commit('assignSummoner2AverageData', tempChamps[statEntry].stats);
-                                    break;
-                                }
-                            }
-                            store.commit('assignLoading', false);
-                        }
-                    ).catch(
-                        response => {
-                            console.log("Error in Ranked Champions Data!");
-                            console.log(response);
-                            store.commit('assignLoading', false);
-                        }
-                    )
+                        store.commit('assignSummoner1RankedMatchList', tempRankedMatchList1);
+                        store.commit('assignSummoner2RankedMatchList', tempRankedMatchList2);
+                    });
                 }
             },
 
-            staticChampion : function(id) {
-                for (var champion in store.state.staticInfo.champions) {
-                    if (store.state.staticInfo.champions[champion].key == id) {
-                        return store.state.staticInfo.champions[champion].id;
-                    }
-                }
-            },
-
+            // This getInfo method is called when the user loads up a summoner.
+            /*
+             It:
+                Finds the summoner data from the database/api including mastery, masteries, leagues, and runes
+                Finds the ranked matchlist for specified user from the database/api
+                Finds the normal matchlist for specified user from the database/api
+             */
             getInfo : function(summonerNumber) {
-                this.findSummoner(summonerNumber).then(
-                    response => {
-                        if (summonerNumber == "1") {
-                            store.commit('assignSummoner1Summoner', JSON.parse(response.body));
-                            store.commit('assignSummoner1Loaded', true);
-                        } else {
-                            store.commit('assignSummoner2Summoner', JSON.parse(response.body));
-                            store.commit('assignSummoner2Loaded', true);
-                        }
+                store.commit('assignLoading', true);
+                this.findSummoner(summonerNumber).then(response => {
+                    if (summonerNumber == "1") {
+                        store.commit('assignSummoner1Summoner', JSON.parse(response.body));
+                        store.commit('assignSummoner1Loaded', true);
+                    } else {
+                        store.commit('assignSummoner2Summoner', JSON.parse(response.body));
+                        store.commit('assignSummoner2Loaded', true);
                     }
-                ).catch(
+                    return this.assignRankedMatchList();
+                }).then(response => {
+                    store.commit('assignLoading', false);
+                }).catch(
                     response => {
                         console.log(response)
                     }
                 );
+            },
 
-                $('.summoner-info').show();
+            addChampionInfoToMatchList : function(matchList) {
+
             },
 
             setStaticData : function() {
@@ -520,84 +222,34 @@
                     }
                 );
             },
-
-            // ChangeMenu :
-            // Changes the states current menu, and sets the current sub menu item to "" in case you were already looking at a view
-            // Then, depending on the menu that was selected, it will load data that the sub menu might need
-            changeMenu : function(menuItem) {
-                store.commit('assignCurrentMenuItem', menuItem);
-                store.commit('assignCurrentSubMenuItem', "");
-                switch (menuItem) {
-                    case "Summary" :
-                        this.assignSummonerSummaryData();
-                        break;
-                    case "Ranked" :
-                        break;
-                    case "Champions" :
-                        this.assignChampionData();
-                        break;
-                    case "Recent Games" :
-                        this.assignRecentGames();
-                        break;
-                    case "Stats" :
-                        this.assignAverageStats();
-                        break;
+            staticChampion : function(id) {
+                for (var champion in store.state.staticInfo.champions) {
+                    if (store.state.staticInfo.champions[champion].key == id) {
+                        return store.state.staticInfo.champions[champion];
+                    }
                 }
-                $('.sub-tab').show();
             },
-            changeSubMenu : function(menuItem) {
-                // Change the sub menu in the current state, then, depending on what the menu item is, load the data for that item
-                this.currentSubMenu = menuItem;
-                store.commit('assignCurrentSubMenuItem', menuItem);
-
-                switch (store.state.currentMenuItem) {
-                    case "Summary" :
-                        //load the summary data;
-                        break;
-                    case "Ranked" :
-                        store.commit('assignSummoner1MatchLoaded', false);
-                        store.commit('assignSummoner2MatchLoaded', false);
-                        store.commit('assignSummoner1SelectedMatch', {});
-                        store.commit('assignSummoner2SelectedMatch', {});
-                        this.assignRankedMatchList();
-                        break;
-                    case "Champions" :
-                        //load the ranked data
-                        break;
-                    case "Stats" :
-                        //load the stats data
-                        break;
-                }
-            }
-
         },
         watch : {
             currentYear : function(newYear) {
                 store.commit('assignCurrentYear', newYear);
-                store.commit('assignCurrentSubMenuItem', "");
-
-                switch (store.state.currentMenuItem) {
-                    case "Summary" :
-                        this.assignSummonerSummaryData();
-                        break;
-                    case "Ranked" :
-
-                        break;
-                    case "Champions" :
-                        this.assignChampionData();
-                        break;
-                    case "Recent Games" :
-                        this.assignRecentGames();
-                        break;
-                    case "Stats" :
-                        this.assignAverageStats();
-                        break;
-                }
             },
         }
     }
 </script>
 
 <style scoped>
+    #main-grid-container > *:first-child {
+        border-right-color: #555557;
+        border-right-style: solid;
+        border-right-width: 2px;
+    }
 
+    .summoner-header {
+        margin: 15px!important;
+    }
+
+    .summoner-column {
+        padding: 30px!important;
+    }
 </style>

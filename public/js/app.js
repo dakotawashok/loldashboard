@@ -4748,38 +4748,18 @@ var store = new Vuex.Store({
         },
         summoner1: {
             loaded: false,
-            matchLoaded: false,
+            dataLoaded: false,
             summoner: {},
-            summaryData: {},
-            rankedData: {},
-            rankedMatchList: {},
-            selectedMatch: {},
-            recentGameList: {},
-            selectedGame: {},
-            stats: {
-                rankedStats: {},
-                normalGameStats: {},
-                friendStats: {}
-            }
+            normalMatchList: {},
+            rankedMatchList: {}
         },
         summoner2: {
             loaded: false,
-            matchLoaded: false,
+            dataLoaded: false,
             summoner: {},
-            summaryData: {},
-            rankedData: {},
-            rankedMatchList: {},
-            selectedMatch: {},
-            recentGameList: {},
-            selectedGame: {},
-            stats: {
-                rankedStats: {},
-                normalGameStats: {},
-                friendStats: {}
-            }
+            normalMatchList: {},
+            rankedMatchList: {}
         },
-        currentMenuItem: "",
-        currentSubMenuItem: "",
         currentYear: "2017",
 
         loading: false
@@ -4794,35 +4774,17 @@ var store = new Vuex.Store({
         assignSummoner2Summoner: function assignSummoner2Summoner(state, summoner) {
             state.summoner2.summoner = summoner;
         },
-        assignSummoner1SummaryData: function assignSummoner1SummaryData(state, summaryData) {
-            state.summoner1.summaryData = summaryData;
-        },
-        assignSummoner2SummaryData: function assignSummoner2SummaryData(state, summaryData) {
-            state.summoner2.summaryData = summaryData;
-        },
-        assignSummoner1RankedData: function assignSummoner1RankedData(state, rankedData) {
-            state.summoner1.rankedData = rankedData;
-        },
-        assignSummoner2RankedData: function assignSummoner2RankedData(state, rankedData) {
-            state.summoner2.rankedData = rankedData;
-        },
         assignSummoner1RankedMatchList: function assignSummoner1RankedMatchList(state, rankedMatchList) {
             state.summoner1.rankedMatchList = rankedMatchList;
         },
         assignSummoner2RankedMatchList: function assignSummoner2RankedMatchList(state, rankedMatchList) {
             state.summoner2.rankedMatchList = rankedMatchList;
         },
-        assignSummoner1RecentGameList: function assignSummoner1RecentGameList(state, recentGameList) {
-            state.summoner1.recentGameList = recentGameList;
+        assignSummoner1NormalMatchList: function assignSummoner1NormalMatchList(state, normalMatchList) {
+            state.summoner1.normalMatchList = normalMatchList;
         },
-        assignSummoner2RecentGameList: function assignSummoner2RecentGameList(state, recentGameList) {
-            state.summoner2.recentGameList = recentGameList;
-        },
-        assignSummoner1AverageData: function assignSummoner1AverageData(state, averageData) {
-            state.summoner1.stats.rankedStats = averageData;
-        },
-        assignSummoner2AverageData: function assignSummoner2AverageData(state, averageData) {
-            state.summoner2.stats.rankedStats = averageData;
+        assignSummoner2NormalMatchList: function assignSummoner2NormalMatchList(state, normalMatchList) {
+            state.summoner2.normalMatchList = normalMatchList;
         },
         assignSummoner1Loaded: function assignSummoner1Loaded(state, loaded) {
             state.summoner1.loaded = loaded;
@@ -4830,35 +4792,18 @@ var store = new Vuex.Store({
         assignSummoner2Loaded: function assignSummoner2Loaded(state, loaded) {
             state.summoner2.loaded = loaded;
         },
-        assignSummoner1MatchLoaded: function assignSummoner1MatchLoaded(state, loaded) {
-            state.summoner1.matchLoaded = loaded;
-        },
-        assignSummoner2MatchLoaded: function assignSummoner2MatchLoaded(state, loaded) {
-            state.summoner2.matchLoaded = loaded;
-        },
-        assignSummoner1SelectedMatch: function assignSummoner1SelectedMatch(state, match) {
-            state.summoner1.selectedMatch = match;
-        },
-        assignSummoner2SelectedMatch: function assignSummoner2SelectedMatch(state, match) {
-            state.summoner2.selectedMatch = match;
-        },
-        assignSummoner1SelectedGame: function assignSummoner1SelectedGame(state, game) {
-            state.summoner1.selectedGame = game;
-        },
-        assignSummoner2SelectedGame: function assignSummoner2SelectedGame(state, game) {
-            state.summoner2.selectedGame = game;
-        },
-        assignCurrentMenuItem: function assignCurrentMenuItem(state, menuItem) {
-            state.currentMenuItem = menuItem;
-        },
-        assignCurrentSubMenuItem: function assignCurrentSubMenuItem(state, menuItem) {
-            state.currentSubMenuItem = menuItem;
-        },
         assignCurrentYear: function assignCurrentYear(state, year) {
             state.currentYear = year;
         },
         assignLoading: function assignLoading(state, loading) {
             state.loading = loading;
+        },
+        assignSummonerDataLoaded: function assignSummonerDataLoaded(state, summonerNumber, loaded) {
+            if (summonerNumber === 1) {
+                state.summoner1.dataLoaded = loaded;
+            } else {
+                state.summoner2.dataLoaded = loaded;
+            }
         }
     }
 });
@@ -70501,6 +70446,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixin_js__ = __webpack_require__(253);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixin_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__mixin_js__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_MatchCard_vue__ = __webpack_require__(220);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_MatchCard_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_MatchCard_vue__);
 //
 //
 //
@@ -70561,10 +70510,16 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+
+
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = {
+    mixins: [__WEBPACK_IMPORTED_MODULE_1__mixin_js___default.a],
+    components: [__WEBPACK_IMPORTED_MODULE_2__components_MatchCard_vue___default.a],
     mounted: function mounted() {
         this.setStaticData();
     },
@@ -70576,57 +70531,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
             currentYear: 9,
 
-            mainMenuItems: ['Summary', 'Ranked', 'Champions', 'Recent Games', 'Stats'],
-            rankedSubMenuItems: ['SEASON2017', 'PRESEASON2017', 'SEASON2016', 'PRESEASON2016', 'SEASON2015'],
-            statsSubMenuItems: ['Current Year Ranked Stats', 'Normal Game Stats', 'Stats with Friends']
+            currentlyViewedMatchList: 'ranked'
         };
     },
     computed: {
         summoner1ProfileIconUrl: function summoner1ProfileIconUrl() {
-            return "http://ddragon.leagueoflegends.com/cdn/7.7.1/img/profileicon/" + this.summoner1.profileIconId + ".png";
+            return "http://ddragon.leagueoflegends.com/cdn/7.7.1/img/profileicon/" + this.summoner1.summoner.profileIconId + ".png";
         },
         summoner2ProfileIconUrl: function summoner2ProfileIconUrl() {
-            return "http://ddragon.leagueoflegends.com/cdn/7.7.1/img/profileicon/" + this.summoner2.profileIconId + ".png";
-        },
-
-        summaryStatsSubMenuItems: function summaryStatsSubMenuItems() {
-            var tempMenuItems = [];
-            if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && !__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                for (var stat in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summaryData) {
-                    tempMenuItems.push(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summaryData[stat].playerStatSummaryType);
-                }
-                return tempMenuItems;
-            } else if (!__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                for (var stat in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summaryData) {
-                    tempMenuItems.push(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summaryData[stat].playerStatSummaryType);
-                }
-                return tempMenuItems;
-            } else {
-                for (var stat in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summaryData) {
-                    tempMenuItems.push(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summaryData[stat].playerStatSummaryType);
-                }
-                for (var stat in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summaryData) {
-                    var found = false;
-                    for (var tempMenuItem in tempMenuItems) {
-                        if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summaryData[stat].playerStatSummaryType == tempMenuItems[tempMenuItem]) {
-                            found = true;
-                        }
-                    }
-                    if (!found) {
-                        tempMenuItems.push(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summaryData[stat].playerStatSummaryType);
-                    }
-                }
-            }
-            tempMenuItems.sort(function (a, b) {
-                var itemA = a.toUpperCase();
-                var itemB = b.toUpperCase();
-                if (itemA < itemB) {
-                    return -1;
-                } else {
-                    return 1;
-                }
-            });
-            return tempMenuItems;
+            return "http://ddragon.leagueoflegends.com/cdn/7.7.1/img/profileicon/" + this.summoner2.summoner.profileIconId + ".png";
         },
 
         staticInfo: function staticInfo() {
@@ -70637,10 +70550,10 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         summoner1: function summoner1() {
-            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner;
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1;
         },
         summoner2: function summoner2() {
-            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner;
+            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2;
         },
 
         summoner1Loaded: function summoner1Loaded() {
@@ -70650,11 +70563,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded;
         },
 
-        currentMenuItem: function currentMenuItem() {
-            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentMenuItem;
-        },
-        currentSubMenuItem: function currentSubMenuItem() {
-            return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentSubMenuItem;
+        summoner2MatchList: function summoner2MatchList() {
+            if (this.currentlyViewedMatchList === 'ranked') {
+                return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedMatchList.matches;
+            } else {
+                return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.normalMatchList.matches;
+            }
         },
 
         loading: function loading() {
@@ -70664,282 +70578,76 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     methods: {
         findSummoner: function findSummoner(summonerNumber) {
             if (summonerNumber == "1") {
-                __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1Loaded', false);
+                __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1Loaded', true);
                 return this.$http.get('/summoner/' + this.summoner1Id);
             } else {
-                __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2Loaded', false);
+                __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2Loaded', true);
                 return this.$http.get('/summoner/' + this.summoner2Id);
             }
         },
-        findSummonerSummaryData: function findSummonerSummaryData(identifier) {
-            return this.$http.get('/summoner/' + identifier + '/summary/data/' + this.currentYear);
-        },
-        findSummonerRankedData: function findSummonerRankedData(identifier) {
-            return this.$http.get('/summoner/' + identifier + '/ranked/data/' + this.currentYear);
-        },
-        findRecentGames: function findRecentGames(id) {
-            return this.$http.get('summoner/' + id + '/recentgames');
-        },
-        findMatchList: function findMatchList(identifier, season) {
-            return this.$http.get('/summoner/' + identifier + '/matchlist/' + season);
+        findMatchList: function findMatchList(identifier, matchlistType, parameters) {
+            var body = { 'matchlistType': matchlistType, 'params': parameters };
+            var headers = { 'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content') };
+            return this.$http.post('/summoner/' + identifier + '/matchlist', body, { headers: headers });
         },
 
-        // if only the first summoner is loaded, load the data for just the first summoner
-        // if only the second summoner is loaded, load the data for just the second summoner
-        // if both summoners are loaded, load the data for both of the summoners
-        assignSummonerSummaryData: function assignSummonerSummaryData() {
+        // assignRankedMatchList()
+        //      gets the ranked matchlist, parses it, then puts it into the stored object
+        assignRankedMatchList: function assignRankedMatchList() {
             var _this = this;
 
-            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', true);
-            if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && !__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                this.findSummonerSummaryData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.accountId).then(function (response) {
-                    var tempSummaryData = JSON.parse(response.body);
-                    tempSummaryData = {
-                        'championMastery': tempSummaryData.championMastery,
-                        'league': tempSummaryData.league,
-                        'masteries': tempSummaryData.masteries,
-                        'runes': tempSummaryData.runes
-                    };
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1SummaryData', tempSummaryData);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                });
-            } else if (!__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                this.findSummonerSummaryData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.accountId).then(function (response) {
-                    var tempSummaryData = JSON.parse(response.body);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2SummaryData', tempSummaryData);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                });
-            } else if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                // I make temporary variables like this so that I can commit both of them at the same time which fixes
-                // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
-                var tempSummaryData1 = {};
-                var tempSummaryData2 = {};
-                this.findSummonerSummaryData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.accountId).then(function (response) {
-                    var tempSummaryData = JSON.parse(response.body);
-                    tempSummaryData = {
-                        'championMastery': tempSummaryData.championMastery,
-                        'league': tempSummaryData.league,
-                        'masteries': tempSummaryData.masteries,
-                        'runes': tempSummaryData.runes
-                    };
-                    tempSummaryData1 = tempSummaryData;
-                    return _this.findSummonerSummaryData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.accountId);
-                }).then(function (response) {
-                    var tempSummaryData = JSON.parse(response.body);
-                    tempSummaryData = {
-                        'championMastery': tempSummaryData.championMastery,
-                        'league': tempSummaryData.league,
-                        'masteries': tempSummaryData.masteries,
-                        'runes': tempSummaryData.runes
-                    };
-                    tempSummaryData2 = tempSummaryData;
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1SummaryData', tempSummaryData1);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2SummaryData', tempSummaryData2);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                }).catch(function (response) {
-                    console.log(response);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                });
+            // created the ranked parameters needed by the back-end
+            var tempParams = { 'queue': [410, 420, 440, 6, 41, 42], 'season': [9], 'endIndex': 20 };
+            var params = [];
+            for (var key in tempParams) {
+                params.push(key + '=' + encodeURIComponent(tempParams[key]));
             }
-        },
-        assignChampionData: function assignChampionData() {
-            var _this2 = this;
+            params = params.join('&');
 
-            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', true);
             if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && !__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                this.findSummonerRankedData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id).then(function (response) {
-                    var tempSummonerRankedData = JSON.parse(response.body);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1RankedData', tempSummonerRankedData);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                }).catch(function (response) {
-                    console.log("Error in Ranked Champions Data!");
-                    console.log(response);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                });
-            } else if (!__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                this.findSummonerRankedData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id).then(function (response) {
-                    var tempSummonerRankedData = JSON.parse(response.body);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2RankedData', tempSummonerRankedData);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                }).catch(function (response) {
-                    console.log("Error in Ranked Champions Data!");
-                    console.log(response);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                });
-            } else if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                // I make temporary variables like this so that I can commit both of them at the same time which fixes
-                // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
-                var tempRankedChampionData1 = {};
-                var tempRankedChampionData2 = {};
-                this.findSummonerRankedData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id).then(function (response) {
-                    tempRankedChampionData1 = JSON.parse(response.body);
-                    return _this2.findSummonerRankedData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id);
-                }).then(function (response) {
-                    tempRankedChampionData2 = JSON.parse(response.body);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1RankedData', tempRankedChampionData1);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2RankedData', tempRankedChampionData2);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                }).catch(function (response) {
-                    console.log("Error in Ranked Champions Data!");
-                    console.log(response);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                });
-            }
-        },
-        assignRankedMatchList: function assignRankedMatchList() {
-            var _this3 = this;
-
-            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', true);
-            if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && !__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                this.findMatchList(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id, __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentSubMenuItem).then(function (response) {
+                this.findMatchList(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.accountId, 'ranked', params).then(function (response) {
                     var tempRankedMatchList = JSON.parse(response.body);
+                    tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
                     __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1RankedMatchList', tempRankedMatchList);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
                 });
             } else if (!__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                this.findMatchList(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id, __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentSubMenuItem).then(function (response) {
+                this.findMatchList(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.accountId, 'ranked', params).then(function (response) {
                     var tempRankedMatchList = JSON.parse(response.body);
+                    tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
                     __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2RankedMatchList', tempRankedMatchList);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
                 });
             } else if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
                 // I make temporary variables like this so that I can commit both of them at the same time which fixes
                 // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
                 var tempRankedMatchList1 = {};
                 var tempRankedMatchList2 = {};
-                this.findMatchList(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id, __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentSubMenuItem).then(function (response) {
-                    tempRankedMatchList1 = JSON.parse(response.body);
-                    return _this3.findMatchList(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id, __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentSubMenuItem);
-                }).then(function (response) {
-                    tempRankedMatchList2 = JSON.parse(response.body);
+                this.findMatchList(this.summoner1.summoner.accountId, 'ranked', params).then(function (response) {
+                    var tempRankedMatchList = JSON.parse(response.body);
+                    tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
+                    tempRankedMatchList1 = tempRankedMatchList;
+                    return _this.findMatchList(_this.summoner2.summoner.accountId, 'ranked', params);
+                }).then(function (resp) {
+                    var tempRankedMatchList = JSON.parse(response.body);
+                    tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
+                    tempRankedMatchList2 = tempRankedMatchList;
+
                     __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1RankedMatchList', tempRankedMatchList1);
                     __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2RankedMatchList', tempRankedMatchList2);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                }).catch(function (response) {
-                    console.log(response);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                });
-            }
-        },
-        assignRecentGames: function assignRecentGames() {
-            var _this4 = this;
-
-            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', true);
-            if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && !__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                this.findRecentGames(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id).then(function (response) {
-                    var tempSummonerRecentGames = JSON.parse(response.body);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1RecentGameList', tempSummonerRecentGames);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                }).catch(function (response) {
-                    console.log("Error in Recent Games Data!");
-                    console.log(response);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                });
-            } else if (!__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                this.findRecentGames(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id).then(function (response) {
-                    var tempSummonerRecentGames = JSON.parse(response.body);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2RecentGameList', tempSummonerRecentGames);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                }).catch(function (response) {
-                    console.log("Error in Recent Games Data!");
-                    console.log(response);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                });
-            } else if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                // I make temporary variables like this so that I can commit both of them at the same time which fixes
-                // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
-                var tempRecentGames1 = {};
-                var tempRecentGames2 = {};
-                this.findRecentGames(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id).then(function (response) {
-                    tempRecentGames1 = JSON.parse(response.body);
-                    return _this4.findRecentGames(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id);
-                }).then(function (response) {
-                    tempRecentGames2 = JSON.parse(response.body);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1RecentGameList', tempRecentGames1);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2RecentGameList', tempRecentGames2);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-
-                    console.log("Done loading after shit was cached or whatever");
-                }).catch(function (response) {
-                    console.log("Error in Ranked Champions Data!");
-                    console.log(response);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                });
-            }
-        },
-        assignAverageStats: function assignAverageStats() {
-            var _this5 = this;
-
-            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', true);
-            if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && !__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                this.findSummonerRankedData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id).then(function (response) {
-                    var tempSummonerRankedData = JSON.parse(response.body);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1RankedData', tempSummonerRankedData);
-                    var tempAverageData = __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions[__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions.length - 1];
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1AverageData', tempAverageData.stats);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                }).catch(function (response) {
-                    console.log("Error in Ranked Champions Data!");
-                    console.log(response);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                });
-            } else if (!__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                this.findSummonerRankedData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id).then(function (response) {
-                    var tempSummonerRankedData = JSON.parse(response.body);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2RankedData', tempSummonerRankedData);
-                    tempAverageData = __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions[__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions.length - 1];
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2AverageData', tempAverageData.stats);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                }).catch(function (response) {
-                    console.log("Error in Ranked Champions Data!");
-                    console.log(response);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                });
-            } else if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.loaded && __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.loaded) {
-                // I make temporary variables like this so that I can commit both of them at the same time which fixes
-                // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
-                var tempRankedChampionData1 = {};
-                var tempRankedChampionData2 = {};
-                this.findSummonerRankedData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id).then(function (response) {
-                    tempRankedChampionData1 = JSON.parse(response.body);
-                    return _this5.findSummonerRankedData(__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id);
-                }).then(function (response) {
-                    tempRankedChampionData2 = JSON.parse(response.body);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1RankedData', tempRankedChampionData1);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2RankedData', tempRankedChampionData2);
-
-                    var tempChamps = __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.rankedData.champions;
-                    for (var statEntry in tempChamps) {
-                        if (tempChamps[statEntry].id == 0) {
-                            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1AverageData', tempChamps[statEntry].stats);
-                            break;
-                        }
-                    }
-                    tempChamps = __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.rankedData.champions;
-                    for (var statEntry in tempChamps) {
-                        if (tempChamps[statEntry].id == 0) {
-                            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2AverageData', tempChamps[statEntry].stats);
-                            break;
-                        }
-                    }
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
-                }).catch(function (response) {
-                    console.log("Error in Ranked Champions Data!");
-                    console.log(response);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
                 });
             }
         },
 
-        staticChampion: function staticChampion(id) {
-            for (var champion in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions) {
-                if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions[champion].key == id) {
-                    return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions[champion].id;
-                }
-            }
-        },
-
+        // This getInfo method is called when the user loads up a summoner.
+        /*
+         It:
+            Finds the summoner data from the database/api including mastery, masteries, leagues, and runes
+            Finds the ranked matchlist for specified user from the database/api
+            Finds the normal matchlist for specified user from the database/api
+         */
         getInfo: function getInfo(summonerNumber) {
+            var _this2 = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', true);
             this.findSummoner(summonerNumber).then(function (response) {
                 if (summonerNumber == "1") {
                     __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1Summoner', JSON.parse(response.body));
@@ -70948,12 +70656,15 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2Summoner', JSON.parse(response.body));
                     __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2Loaded', true);
                 }
+                return _this2.assignRankedMatchList();
+            }).then(function (response) {
+                __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignLoading', false);
             }).catch(function (response) {
                 console.log(response);
             });
-
-            $('.summoner-info').show();
         },
+
+        addChampionInfoToMatchList: function addChampionInfoToMatchList(matchList) {},
 
         setStaticData: function setStaticData() {
             this.$http.get('/jsonfiles/champion.json').then(function (response) {
@@ -70974,79 +70685,17 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignChampions', tempChampionsList);
             });
         },
-
-        // ChangeMenu :
-        // Changes the states current menu, and sets the current sub menu item to "" in case you were already looking at a view
-        // Then, depending on the menu that was selected, it will load data that the sub menu might need
-        changeMenu: function changeMenu(menuItem) {
-            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentMenuItem', menuItem);
-            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentSubMenuItem', "");
-            switch (menuItem) {
-                case "Summary":
-                    this.assignSummonerSummaryData();
-                    break;
-                case "Ranked":
-                    break;
-                case "Champions":
-                    this.assignChampionData();
-                    break;
-                case "Recent Games":
-                    this.assignRecentGames();
-                    break;
-                case "Stats":
-                    this.assignAverageStats();
-                    break;
-            }
-            $('.sub-tab').show();
-        },
-        changeSubMenu: function changeSubMenu(menuItem) {
-            // Change the sub menu in the current state, then, depending on what the menu item is, load the data for that item
-            this.currentSubMenu = menuItem;
-            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentSubMenuItem', menuItem);
-
-            switch (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentMenuItem) {
-                case "Summary":
-                    //load the summary data;
-                    break;
-                case "Ranked":
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1MatchLoaded', false);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2MatchLoaded', false);
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1SelectedMatch', {});
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2SelectedMatch', {});
-                    this.assignRankedMatchList();
-                    break;
-                case "Champions":
-                    //load the ranked data
-                    break;
-                case "Stats":
-                    //load the stats data
-                    break;
+        staticChampion: function staticChampion(id) {
+            for (var champion in __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions) {
+                if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions[champion].key == id) {
+                    return __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.staticInfo.champions[champion];
+                }
             }
         }
-
     },
     watch: {
         currentYear: function currentYear(newYear) {
             __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentYear', newYear);
-            __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignCurrentSubMenuItem', "");
-
-            switch (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.currentMenuItem) {
-                case "Summary":
-                    this.assignSummonerSummaryData();
-                    break;
-                case "Ranked":
-
-                    break;
-                case "Champions":
-                    this.assignChampionData();
-                    break;
-                case "Recent Games":
-                    this.assignRecentGames();
-                    break;
-                case "Stats":
-                    this.assignAverageStats();
-                    break;
-            }
         }
     }
 };
@@ -71088,38 +70737,22 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 "use strict";
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(3);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixin_js__ = __webpack_require__(253);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixin_js___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1__mixin_js__);
 //
 //
 //
 //
 //
 //
-//
-//
+
 
 
 
 /* harmony default export */ __webpack_exports__["default"] = {
-    props: ["match", "summonerId"],
-    methods: {
-        logMatchData: function logMatchData(matchId) {
-            var _this = this;
-
-            this.$http.get('/summoner/' + this.summonerId + '/match/' + matchId).then(function (response) {
-                if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner1.summoner.id == _this.summonerId) {
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1SelectedMatch', JSON.parse(response.body));
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner1MatchLoaded', true);
-                } else if (__WEBPACK_IMPORTED_MODULE_0__store_js__["default"].state.summoner2.summoner.id == _this.summonerId) {
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2SelectedMatch', JSON.parse(response.body));
-                    __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummoner2MatchLoaded', true);
-                } else {
-                    console.log("something fucked up when doing matchcard shit");
-                }
-            }, function (response) {
-                console.log('match failure');
-            });
-        }
-    },
+    props: ["match"],
+    mixins: [__WEBPACK_IMPORTED_MODULE_1__mixin_js___default.a],
+    methods: {},
     mounted: function mounted() {},
 
     data: function data() {
@@ -84195,7 +83828,7 @@ exports = module.exports = __webpack_require__(4)();
 
 
 // module
-exports.push([module.i, "\n.match-card[data-v-6b5eb526] {\n    height: 150px;\n}\n", ""]);
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
 
 // exports
 
@@ -84265,7 +83898,7 @@ exports = module.exports = __webpack_require__(4)();
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n#main-grid-container > *[data-v-cb31cc76]:first-child {\n    border-right-color: #555557;\n    border-right-style: solid;\n    border-right-width: 2px;\n}\n.summoner-header[data-v-cb31cc76] {\n    margin: 15px!important;\n}\n.summoner-column[data-v-cb31cc76] {\n    padding: 30px!important;\n}\n", ""]);
 
 // exports
 
@@ -102156,18 +101789,9 @@ if (false) {
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('a', {
-    staticClass: "match-card col-sm-4 col-md-3",
-    style: (_vm.styleObject),
-    attrs: {
-      "href": "#"
-    },
-    on: {
-      "click": function($event) {
-        _vm.logMatchData(_vm.match.matchId)
-      }
-    }
-  }, [_vm._v("\n    " + _vm._s(_vm.match.lane) + "\n    " + _vm._s(_vm.match.role) + "\n    " + _vm._s(_vm.match.champion) + "\n")])
+  return _c('div', {
+    staticClass: "ui segment"
+  }, [_vm._v("\n    " + _vm._s(_vm.match) + "\n")])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -102421,17 +102045,24 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   return _c('div', {
     staticClass: "ui grid"
   }, [_c('div', {
-    staticClass: "three column row"
+    staticClass: "two column row",
+    attrs: {
+      "id": "main-grid-container"
+    }
   }, [_c('div', {
-    staticClass: "left floated column"
-  }, [(_vm.summoner1Loaded) ? _c('div', {
-    staticClass: "icon"
-  }, [_c('img', {
+    staticClass: "left floated column summoner-column"
+  }, [_c('div', {
+    staticClass: "right-floated-icon"
+  }, [(_vm.summoner1Loaded) ? _c('img', {
     attrs: {
       "src": _vm.summoner1ProfileIconUrl
     }
-  })]) : _vm._e(), _vm._v(" "), _c('div', {
-    staticClass: "summoner-form"
+  }) : _vm._e()]), _vm._v(" "), _c('div', {
+    staticClass: "summoner-form",
+    staticStyle: {
+      "float": "right",
+      "text-align": "right"
+    }
   }, [_c('h2', [_vm._v("SUMMONER NAME1: ")]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
@@ -102456,72 +102087,25 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     }
   })])]), _vm._v(" "), _c('div', {
-    staticClass: "column"
-  }, [_c('label'), _vm._v(" "), (_vm.summoner1Loaded || _vm.summoner2Loaded) ? _c('select', {
-    directives: [{
-      name: "model",
-      rawName: "v-model",
-      value: (_vm.currentYear),
-      expression: "currentYear"
-    }],
-    staticClass: "ui dropdown",
-    attrs: {
-      "id": "currentYear"
-    },
-    on: {
-      "change": function($event) {
-        _vm.currentYear = Array.prototype.filter.call($event.target.options, function(o) {
-          return o.selected
-        }).map(function(o) {
-          var val = "_value" in o ? o._value : o.value;
-          return val
-        })[0]
-      }
-    }
-  }, [_c('option', {
-    attrs: {
-      "value": "9"
-    }
-  }, [_vm._v("Season 2017")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "8"
-    }
-  }, [_vm._v("Pre-Season 2017")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "7"
-    }
-  }, [_vm._v("Season 2016")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "6"
-    }
-  }, [_vm._v("Pre-Season 2016")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "5"
-    }
-  }, [_vm._v("Season 2015")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "4"
-    }
-  }, [_vm._v("Pre-Season 2015")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "3"
-    }
-  }, [_vm._v("Season 2014")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "2"
-    }
-  }, [_vm._v("Pre-Season 2014")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "1"
-    }
-  }, [_vm._v("Season 3")]), _vm._v(" "), _c('option', {
-    attrs: {
-      "value": "0"
-    }
-  }, [_vm._v("Pre-Season 3")])]) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "right floated column"
+    staticClass: "right floated column summoner-column"
   }, [_c('div', {
-    staticClass: "summoner-form"
+    staticClass: "ui two column grid"
+  }, [_c('div', {
+    staticClass: "three wide column"
+  }, [_c('div', {
+    staticClass: "left-floated-icon"
+  }, [(_vm.summoner2Loaded) ? _c('img', {
+    staticClass: "ui fluid centered image",
+    attrs: {
+      "src": _vm.summoner2ProfileIconUrl
+    }
+  }) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "thirteen wide column"
+  }, [_c('div', {
+    staticClass: "ui raised segment",
+    class: {
+      'loading': _vm.loading
+    }
   }, [_c('h2', [_vm._v("SUMMONER NAME2: ")]), _vm._v(" "), _c('input', {
     directives: [{
       name: "model",
@@ -102545,81 +102129,45 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         _vm.summoner2Id = $event.target.value
       }
     }
-  })]), _vm._v(" "), (_vm.summoner2Loaded) ? _c('div', {
-    staticClass: "icon"
-  }, [_c('img', {
+  }), _vm._v(" "), (_vm.summoner2Loaded) ? _c('div', {
+    staticClass: "season-container"
+  }, [_c('span', [_vm._v("Season 6: ")]), _vm._v(" "), _c('span', [_vm._v("Season 5:  ")]), _vm._v(" "), _c('span', [_vm._v("Season 4: ")])]) : _vm._e(), _vm._v(" "), (_vm.summoner2Loaded) ? _c('div', {
+    staticClass: "ui grid ranked-info-container"
+  }, [_c('div', {
+    staticClass: "two column row"
+  }, [_c('div', {
+    staticClass: "four wide column"
+  }, [(_vm.summoner2Loaded) ? _c('img', {
+    staticClass: "ui centered small image",
     attrs: {
       "src": _vm.summoner2ProfileIconUrl
     }
-  })]) : _vm._e()])]), _vm._v(" "), _c('div', {
-    staticClass: "row main-tab"
-  }, [(_vm.summoner1Loaded || _vm.summoner2Loaded) ? _c('ul', {
-    staticClass: "nav nav-tabs"
-  }, _vm._l((_vm.mainMenuItems), function(menuItem) {
-    return _c('li', {
+  }) : _vm._e()]), _vm._v(" "), _vm._m(0)])]) : _vm._e()])]), _vm._v(" "), (_vm.summoner2Loaded) ? _c('div', {
+    staticClass: "three wide column"
+  }) : _vm._e(), _vm._v(" "), (_vm.summoner2Loaded && !_vm.loading) ? _c('div', {
+    staticClass: "thirteen wide column"
+  }, [_vm._m(1), _vm._v(" "), _c('div', {
+    staticClass: "ui bottom attached segments"
+  }, _vm._l((_vm.summoner2MatchList), function(match) {
+    return _c('matchcard', {
       attrs: {
-        "role": "presentation"
+        "match": match
       }
-    }, [_c('a', {
-      attrs: {
-        "href": "#"
-      },
-      on: {
-        "click": function($event) {
-          _vm.changeMenu(menuItem)
-        }
-      }
-    }, [_vm._v(_vm._s(menuItem))])])
-  })) : _vm._e()]), _vm._v(" "), _c('div', {
-    staticClass: "row sub-tab"
-  }, [(_vm.currentMenuItem == 'Ranked') ? _c('ul', {
-    staticClass: "nav nav-tabs"
-  }, _vm._l((_vm.rankedSubMenuItems), function(item) {
-    return _c('li', {
-      attrs: {
-        "role": "presentation"
-      }
-    }, [_c('a', {
-      attrs: {
-        "href": "#"
-      },
-      on: {
-        "click": function($event) {
-          _vm.changeSubMenu(item)
-        }
-      }
-    }, [_vm._v(_vm._s(item))])])
-  })) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Stats') ? _c('ul', {
-    staticClass: "nav nav-tabs"
-  }, _vm._l((_vm.statsSubMenuItems), function(item) {
-    return _c('li', {
-      attrs: {
-        "role": "presentation"
-      }
-    }, [_c('a', {
-      attrs: {
-        "href": "#"
-      },
-      on: {
-        "click": function($event) {
-          _vm.changeSubMenu(item)
-        }
-      }
-    }, [_vm._v(_vm._s(item))])])
-  })) : _vm._e()]), _vm._v(" "), (_vm.loading == false) ? _c('div', {
-    staticClass: "row main-content-wrapper"
-  }, [(_vm.currentMenuItem == 'Summary') ? _c('div', {
-    staticClass: "main-content row"
-  }, [_c('summarycontents')], 1) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Ranked' && _vm.currentSubMenuItem != '') ? _c('div', {
-    staticClass: "main-content row"
-  }, [_c('rankedmatchlistview')], 1) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Champions') ? _c('div', {
-    staticClass: "main-content row"
-  }, [_c('championstatsview')], 1) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Recent Games') ? _c('div', {
-    staticClass: "main-content row"
-  }, [_c('recentgamesview')], 1) : _vm._e(), _vm._v(" "), (_vm.currentMenuItem == 'Stats' && _vm.currentSubMenuItem != '') ? _c('div', {
-    staticClass: "main-content row"
-  }, [_c('statsview')], 1) : _vm._e()]) : _vm._e()])
-},staticRenderFns: []}
+    })
+  }))]) : _vm._e()])])])])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "twelve wide column"
+  }, [_c('p', [_vm._v("Current Rank")]), _vm._v(" "), _c('p', [_vm._v("LP / W / L")]), _vm._v(" "), _c('p', [_vm._v("Win Ratio")]), _vm._v(" "), _c('p', [_vm._v("League Name")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "ui two item top attached menu"
+  }, [_c('a', {
+    staticClass: "active item"
+  }, [_vm._v("Ranked Games")]), _vm._v(" "), _c('a', {
+    staticClass: "item"
+  }, [_vm._v("Normal Games")])])
+}]}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -113822,6 +113370,23 @@ return index;
 __webpack_require__(125);
 module.exports = __webpack_require__(126);
 
+
+/***/ }),
+/* 251 */,
+/* 252 */,
+/* 253 */
+/***/ (function(module, exports) {
+
+module.exports = {
+    created: function created() {},
+
+    data: function data() {
+        return {};
+    },
+
+
+    methods: {}
+};
 
 /***/ })
 /******/ ]);
