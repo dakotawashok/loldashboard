@@ -11,6 +11,8 @@ var store = new Vuex.Store({
             summoner : {},
             normalMatchList :{},
             rankedMatchList : {},
+            definedNormalMatchList: {},
+            definedRankedMatchList: {},
         },
         summoner2 : {
             loaded : false,
@@ -18,6 +20,8 @@ var store = new Vuex.Store({
             summoner : {},
             normalMatchList :{},
             rankedMatchList : {},
+            definedNormalMatchList: {},
+            definedRankedMatchList: {},
         },
         currentYear : "2017",
 
@@ -44,6 +48,19 @@ var store = new Vuex.Store({
         },
         assignSummoner2NormalMatchList (state, normalMatchList) {
             state.summoner2.normalMatchList = normalMatchList;
+        },
+
+        assignSummoner1DefinedRankedMatchList (state, rankedMatchList) {
+            state.summoner1.definedRankedMatchList = rankedMatchList;
+        },
+        assignSummoner2DefinedRankedMatchList (state, rankedMatchList) {
+            state.summoner2.definedRankedMatchList = rankedMatchList;
+        },
+        assignSummoner1DefinedNormalMatchList (state, normalMatchList) {
+            state.summoner1.definedNormalMatchList = normalMatchList;
+        },
+        assignSummoner2DefinedNormalMatchList (state, normalMatchList) {
+            state.summoner2.definedNormalMatchList = normalMatchList;
         },
         assignSummoner1Loaded (state, loaded) { state.summoner1.loaded = loaded; },
         assignSummoner2Loaded (state, loaded) { state.summoner2.loaded = loaded; },

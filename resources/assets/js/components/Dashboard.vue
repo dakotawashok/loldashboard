@@ -42,18 +42,51 @@
                         </div>
                     </div>
                     <div class="three wide column" v-if="summoner2Loaded">
-
+                        <div class="ui selection dropdown">
+                            <input type="hidden" name="gender">
+                            <i class="dropdown icon"></i>
+                            <div class="default text">Gender</div>
+                            <div class="menu">
+                                <div class="item" data-value="1">Male</div>
+                                <div class="item" data-value="0">Female</div>
+                            </div>
+                        </div>
                     </div>
                     <div class="thirteen wide column" v-if="summoner2Loaded && !loading">
                         <div class="ui two item top attached menu">
-                            <a class="active item">Ranked Games</a>
-                            <a class="item">Normal Games</a>
+                            <a class="item"
+                               :class="{'active' : (currentlyViewedMatchList=='ranked')}"
+                               @click="changeView('ranked')">Ranked Games</a>
+                            <a class="item"
+                               :class="{'active' : (currentlyViewedMatchList=='normal')}"
+                               @click="changeView('normal')">Normal Games</a>
                         </div>
-                        <div class="ui bottom attached segments" >
-                            <matchcard v-for="match in summoner2MatchList" :match="match"></matchcard>
-                        </div>
+                        <template v-if="currentlyViewedMatchList=='ranked'">
+                            <matchcard v-for="(match, key, index) in summoner2RankedMatchList" :summoner_number="'2'" :match_type="'ranked'" :match="match"></matchcard>
+                        </template>
+                        <template v-if="currentlyViewedMatchList=='normal'">
+                            <matchcard v-for="(match, key, index) in summoner2NormalMatchList" :summoner_number="'2'" :match_type="'normal'" :match="match"></matchcard>
+                        </template>
                     </div>
                 </div>
+            </div>
+        </div>
+        <div class="ui modal">
+            <i class="close icon"></i>
+            <div class="header">
+                Modal Title
+            </div>
+            <div class="image content">
+                <div class="image">
+                    An image can appear on left or an icon
+                </div>
+                <div class="description">
+                    A description can appear on the right
+                </div>
+            </div>
+            <div class="actions">
+                <div class="ui button">Cancel</div>
+                <div class="ui button">OK</div>
             </div>
         </div>
     </div>
@@ -74,6 +107,18 @@
         ],
         mounted() {
             this.setStaticData();
+
+//            console.log($('.ui.modal'));
+//            $('.ui.modal').modal({
+//                closable  : false,
+//                detachable: false,
+//                onApprove: () => {
+//                    this.delete();
+//                }
+//            })
+
+            $('select.dropdown').dropdown();
+
         },
         data : function() {
             return {
@@ -86,27 +131,7 @@
             }
         },
         computed : {
-            summoner1ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.7.1/img/profileicon/" + this.summoner1.summoner.profileIconId + ".png"; },
-            summoner2ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.7.1/img/profileicon/" + this.summoner2.summoner.profileIconId + ".png"; },
 
-            staticInfo : function() { return store.state.staticInfo; },
-            staticChampions : function() { return store.state.staticInfo.champions; },
-
-            summoner1 : function() { return store.state.summoner1; },
-            summoner2 : function() { return store.state.summoner2; },
-
-            summoner1Loaded : function() { return store.state.summoner1.loaded; },
-            summoner2Loaded : function() { return store.state.summoner2.loaded; },
-
-            summoner2MatchList : function() {
-                if (this.currentlyViewedMatchList === 'ranked') {
-                    return store.state.summoner2.rankedMatchList.matches;
-                } else {
-                    return store.state.summoner2.normalMatchList.matches;
-                }
-            },
-
-            loading : function() { return store.state.loading; },
         },
         methods : {
             findSummoner : function(summonerNumber) {
@@ -144,9 +169,19 @@
                 } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
                     this.findMatchList(store.state.summoner2.summoner.accountId, 'ranked', params).then(
                         response => {
-                            var tempRankedMatchList = JSON.parse(response.body);
-                            tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
-                            store.commit('assignSummoner2RankedMatchList', tempRankedMatchList);
+                            var tempMatchList = JSON.parse(response.body);
+                            var tempMatchListDefined = tempMatchList.matches_defined;
+                            tempMatchList = JSON.parse(tempMatchList.matches.matches);
+                            // Now we're going to add the defined match to each of the regular matches
+                            _.forEach(tempMatchList, (match) => {
+                                _.forEach(tempMatchListDefined, (defined_match) => {
+                                    if (match.gameId == defined_match.gameId) {
+                                        match.defined_match = defined_match;
+                                    }
+                                })
+                            })
+
+                            store.commit('assignSummoner2RankedMatchList', tempMatchList);
                         }
                     );
                 } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
@@ -170,6 +205,62 @@
                 }
             },
 
+            // assignNormalMatchList()
+            //      gets the normal match list, parses it, then puts it into the stored object
+            assignNormalMatchList : function() {
+                // created the ranked parameters needed by the back-end
+                var tempParams = {'queue' : [2, 8, 14, 400, 430, 460], 'season' : [9], 'endIndex' : 20};
+                var params = [];
+                for (var key in tempParams) {params.push(key+'='+encodeURIComponent(tempParams[key]));}
+                params = params.join('&');
+
+                if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
+                    this.findMatchList(store.state.summoner1.summoner.accountId, 'normal', params).then(
+                        response => {
+                            var tempMatchList = JSON.parse(response.body);
+                            tempMatchList.matches = JSON.parse(tempMatchList.matches.matches);
+                            store.commit('assignSummoner1NormalMatchList', tempMatchList);
+                        }
+                    );
+                } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
+                    this.findMatchList(store.state.summoner2.summoner.accountId, 'normal', params).then(
+                        response => {
+                            var tempMatchList = JSON.parse(response.body);
+                            var tempMatchListDefined = tempMatchList.matches_defined;
+                            tempMatchList = JSON.parse(tempMatchList.matches.matches);
+                            // Now we're going to add the defined match to each of the regular matches
+                            _.forEach(tempMatchList, (match) => {
+                                _.forEach(tempMatchListDefined, (defined_match) => {
+                                    if (match.gameId == defined_match.gameId) {
+                                        match.defined_match = defined_match;
+                                    }
+                                })
+                            })
+
+                            store.commit('assignSummoner2NormalMatchList', tempMatchList);
+                        }
+                    );
+                } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
+                    // I make temporary variables like this so that I can commit both of them at the same time which fixes
+                    // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
+                    var tempMatchList1 = {};
+                    var tempMatchList2 = {};
+                    this.findMatchList(this.summoner1.summoner.accountId, 'normal', params).then(response => {
+                        var tempMatchList = JSON.parse(response.body);
+                        tempMatchList.matches = JSON.parse(tempMatchList.matches);
+                        tempMatchList1 = tempMatchList;
+                        return this.findMatchList(this.summoner2.summoner.accountId, 'normal', params)
+                    }).then(resp => {
+                        var tempMatchList = JSON.parse(response.body);
+                        tempMatchList.matches = JSON.parse(tempMatchList.matches);
+                        tempMatchList2 = tempMatchList;
+
+                        store.commit('assignSummoner1NormalMatchList', tempMatchList1);
+                        store.commit('assignSummoner2NormalMatchList', tempMatchList2);
+                    });
+                }
+            },
+
             // This getInfo method is called when the user loads up a summoner.
             /*
              It:
@@ -188,6 +279,8 @@
                         store.commit('assignSummoner2Loaded', true);
                     }
                     return this.assignRankedMatchList();
+                }).then(response => {
+                    return this.assignNormalMatchList();
                 }).then(response => {
                     store.commit('assignLoading', false);
                 }).catch(
@@ -222,13 +315,10 @@
                     }
                 );
             },
-            staticChampion : function(id) {
-                for (var champion in store.state.staticInfo.champions) {
-                    if (store.state.staticInfo.champions[champion].key == id) {
-                        return store.state.staticInfo.champions[champion];
-                    }
-                }
-            },
+
+            changeView : function(view) {
+                this.currentlyViewedMatchList = view;
+            }
         },
         watch : {
             currentYear : function(newYear) {

@@ -116,10 +116,20 @@ class SummonerController extends Controller
             $matchesObject->matches = json_encode($matches['matches']);
             $matchesObject->save();
         }
+//        echo "<pre>".print_r($matchesObject,true)."</pre>";
+        if ($matchlistType == 'normal') {
+            $this->createNormalMatchData($summonerId);
+        } else if ($matchlistType == 'ranked') {
+            $this->createRankedMatchData($summonerId);
+        }
 
-        $response = response()->json(json_encode($matchesObject));
+        $matchesDefined = $this->getMatchListMatches($matchesObject);
+        $returnObject = ['matches' => $matchesObject, 'matches_defined' => $matchesDefined];
+
+        $response = response()->json(json_encode($returnObject));
         return $response;
     }
+
 
 
     private function saveMatchListMatches(&$api, $matches) {
@@ -186,7 +196,7 @@ class SummonerController extends Controller
                     $newParticipant->matchId = (string)$match_entry['gameId'];
                     $newParticipant->stats = json_encode($participant['stats']);
                     $newParticipant->runes = (isset($participant['runes']) ? json_encode($participant['runes']) : '');
-                    $newParticipant->masteries = json_encode($participant['masteries']);
+                    $newParticipant->masteries = (isset($participant['masteries']) ? json_encode($participant['masteries']) : '');
                     $newParticipant->timeline = (isset($participant['timeline']) ? json_encode($participant['timeline']) : '');
                     $newParticipant->spell1Id = (isset($participant['spell1Id']) ? $participant['spell1Id'] : '');
                     $newParticipant->spell2Id = (isset($participant['spell2Id']) ? $participant['spell2Id'] : '');
@@ -201,6 +211,24 @@ class SummonerController extends Controller
                 $newMatch->save();
             }
         }
+    }
+
+    private function getMatchListMatches($matches) {
+        $matchArray = [];
+        $matches = json_decode($matches);
+        $matches = json_decode($matches->matches);
+        forEach($matches as $match_entry) {
+            try {
+                $matchFromDatabase = Match::where('gameId', (string)$match_entry->gameId)->firstOrFail();
+                $matchFromDatabase->matchTeams = $matchFromDatabase->teams;
+                $matchFromDatabase->matchParticipants = $matchFromDatabase->participants;
+                $matchFromDatabase->MatchParticipantIdentities = $matchFromDatabase->participantIdentities;
+                array_push($matchArray, $matchFromDatabase);
+            } catch (ModelNotFoundException $e) {
+
+            }
+        }
+        return $matchArray;
     }
 
     private function createNormalMatchData($summonerId, $params = null) {
@@ -224,24 +252,15 @@ class SummonerController extends Controller
             ];
         }
 
-        try {
-            $matchListFromDatabase = MatchList::where('summonerId', $summonerId)->where('list_type', 'normal')->firstOrFail();
-            if (strtotime($matchListFromDatabase->updated_at) < (strtotime('now') - 86400)) {
-                $matches = $this->api->getMatchList($summonerId, $normalParams);
-                $matchListFromDatabase->matches = json_encode($matches['matches']);
-                $matchListFromDatabase->save();
-            }
-        } catch (ModelNotFoundException $e) {
-            $matches = $this->api->getMatchList($summonerId, $normalParams);
-            $matchesObject = new MatchList;
-            $matchesObject->summonerId = $summonerId;
-            $matchesObject->season = 9;
-            $matchesObject->list_type = 'normal';
-            $matchesObject->matches = json_encode($matches['matches']);
-            $matchesObject->save();
+        $matches = $this->api->getMatchList($summonerId, $normalParams);
+        $matchesObject = new MatchList;
+        $matchesObject->summonerId = $summonerId;
+        $matchesObject->season = 9;
+        $matchesObject->list_type = 'normal';
+        $matchesObject->matches = json_encode($matches['matches']);
+        $matchesObject->save();
 
-            $this->saveMatchListMatches($this->api, $matches);
-        }
+        $this->saveMatchListMatches($this->api, $matches);
     }
 
     private function createRankedMatchData($summonerId, $params = null) {
@@ -266,7 +285,7 @@ class SummonerController extends Controller
         $matchesObject = new MatchList;
         $matchesObject->summonerId = $summonerId;
         $matchesObject->season = 9;
-        $matchesObject->list_type = 'normal';
+        $matchesObject->list_type = 'ranked';
         $matchesObject->matches = json_encode($matches['matches']);
         $matchesObject->save();
 
