@@ -4,10 +4,18 @@
             <div class="two column row">
                 <div class="ten wide column">
                     <img class="ui top aligned spaced rounded tiny image summoner-champion-icon" :src="champion_image_url">
-                    <span>Role: {{card_title}}</span><br />
-                    <span>Date: {{date}}</span><br />
-                    <span>Duration: {{duration}}</span><br />
-                    <span>KDR: {{kill_death_ratio}}</span><br />
+                    Role: <span class="card-data right">{{card_title}}</span><br />
+                    Date: <span class="card-data right">{{date}}</span><br />
+                    Duration: <span class="card-data right">{{duration}}</span><br />
+                    KDR: <span class="card-data right">{{kill_death_ratio}}</span><br />
+                    <div class="summoner-spells-and-items">
+                        <div class="summoner-spells">
+
+                        </div>
+                        <div class="summoner-items">
+                            <img class="ui rounded left floated image" v-for="item in summoner_items" :src="'http://ddragon.leagueoflegends.com/cdn/7.18.1/img/item/'+item+'.png'" />
+                        </div>
+                    </div>
                 </div>
                 <div class="six wide column">
 
@@ -79,11 +87,14 @@
 
             parseMatchParticipantData : function() {
                 _.forEach(this.defined_match.participants, (participant) => {
-                    // json parse out all the data!
-                    participant.masteries = (participant.masteries != '' ? JSON.parse(participant.masteries) : []);
-                    participant.runes = (participant.runes != '' ? JSON.parse(participant.runes) : []);
-                    participant.stats = (participant.stats != '' ? JSON.parse(participant.stats) : []);
-                    participant.timeline = (participant.timeline != '' ? JSON.parse(participant.timeline) : []);
+                    // TODO:: FIX THIS SHIT
+                    // json parse out all the data! If they're not a string, then they're already parsed or something not sure why but fuck it I'll figure it out later
+                    if (typeof participant.masteries === 'string') {
+                        participant.masteries = (participant.masteries != '' ? JSON.parse(participant.masteries) : []);
+                        participant.runes = (participant.runes != '' ? JSON.parse(participant.runes) : []);
+                        participant.stats = (participant.stats != '' ? JSON.parse(participant.stats) : []);
+                        participant.timeline = (participant.timeline != '' ? JSON.parse(participant.timeline) : []);
+                    }
                 });
             },
 
@@ -160,12 +171,32 @@
                         break;
                 }
                 return lane + " " + this.champion.name;
-            }
+            },
+
+            summoner_items : function() {
+                var item_array = [];
+                if (this.stats.item0 != undefined && this.stats.item0 != '') {item_array.push(this.stats.item0) }
+                if (this.stats.item1 != undefined && this.stats.item1 != '') {item_array.push(this.stats.item1) }
+                if (this.stats.item2 != undefined && this.stats.item2 != '') {item_array.push(this.stats.item2) }
+                if (this.stats.item3 != undefined && this.stats.item3 != '') {item_array.push(this.stats.item3) }
+                if (this.stats.item4 != undefined && this.stats.item4 != '') {item_array.push(this.stats.item4) }
+                if (this.stats.item5 != undefined && this.stats.item5 != '') {item_array.push(this.stats.item5) }
+                return item_array;
+            },
+
+            summoner_spells : function() {
+                var spell_array = [];
+                if (this.summoner_participant_data.spell1Id != undefined && this.summoner_participant_data.spell1Id != '') {spell_array.push(this.summoner_participant_data.spell1Id); }
+                if (this.summoner_participant_data.spell2Id != undefined && this.summoner_participant_data.spell2Id != '') {spell_array.push(this.summoner_participant_data.spell2Id); }
+                if (this.stats.item6 != undefined && this.stats.item6 != '') {spell_array.push(this.stats.item6); }
+                return spell_array;
+            },
 
         },
         watch : {
             'match' : function(newMatch) {
                 this.setChampionData();
+                this.loadIntroductoryData();
             }
         }
     }
@@ -174,6 +205,7 @@
 <style scoped>
     .match-card {
         font-size: 12px;
+        line-height: 12px;
     }
     .summoner-champion-icon {
         float: left;
@@ -184,5 +216,18 @@
     }
     .red-loss {
         background-color: #ffc3be!important;
+    }
+    .card-data.right {
+        float: right;
+    }
+
+    .summoner-items {
+        margin-top: 10px;
+    }
+
+    .summoner-items > img {
+        width: 25px!important;
+        height: auto;
+        margin-right: 5px!important;
     }
 </style>

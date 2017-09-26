@@ -262,6 +262,9 @@
              */
             getInfo : function(summonerNumber) {
                 store.commit('assignLoading', true);
+                store.commit('assignSummoner1Loaded', false);
+                store.commit('assignSummoner2Loaded', false);
+                this.clearData(summonerNumber);
                 this.findSummoner(summonerNumber).then(response => {
                     if (summonerNumber == "1") {
                         store.commit('assignSummoner1Summoner', JSON.parse(response.body));
@@ -282,8 +285,23 @@
                 );
             },
 
-            addChampionInfoToMatchList : function(matchList) {
+            clearData : function(summonerNumber) {
+                if (summonerNumber == '1') {
+                    store.commit('assignSummoner1Summoner', {});
+                    store.commit('assignSummoner1NormalMatchList', {});
+                    store.commit('assignSummoner1RankedMatchList', {});
+                    store.commit('assignSummoner1DefinedRankedMatchList', {});
+                    store.commit('assignSummoner1DefinedNormalMatchList', {});
+                } else if (summonerNumber == '2'){
+                    store.commit('assignSummoner2Summoner', {});
+                    store.commit('assignSummoner2NormalMatchList', {});
+                    store.commit('assignSummoner2RankedMatchList', {});
+                    store.commit('assignSummoner2DefinedRankedMatchList', {});
+                    store.commit('assignSummoner2DefinedNormalMatchList', {});
 
+                } else {
+                    console.log('errorrrrr');
+                }
             },
 
             setStaticData : function() {
