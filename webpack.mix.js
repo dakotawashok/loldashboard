@@ -1,4 +1,5 @@
 const { mix } = require('laravel-mix');
+var path = require('path');
 
 /*
  |--------------------------------------------------------------------------
@@ -13,5 +14,28 @@ const { mix } = require('laravel-mix');
 
 mix.js('resources/assets/js/app.js', 'public/js')
     .sass('resources/assets/sass/app.scss', 'public/css')
-    .copy('node_modules/semantic/dist/semantic.min.css','public/css/semantic.min.css')
-    .copy('node_modules/semantic/dist/semantic.min.js','public/js/semantic.min.js');
+    .copy('resources/assets/js/jquery.min.js', 'public/js/jquery.min.js')
+    .copy('semantic/dist/semantic.css','public/css/semantic.css')
+    .copy('semantic/dist/semantic.js','public/js/semantic.js');
+
+mix.webpackConfig({
+    resolve: {
+        modules: [
+            path.resolve(__dirname, 'semantic/dist'),
+            path.resolve(__dirname, 'node_modules')
+        ],
+        extensions: ['*', '.js', '.jsx', '.vue'],
+
+        alias: {
+            'vue$': 'vue/dist/vue.common.js'
+        }
+    },
+    module: {
+        rules: [
+            {
+                test: /\.css$/,
+                use: [ 'style-loader', 'css-loader' ]
+            }
+        ]
+    }
+});

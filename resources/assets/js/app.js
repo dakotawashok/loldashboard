@@ -34,10 +34,8 @@ Vue.use(VueResource);
 
 import VueCharts from 'vue-chartjs';
 
-var store = require('./store.js');
 
-import 'semantic.min.css'
-import 'semantic'
+var store = require('./store.js');
 
 const app = new Vue({
     el: '#app',

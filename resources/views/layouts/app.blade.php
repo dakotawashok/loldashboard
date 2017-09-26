@@ -5,11 +5,6 @@
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
     <meta name="viewport" content="width=device-width, initial-scale=1">
 
-    <script
-            src="https://code.jquery.com/jquery-3.1.1.min.js"
-            integrity="sha256-hVVnYaiADRTO2PzUGmuLJr8BLUSjGIZsDYGmIJLv2b8="
-            crossorigin="anonymous"></script>
-
     <!-- CSRF Token -->
     <meta name="csrf-token" content="{{ csrf_token() }}">
 
@@ -18,9 +13,11 @@
     <!-- Styles -->
     <link href="/css/app.css" rel="stylesheet">
 
+    <script src="{{ asset('/js/jquery.min.js') }}"></script>
+
     <!-- Semantic UI -->
-    <link rel="stylesheet" type="text/css" href="{{ asset('css/semantic.min.css') }}">
-    <script src="{{ asset('js/semantic.min.js') }}"></script>
+    <link rel="stylesheet" type="text/css" href="{{ asset('css/semantic.css') }}">
+    <script src="{{ asset('js/semantic.js') }}"></script>
 
     <!-- Scripts -->
     <script>

@@ -1,5 +1,23 @@
 <template>
     <div class="ui grid">
+        <div class="ui modal">
+            <i class="close icon"></i>
+            <div class="header">
+                Modal Title
+            </div>
+            <div class="image content">
+                <div class="image">
+                    An image can appear on left or an icon
+                </div>
+                <div class="description">
+                    A description can appear on the right
+                </div>
+            </div>
+            <div class="actions">
+                <div class="ui button">Cancel</div>
+                <div class="ui button">OK</div>
+            </div>
+        </div>
         <div class="two column row" id="main-grid-container">
             <div class="left floated column summoner-column">
                 <div class="right-floated-icon">
@@ -42,15 +60,7 @@
                         </div>
                     </div>
                     <div class="three wide column" v-if="summoner2Loaded">
-                        <div class="ui selection dropdown">
-                            <input type="hidden" name="gender">
-                            <i class="dropdown icon"></i>
-                            <div class="default text">Gender</div>
-                            <div class="menu">
-                                <div class="item" data-value="1">Male</div>
-                                <div class="item" data-value="0">Female</div>
-                            </div>
-                        </div>
+
                     </div>
                     <div class="thirteen wide column" v-if="summoner2Loaded && !loading">
                         <div class="ui two item top attached menu">
@@ -71,28 +81,12 @@
                 </div>
             </div>
         </div>
-        <div class="ui modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Modal Title
-            </div>
-            <div class="image content">
-                <div class="image">
-                    An image can appear on left or an icon
-                </div>
-                <div class="description">
-                    A description can appear on the right
-                </div>
-            </div>
-            <div class="actions">
-                <div class="ui button">Cancel</div>
-                <div class="ui button">OK</div>
-            </div>
-        </div>
     </div>
 </template>
 
 <script>
+    import 'semantic.min.css'
+    import 'semantic'
     import store from '../store.js';
     import mixin from '../mixin.js';
 
@@ -117,7 +111,6 @@
 //                }
 //            })
 
-            $('select.dropdown').dropdown();
 
         },
         data : function() {
@@ -283,6 +276,9 @@
                     return this.assignNormalMatchList();
                 }).then(response => {
                     store.commit('assignLoading', false);
+                    setTimeout(function() {
+                        $('.ui.modal').modal('show');
+                    }, 1000);
                 }).catch(
                     response => {
                         console.log(response)
@@ -324,6 +320,8 @@
             currentYear : function(newYear) {
                 store.commit('assignCurrentYear', newYear);
             },
+
+
         }
     }
 </script>
