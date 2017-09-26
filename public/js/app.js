@@ -61242,7 +61242,6 @@ __webpack_require__(168);
  *
  */
 
-Vue.component('example', __webpack_require__(238));
 Vue.component('dashboard', __webpack_require__(237));
 Vue.component('matchcard', __webpack_require__(133));
 Vue.component('rankedmatchlistview', __webpack_require__(240));
@@ -62404,15 +62403,13 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         this.setStaticData();
 
-        //            console.log($('.ui.modal'));
-        //            $('.ui.modal').modal({
-        //                closable  : false,
-        //                detachable: false,
-        //                onApprove: () => {
-        //                    this.delete();
-        //                }
-        //            })
-
+        $('.ui.modal').modal({
+            closable: true,
+            detachable: true,
+            onApprove: function onApprove() {
+                console.log('closed');
+            }
+        });
     },
 
     data: function data() {
@@ -62578,9 +62575,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 return _this3.assignNormalMatchList();
             }).then(function (response) {
                 __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignLoading', false);
-                setTimeout(function () {
-                    $('.ui.modal').modal('show');
-                }, 1000);
             }).catch(function (response) {
                 console.log(response);
             });
@@ -62621,35 +62615,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 };
 
 /***/ }),
-/* 159 */
-/***/ (function(module, __webpack_exports__, __webpack_require__) {
-
-"use strict";
-Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-
-/* harmony default export */ __webpack_exports__["default"] = {
-    mounted: function mounted() {
-        console.log('Component mounted.');
-    }
-};
-
-/***/ }),
+/* 159 */,
 /* 160 */
 /***/ (function(module, __webpack_exports__, __webpack_require__) {
 
@@ -62708,6 +62674,9 @@ var moment = __webpack_require__(0);
                 }
             });
 
+            // parse all the json data for the participants
+            this.parseMatchParticipantData();
+
             // load the teams into their respective object
             if (this.summoner_participant_data.teamId === '100') {
                 summonerTeamId = '100';
@@ -62727,11 +62696,21 @@ var moment = __webpack_require__(0);
             }
 
             // get the summoner stats for this game
-            this.stats = JSON.parse(this.summoner_participant_data.stats);
+            this.stats = this.summoner_participant_data.stats;
+        },
+
+        parseMatchParticipantData: function parseMatchParticipantData() {
+            _.forEach(this.defined_match.participants, function (participant) {
+                // json parse out all the data!
+                participant.masteries = participant.masteries != '' ? JSON.parse(participant.masteries) : [];
+                participant.runes = participant.runes != '' ? JSON.parse(participant.runes) : [];
+                participant.stats = participant.stats != '' ? JSON.parse(participant.stats) : [];
+                participant.timeline = participant.timeline != '' ? JSON.parse(participant.timeline) : [];
+            });
         },
 
         showModal: function showModal() {
-            $('.ui.modal').modal();
+            $('.ui.modal').modal('show');
         }
     },
     mounted: function mounted() {
@@ -62778,7 +62757,34 @@ var moment = __webpack_require__(0);
 
         defined_match: function defined_match() {
             return this.match.defined_match;
+        },
+
+        kill_death_ratio: function kill_death_ratio() {
+            return this.stats.kills + ' / ' + this.stats.deaths + ' / ' + this.stats.assists;
+        },
+
+        card_title: function card_title() {
+            var lane = '';
+            switch (this.match.lane) {
+                case 'TOP':
+                    lane = "Top";
+                    break;
+                case 'JUNGLE':
+                    lane = "Jungle";
+                    break;
+                case 'BOTTOM':
+                    lane = this.match.role == 'DUO_SUPPORT' ? 'Support' : 'AD Carry';
+                    break;
+                case 'MID':
+                    lane = "Mid";
+                    break;
+                default:
+                    lane = "";
+                    break;
+            }
+            return lane + " " + this.champion.name;
         }
+
     },
     watch: {
         'match': function match(newMatch) {
@@ -75811,7 +75817,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.match-card[data-v-6b5eb526] {\n    font-size: 12px;\n}\n.summoner-champion-icon[data-v-6b5eb526] {\n    float: left;\n    margin-right: 15px!important;\n}\n.green-win[data-v-6b5eb526] {\n    background-color: #beffbe!important;\n}\n.red-loss[data-v-6b5eb526] {\n    background-color: #ffc3be!important;\n}\n", ""]);
 
 // exports
 
@@ -93682,40 +93688,7 @@ module.exports = Component.exports
 
 
 /***/ }),
-/* 238 */
-/***/ (function(module, exports, __webpack_require__) {
-
-var Component = __webpack_require__(3)(
-  /* script */
-  __webpack_require__(159),
-  /* template */
-  __webpack_require__(247),
-  /* scopeId */
-  null,
-  /* cssModules */
-  null
-)
-Component.options.__file = "/Users/dakotawashok/NinjaDev/www/lolDashboard/resources/assets/js/components/Example.vue"
-if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
-if (Component.options.functional) {console.error("[vue-loader] Example.vue: functional components are not supported with templates, they should use render functions.")}
-
-/* hot reload */
-if (false) {(function () {
-  var hotAPI = require("vue-hot-reload-api")
-  hotAPI.install(require("vue"), false)
-  if (!hotAPI.compatible) return
-  module.hot.accept()
-  if (!module.hot.data) {
-    hotAPI.createRecord("data-v-455e904a", Component.options)
-  } else {
-    hotAPI.reload("data-v-455e904a", Component.options)
-  }
-})()}
-
-module.exports = Component.exports
-
-
-/***/ }),
+/* 238 */,
 /* 239 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -94006,35 +93979,7 @@ if (false) {
 }
 
 /***/ }),
-/* 247 */
-/***/ (function(module, exports, __webpack_require__) {
-
-module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _vm._m(0)
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "container"
-  }, [_c('div', {
-    staticClass: "row"
-  }, [_c('div', {
-    staticClass: "col-md-8 col-md-offset-2"
-  }, [_c('div', {
-    staticClass: "panel panel-default"
-  }, [_c('div', {
-    staticClass: "panel-heading"
-  }, [_vm._v("Example Component")]), _vm._v(" "), _c('div', {
-    staticClass: "panel-body"
-  }, [_vm._v("\n                    I'm an example component!\n                ")])])])])])
-}]}
-module.exports.render._withStripped = true
-if (false) {
-  module.hot.accept()
-  if (module.hot.data) {
-     require("vue-hot-reload-api").rerender("data-v-455e904a", module.exports)
-  }
-}
-
-/***/ }),
+/* 247 */,
 /* 248 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -94071,9 +94016,9 @@ if (false) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
-    staticClass: "ui inverted segment",
+    staticClass: "ui segment match-card",
     class: {
-      'green': _vm.match_won, 'red': !_vm.match_won
+      'green-win': _vm.match_won, 'red-loss': !_vm.match_won
     },
     on: {
       "click": function($event) {
@@ -94085,17 +94030,15 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "two column row"
   }, [_c('div', {
-    staticClass: "four wide column"
+    staticClass: "ten wide column"
   }, [_c('img', {
-    staticClass: "ui rounded tiny image",
+    staticClass: "ui top aligned spaced rounded tiny image summoner-champion-icon",
     attrs: {
       "src": _vm.champion_image_url
     }
-  })]), _vm._v(" "), _c('div', {
-    staticClass: "twelve wide column"
-  }, [_c('div', {
-    staticClass: "content"
-  }, [_c('span', [_vm._v(_vm._s(_vm.match.role + ' ' + _vm.match.lane))]), _c('br'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.date))]), _c('br'), _vm._v(" "), _c('span', [_vm._v(_vm._s(_vm.duration))]), _c('br')])])])])])
+  }), _vm._v(" "), _c('span', [_vm._v("Role: " + _vm._s(_vm.card_title))]), _c('br'), _vm._v(" "), _c('span', [_vm._v("Date: " + _vm._s(_vm.date))]), _c('br'), _vm._v(" "), _c('span', [_vm._v("Duration: " + _vm._s(_vm.duration))]), _c('br'), _vm._v(" "), _c('span', [_vm._v("KDR: " + _vm._s(_vm.kill_death_ratio))]), _c('br')]), _vm._v(" "), _c('div', {
+    staticClass: "six wide column"
+  })])])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {

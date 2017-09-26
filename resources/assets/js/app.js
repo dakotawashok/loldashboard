@@ -15,7 +15,6 @@ require('./bootstrap');
  *
  */
 
-Vue.component('example', require('./components/Example.vue'));
 Vue.component('dashboard', require('./components/Dashboard.vue'));
 Vue.component('matchcard', require('./components/MatchCard.vue'));
 Vue.component('rankedmatchlistview', require('./components/RankedMatchListView.vue'));

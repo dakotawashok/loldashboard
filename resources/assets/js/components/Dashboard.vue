@@ -102,14 +102,13 @@
         mounted() {
             this.setStaticData();
 
-//            console.log($('.ui.modal'));
-//            $('.ui.modal').modal({
-//                closable  : false,
-//                detachable: false,
-//                onApprove: () => {
-//                    this.delete();
-//                }
-//            })
+            $('.ui.modal').modal({
+                closable  : true,
+                detachable: true,
+                onApprove: () => {
+                    console.log('closed');
+                }
+            })
 
 
         },
@@ -276,9 +275,6 @@
                     return this.assignNormalMatchList();
                 }).then(response => {
                     store.commit('assignLoading', false);
-                    setTimeout(function() {
-                        $('.ui.modal').modal('show');
-                    }, 1000);
                 }).catch(
                     response => {
                         console.log(response)
