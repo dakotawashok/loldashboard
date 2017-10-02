@@ -25,27 +25,27 @@
                         <div class="ui raised segment" :class="{'loading': loading}">
                             <h2>SUMMONER NAME1: </h2>
                             <input v-model="summoner1Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('1')"/>
-                            <div v-if="summoner1Loaded" class="season-container">
-                                <span>Season 6: </span>
-                                <span>Season 5:  </span>
-                                <span>Season 4: </span>
-                            </div>
+                            <!--<div v-if="summoner1Loaded" class="season-container">-->
+                                <!--<span>Season 6: </span>-->
+                                <!--<span>Season 5:  </span>-->
+                                <!--<span>Season 4: </span>-->
+                            <!--</div>-->
                             <div v-if="summoner1Loaded" class="ui grid ranked-info-container">
                                 <div class="two column row">
                                     <div class="four wide column">
                                         <img class="ui centered small image" v-if="summoner1Loaded" :src="summoner1ProfileIconUrl" />
                                     </div>
                                     <div class="twelve wide column">
-                                        <p>Current Rank</p>
-                                        <p>LP / W / L</p>
-                                        <p>Win Ratio</p>
-                                        <p>League Name</p>
+                                        <p>Current Rank: {{summoner1CurrentRank}}</p>
+                                        <p>{{summoner1Ratio}}</p>
+                                        <p>Win Ratio: {{summoner1RatioPercent}}</p>
+                                        <p>League Name: {{summoner1RankName}}</p>
                                     </div>
                                 </div>
                             </div>
                         </div>
                     </div>
-                    <div class="sixteen wide column" v-if="summoner2Loaded && !loading">
+                    <div class="sixteen wide column" v-if="summoner1Loaded && !loading">
                         <div class="ui two item top attached menu">
                             <a class="item"
                                :class="{'active' : (currentlyViewedMatchList=='ranked')}"
@@ -69,21 +69,21 @@
                         <div class="ui raised segment" :class="{'loading': loading}">
                             <h2>SUMMONER NAME2: </h2>
                             <input v-model="summoner2Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('2')"/>
-                            <div v-if="summoner2Loaded" class="season-container">
-                                <span>Season 6: </span>
-                                <span>Season 5:  </span>
-                                <span>Season 4: </span>
-                            </div>
+                            <!--<div v-if="summoner2Loaded" class="season-container">-->
+                                <!--<span>Season 6: </span>-->
+                                <!--<span>Season 5:  </span>-->
+                                <!--<span>Season 4: </span>-->
+                            <!--</div>-->
                             <div v-if="summoner2Loaded" class="ui grid ranked-info-container">
                                 <div class="two column row">
                                     <div class="four wide column">
                                         <img class="ui centered small image" v-if="summoner2Loaded" :src="summoner2ProfileIconUrl" />
                                     </div>
                                     <div class="twelve wide column">
-                                        <p>Current Rank</p>
-                                        <p>LP / W / L</p>
-                                        <p>Win Ratio</p>
-                                        <p>League Name</p>
+                                        <p>Current Rank: {{summoner2CurrentRank}}</p>
+                                        <p>{{summoner2Ratio}}</p>
+                                        <p>Win Ratio: {{summoner2RatioPercent}}</p>
+                                        <p>League Name: {{summoner2RankName}}</p>
                                     </div>
                                 </div>
                             </div>
@@ -158,7 +158,6 @@
                 if (summonerNumber == "1") {
                     this.$http.get('/summoner/' + this.summoner1Id + '/allData').then((resp) => {
                         resp = JSON.parse(resp.body);
-                        console.log(_.cloneDeep(resp));
                         // get the summoner information from the response
                         resp.summoner = this.parseSummonerDataFromResponse(resp.summoner);
                         resp.normalMatchList.matches = JSON.parse(resp.normalMatchList.matches);
@@ -172,12 +171,13 @@
                         store.commit('assignSummoner1NormalMatchList', resp.normalMatchList.matches);
                         store.commit('assignSummoner1DefinedNormalMatchList', resp.normalDefinedMatchList);
 
+                        this.assignRankedData(summonerNumber);
+
                         store.commit('assignLoading', false);
                     });
                 } else {
                     this.$http.get('/summoner/' + this.summoner2Id + '/allData').then((resp) => {
                         resp = JSON.parse(resp.body);
-                        console.log(_.cloneDeep(resp));
                         // get the summoner information from the response
                         resp.summoner = this.parseSummonerDataFromResponse(resp.summoner);
                         resp.normalMatchList.matches = JSON.parse(resp.normalMatchList.matches);
@@ -190,6 +190,8 @@
                         store.commit('assignSummoner2DefinedRankedMatchList', resp.rankedDefinedMatchList);
                         store.commit('assignSummoner2NormalMatchList', resp.normalMatchList.matches);
                         store.commit('assignSummoner2DefinedNormalMatchList', resp.normalDefinedMatchList);
+
+                        this.assignRankedData(summonerNumber);
 
                         store.commit('assignLoading', false);
                     });
@@ -323,6 +325,93 @@
                 }
             },
 
+            // Go through all the summoner league ranked data and find the specific data that matches with this summoner
+            assignRankedData : function(summonerNumber) {
+                if (summonerNumber == '1') {
+                    // make a temp object that we will use to replace the summoner
+                    var tempSummoner = _.cloneDeep(this.summoner1.summoner);
+                    tempSummoner.rankedData = {};
+                    if (tempSummoner != undefined && tempSummoner.league != undefined) {
+                        _.forEach(tempSummoner.league, (league) => {
+                            if (league.queue == 'RANKED_SOLO_5x5') {
+                                tempSummoner.rankedData.tier = league.tier;
+                                tempSummoner.rankedData.name = league.name;
+                                tempSummoner.rankedData.queue = league.queue;
+                                // now we have to go into every goddamn summoner in this league and find the one that
+                                // matches the current summoner so we can find it's tier_league
+                                var found = false;
+                                _.forEach(league.entries, (league_summoner) => {
+                                    if (league_summoner.playerOrTeamName === tempSummoner.name) {
+                                        found = true;
+                                        tempSummoner.rankedData.freshBlood = league_summoner.freshBlood;
+                                        tempSummoner.rankedData.hotStreak = league_summoner.hotStreak;
+                                        tempSummoner.rankedData.losses = league_summoner.losses;
+                                        tempSummoner.rankedData.playerOrTeamId = league_summoner.playerOrTeamId;
+                                        tempSummoner.rankedData.playerOrTeamName = league_summoner.playerOrTeamName;
+                                        tempSummoner.rankedData.rank = league_summoner.rank;
+                                        tempSummoner.rankedData.veteran = league_summoner.veteran;
+                                        tempSummoner.rankedData.wins = league_summoner.wins;
+                                        tempSummoner.rankedData.leaguePoints = league_summoner.leaguePoints;
+                                    }
+                                });
+                                // if we found the summoner in all that data, lets get rid of all that data since we
+                                // don't need it anymore
+                                if (found) {
+                                    delete tempSummoner.league;
+                                    store.commit('assignSummoner1Summoner', tempSummoner);
+                                }
+                            }
+                        })
+                    } else {
+                        return '';
+                    }
+                } else if (summonerNumber == '2') {
+                    // make a temp object that we will use to replace the summoner
+                    var tempSummoner = _.cloneDeep(this.summoner2.summoner);
+                    tempSummoner.rankedData = {};
+                    if (tempSummoner != undefined && tempSummoner.league != undefined) {
+                        _.forEach(tempSummoner.league, (league) => {
+                            if (league.queue == 'RANKED_SOLO_5x5') {
+                                console.log(league);
+                                tempSummoner.rankedData.tier = league.tier;
+                                tempSummoner.rankedData.name = league.name;
+                                tempSummoner.rankedData.queue = league.queue;
+                                // now we have to go into every goddamn summoner in this league and find the one that
+                                // matches the current summoner so we can find it's tier_league
+                                var found = false;
+                                _.forEach(league.entries, (league_summoner) => {
+                                    if (league_summoner.playerOrTeamName === tempSummoner.name) {
+                                        console.log(league_summoner);
+                                        found = true;
+                                        tempSummoner.rankedData.freshBlood = league_summoner.freshBlood;
+                                        tempSummoner.rankedData.hotStreak = league_summoner.hotStreak;
+                                        tempSummoner.rankedData.losses = league_summoner.losses;
+                                        tempSummoner.rankedData.playerOrTeamId = league_summoner.playerOrTeamId;
+                                        tempSummoner.rankedData.playerOrTeamName = league_summoner.playerOrTeamName;
+                                        tempSummoner.rankedData.rank = league_summoner.rank;
+                                        tempSummoner.rankedData.veteran = league_summoner.veteran;
+                                        tempSummoner.rankedData.wins = league_summoner.wins;
+                                        tempSummoner.rankedData.leaguePoints = league_summoner.leaguePoints;
+                                    }
+                                });
+                                // if we found the summoner in all that data, lets get rid of all that data since we
+                                // don't need it anymore
+                                if (found) {
+                                    delete tempSummoner.league;
+                                    store.commit('assignSummoner2Summoner', tempSummoner);
+                                } else {
+                                }
+                            }
+                        })
+                    } else {
+                        console.log('super wtf');
+                        return '';
+                    }
+                } else {
+                    console.log('wtf');
+                }
+            },
+
             // This getInfo method is called when the user loads up a summoner.
             /*
              It:
@@ -332,8 +421,12 @@
              */
             getInfo : function(summonerNumber) {
                 store.commit('assignLoading', true);
-                store.commit('assignSummoner1Loaded', false);
-                store.commit('assignSummoner2Loaded', false);
+
+                if (summonerNumber == "1") {
+                    store.commit('assignSummoner1Loaded', false);
+                } else {
+                    store.commit('assignSummoner2Loaded', false);
+                }
                 this.clearData(summonerNumber);
                 this.findSummoner(summonerNumber).then(response => {
                     if (summonerNumber == "1") {

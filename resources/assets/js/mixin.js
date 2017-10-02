@@ -58,5 +58,40 @@ export default {
         },
 
         loading : function() { return store.state.loading; },
+
+
+
+        summoner1CurrentRank : function() {
+            return this.summoner1.summoner.rankedData.tier + ' ' + this.summoner1.summoner.rankedData.rank;
+        },
+        summoner1RankName : function() {
+            return this.summoner1.summoner.rankedData.name;
+        },
+        summoner1Ratio : function() {
+            return this.summoner1.summoner.rankedData.leaguePoints + ' LP / ' +
+                this.summoner1.summoner.rankedData.wins + ' wins / ' +
+                this.summoner1.summoner.rankedData.losses + ' losses';
+        },
+        summoner1RatioPercent : function() {
+            var wins = parseInt(this.summoner1.summoner.rankedData.wins);
+            var total = parseInt(this.summoner1.summoner.rankedData.wins) + parseInt(this.summoner1.summoner.rankedData.losses);
+            return ((wins / total) * 100) + '%';
+        },
+        summoner2CurrentRank : function() {
+            return this.summoner2.summoner.rankedData.tier + ' ' + this.summoner2.summoner.rankedData.rank;
+        },
+        summoner2RankName : function() {
+            return this.summoner2.summoner.rankedData.name;
+        },
+        summoner2Ratio : function() {
+            return this.summoner2.summoner.rankedData.leaguePoints + ' LP / ' +
+                this.summoner2.summoner.rankedData.wins + ' wins / ' +
+                this.summoner2.summoner.rankedData.losses + ' losses';
+        },
+        summoner2RatioPercent : function() {
+            var wins = parseInt(this.summoner2.summoner.rankedData.wins);
+            var total = parseInt(this.summoner2.summoner.rankedData.wins) + parseInt(this.summoner2.summoner.rankedData.losses);
+            return ((wins / total) * 100) + '%';
+        },
     }
 }
