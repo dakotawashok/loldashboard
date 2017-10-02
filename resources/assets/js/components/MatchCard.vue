@@ -10,10 +10,10 @@
                     KDR: <span class="card-data right">{{kill_death_ratio}}</span><br />
                     <div class="summoner-spells-and-items">
                         <div class="summoner-spells">
-
-                        </div>
+                            <img class="ui rounded left floated image" v-for="item in summoner_items" :src="item" />
+                        </div><br />
                         <div class="summoner-items">
-                            <img class="ui rounded left floated image" v-for="item in summoner_items" :src="'http://ddragon.leagueoflegends.com/cdn/7.18.1/img/item/'+item+'.png'" />
+                            <img class="ui rounded left floated image" v-for="item in summoner_spells" :src="item" />
                         </div>
                     </div>
                 </div>
@@ -108,6 +108,8 @@
         },
         data : function() {
             return {
+                API_VERSION: '7.19.1',
+
                 champion : {},
                 match_won : false,
                 summoner_team : {},
@@ -124,9 +126,9 @@
             champion_image_url : function() {
                 if (this.champion != undefined && this.champion.name != undefined) {
                     var parsedChampName = this.champion.name.split(' ').join('').split('\'').join('');
-                    return 'http://ddragon.leagueoflegends.com/cdn/7.18.1/img/champion/'+parsedChampName+'.png';
+                    return 'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/champion/'+parsedChampName+'.png';
                 } else {
-                    return 'http://ddragon.leagueoflegends.com/cdn/7.18.1/img/champion/aatrox.png';
+                    return 'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/champion/aatrox.png';
                 }
             },
 
@@ -184,14 +186,23 @@
                 if (this.stats.item3 != undefined && this.stats.item3 != '') {item_array.push(this.stats.item3) }
                 if (this.stats.item4 != undefined && this.stats.item4 != '') {item_array.push(this.stats.item4) }
                 if (this.stats.item5 != undefined && this.stats.item5 != '') {item_array.push(this.stats.item5) }
+                _.forEach(item_array, (item, key) => {
+                    item_array[key] = 'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/item/'+item+'.png';
+                });
                 return item_array;
             },
 
             summoner_spells : function() {
                 var spell_array = [];
-                if (this.summoner_participant_data.spell1Id != undefined && this.summoner_participant_data.spell1Id != '') {spell_array.push(this.summoner_participant_data.spell1Id); }
-                if (this.summoner_participant_data.spell2Id != undefined && this.summoner_participant_data.spell2Id != '') {spell_array.push(this.summoner_participant_data.spell2Id); }
-                if (this.stats.item6 != undefined && this.stats.item6 != '') {spell_array.push(this.stats.item6); }
+                if (this.summoner_participant_data.spell1Id != undefined && this.summoner_participant_data.spell1Id != '') {
+                    spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+this.summoner_participant_data.spell1Id+'.png');
+                }
+                if (this.summoner_participant_data.spell2Id != undefined && this.summoner_participant_data.spell2Id != '') {
+                    spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+this.summoner_participant_data.spell2Id+'.png');
+                }
+                if (this.stats.item6 != undefined && this.stats.item6 != '') {
+                    spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/item/'+this.stats.item6 +'.png');
+                }
                 return spell_array;
             },
 
@@ -224,13 +235,22 @@
         float: right;
     }
 
-    .summoner-items {
-        margin-top: 10px;
+    .summoner-spells-and-items {
+        float: left;
     }
 
-    .summoner-items > img {
+    .summoner-items, .summoner-spells {
+        margin-top: 5px;
+        margin-bottom: 0px;
+        display: block;
+        float: left;
+        width: 100%;
+    }
+
+    .summoner-items > img, .summoner-spells > img {
         width: 25px!important;
         height: auto;
         margin-right: 5px!important;
+        margin-bottom: 0px!important;
     }
 </style>

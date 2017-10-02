@@ -7,7 +7,7 @@ export default {
 
     data () {
         return {
-
+            API_VERSION: '7.19.1'
         }
     },
 
@@ -19,14 +19,23 @@ export default {
                 }
             }
         },
+
+        staticSpell : function(id) {
+            for (var spell in store.state.staticInfo.spells) {
+                if (store.state.staticInfo.champions[spell].key == id) {
+                    return store.state.staticInfo.champions[spell];
+                }
+            }
+        },
     },
 
     computed: {
-        summoner1ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.18.1/img/profileicon/" + this.summoner1.summoner.profileIconId + ".png"; },
-        summoner2ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/7.18.1/img/profileicon/" + this.summoner2.summoner.profileIconId + ".png"; },
+        summoner1ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/"+this.API_VERSION+"/img/profileicon/" + this.summoner1.summoner.profileIconId + ".png"; },
+        summoner2ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/"+this.API_VERSION+"/img/profileicon/" + this.summoner2.summoner.profileIconId + ".png"; },
 
         staticInfo : function() { return store.state.staticInfo; },
         staticChampions : function() { return store.state.staticInfo.champions; },
+        staticSpells : function() { return store.state.staticInfo.spells; },
 
         summoner1 : function() { return store.state.summoner1; },
         summoner2 : function() { return store.state.summoner2; },

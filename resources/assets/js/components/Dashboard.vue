@@ -342,8 +342,25 @@
                             }
                         });
                         store.commit('assignChampions', tempChampionsList);
+                        return this.$http.get('/jsonfiles/summonerspells.json');
                     }
-                );
+                ).then((resp) => {
+                    var spells = resp.body.data;
+
+                    var tempSpellList = [];
+                    for (var spell in spells) {
+                        tempSpellList.push(spells[spell]);
+                    };
+
+                    tempSpellList.sort(function(spellA, spellB) {
+                        if (parseInt(spellA.key) < parseInt(spellB.key)) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    });
+                    store.commit('assignSpells', tempSpellList);
+                });
             },
 
             changeView : function(view) {
