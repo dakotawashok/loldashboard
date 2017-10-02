@@ -50,11 +50,11 @@
                 // for every participant, add the id to that object
                 _.forEach(this.defined_match.participants, (participant) => {
                     _.forEach(this.defined_match.participant_identities, (identitity) => {
-                        if (participant.participantId === identitity.participantId) {
+                        if (parseInt(participant.participantId) == parseInt(identitity.participantId)) {
                             participant.identity = identitity;
                         }
                     });
-                    if (participant.identity.accountId === summonerId) {
+                    if (participant.identity.accountId == summonerId) {
                         this.summoner_participant_data = participant;
                     }
                 });
@@ -123,7 +123,7 @@
 
             champion_image_url : function() {
                 if (this.champion != undefined && this.champion.name != undefined) {
-                    var parsedChampName = this.champion.name.split(' ').join('');
+                    var parsedChampName = this.champion.name.split(' ').join('').split('\'').join('');
                     return 'http://ddragon.leagueoflegends.com/cdn/7.18.1/img/champion/'+parsedChampName+'.png';
                 } else {
                     return 'http://ddragon.leagueoflegends.com/cdn/7.18.1/img/champion/aatrox.png';
@@ -148,6 +148,9 @@
             },
 
             kill_death_ratio : function() {
+                this.stats.kills = ((this.stats.kills != undefined) ? this.stats.kills : 0);
+                this.stats.deaths = ((this.stats.deaths != undefined) ? this.stats.deaths : 0);
+                this.stats.assists = ((this.stats.assists != undefined) ? this.stats.assists : 0);
                 return this.stats.kills + ' / ' + this.stats.deaths + ' / ' + this.stats.assists;
             },
 

@@ -62381,14 +62381,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -62424,6 +62416,34 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     },
     computed: {},
     methods: {
+        getAllSummonerData: function getAllSummonerData(summonerNumber) {
+            var _this = this;
+
+            __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignLoading', true);
+            if (summonerNumber == "1") {
+                this.$http.get('/summoner/' + this.summoner1Id + '/allData').then(function (resp) {});
+            } else {
+                this.$http.get('/summoner/' + this.summoner2Id + '/allData').then(function (resp) {
+                    resp = JSON.parse(resp.body);
+                    console.log(_.cloneDeep(resp));
+                    // get the summoner information from the response
+                    resp.summoner = _this.parseSummonerDataFromResponse(resp.summoner);
+                    resp.normalMatchList.matches = JSON.parse(resp.normalMatchList.matches);
+                    resp.rankedMatchList.matches = JSON.parse(resp.rankedMatchList.matches);
+                    _this.parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
+                    _this.parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
+                    __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner2Summoner', resp.summoner);
+                    __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner2Loaded', true);
+                    __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner2RankedMatchList', resp.rankedMatchList.matches);
+                    __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner2DefinedRankedMatchList', resp.rankedDefinedMatchList);
+                    __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner2NormalMatchList', resp.normalMatchList.matches);
+                    __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner2DefinedNormalMatchList', resp.normalDefinedMatchList);
+
+                    __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignLoading', false);
+                });
+            }
+        },
+
         findSummoner: function findSummoner(summonerNumber) {
             if (summonerNumber == "1") {
                 __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner1Loaded', true);
@@ -62442,7 +62462,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         // assignRankedMatchList()
         //      gets the ranked matchlist, parses it, then puts it into the stored object
         assignRankedMatchList: function assignRankedMatchList() {
-            var _this = this;
+            var _this2 = this;
 
             // created the ranked parameters needed by the back-end
             var tempParams = { 'queue': [410, 420, 440, 6, 41, 42], 'season': [9], 'endIndex': 20 };
@@ -62483,7 +62503,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     var tempRankedMatchList = JSON.parse(response.body);
                     tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
                     tempRankedMatchList1 = tempRankedMatchList;
-                    return _this.findMatchList(_this.summoner2.summoner.accountId, 'ranked', params);
+                    return _this2.findMatchList(_this2.summoner2.summoner.accountId, 'ranked', params);
                 }).then(function (resp) {
                     var tempRankedMatchList = JSON.parse(response.body);
                     tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
@@ -62498,7 +62518,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         // assignNormalMatchList()
         //      gets the normal match list, parses it, then puts it into the stored object
         assignNormalMatchList: function assignNormalMatchList() {
-            var _this2 = this;
+            var _this3 = this;
 
             // created the ranked parameters needed by the back-end
             var tempParams = { 'queue': [2, 8, 14, 400, 430, 460], 'season': [9], 'endIndex': 20 };
@@ -62539,7 +62559,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     var tempMatchList = JSON.parse(response.body);
                     tempMatchList.matches = JSON.parse(tempMatchList.matches);
                     tempMatchList1 = tempMatchList;
-                    return _this2.findMatchList(_this2.summoner2.summoner.accountId, 'normal', params);
+                    return _this3.findMatchList(_this3.summoner2.summoner.accountId, 'normal', params);
                 }).then(function (resp) {
                     var tempMatchList = JSON.parse(response.body);
                     tempMatchList.matches = JSON.parse(tempMatchList.matches);
@@ -62559,7 +62579,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             Finds the normal matchlist for specified user from the database/api
          */
         getInfo: function getInfo(summonerNumber) {
-            var _this3 = this;
+            var _this4 = this;
 
             __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignLoading', true);
             __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner1Loaded', false);
@@ -62573,9 +62593,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner2Summoner', JSON.parse(response.body));
                     __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner2Loaded', true);
                 }
-                return _this3.assignRankedMatchList();
+                return _this4.assignRankedMatchList();
             }).then(function (response) {
-                return _this3.assignNormalMatchList();
+                return _this4.assignNormalMatchList();
             }).then(function (response) {
                 __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignLoading', false);
             }).catch(function (response) {
@@ -62623,6 +62643,36 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
         changeView: function changeView(view) {
             this.currentlyViewedMatchList = view;
+        },
+
+        /*
+            parseSummonerDataFromResponse()
+                turns the json string variables in the object into an actual object and then returns thew new summoner
+         */
+        parseSummonerDataFromResponse: function parseSummonerDataFromResponse(summoner) {
+            var parsedSummoner = summoner;
+            parsedSummoner.championMastery = typeof summoner.championMastery == 'string' ? JSON.parse(summoner.championMastery) : summoner.championMastery;
+            parsedSummoner.league = typeof summoner.league == 'string' ? JSON.parse(summoner.league) : summoner.league;
+            parsedSummoner.masteries = typeof summoner.masteries == 'string' ? JSON.parse(summoner.masteries) : summoner.masteries;
+            parsedSummoner.runes = typeof summoner.runes == 'string' ? JSON.parse(summoner.runes) : summoner.runes;
+
+            return parsedSummoner;
+        },
+
+
+        /*
+            Now we have to be able to turn each of the responses data into usable properties on the front end.
+            Let's go through each of the matches, and attach their corresponding defined match to it
+         */
+        parseMatchListDataFromResponse: function parseMatchListDataFromResponse(tempMatchList, tempMatchListDefined) {
+            // Now we're going to add the defined match to each of the regular matches
+            _.forEach(tempMatchList, function (match) {
+                _.forEach(tempMatchListDefined, function (defined_match) {
+                    if (match.gameId == defined_match.gameId) {
+                        match.defined_match = defined_match;
+                    }
+                });
+            });
         }
     },
     watch: {
@@ -62691,11 +62741,11 @@ var moment = __webpack_require__(0);
             // for every participant, add the id to that object
             _.forEach(this.defined_match.participants, function (participant) {
                 _.forEach(_this.defined_match.participant_identities, function (identitity) {
-                    if (participant.participantId === identitity.participantId) {
+                    if (parseInt(participant.participantId) == parseInt(identitity.participantId)) {
                         participant.identity = identitity;
                     }
                 });
-                if (participant.identity.accountId === summonerId) {
+                if (participant.identity.accountId == summonerId) {
                     _this.summoner_participant_data = participant;
                 }
             });
@@ -62764,7 +62814,7 @@ var moment = __webpack_require__(0);
 
         champion_image_url: function champion_image_url() {
             if (this.champion != undefined && this.champion.name != undefined) {
-                var parsedChampName = this.champion.name.split(' ').join('');
+                var parsedChampName = this.champion.name.split(' ').join('').split('\'').join('');
                 return 'http://ddragon.leagueoflegends.com/cdn/7.18.1/img/champion/' + parsedChampName + '.png';
             } else {
                 return 'http://ddragon.leagueoflegends.com/cdn/7.18.1/img/champion/aatrox.png';
@@ -62789,6 +62839,9 @@ var moment = __webpack_require__(0);
         },
 
         kill_death_ratio: function kill_death_ratio() {
+            this.stats.kills = this.stats.kills != undefined ? this.stats.kills : 0;
+            this.stats.deaths = this.stats.deaths != undefined ? this.stats.deaths : 0;
+            this.stats.assists = this.stats.assists != undefined ? this.stats.assists : 0;
             return this.stats.kills + ' / ' + this.stats.deaths + ' / ' + this.stats.assists;
         },
 
@@ -94422,18 +94475,9 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })])]), _vm._v(" "), _c('div', {
     staticClass: "right floated column summoner-column"
   }, [_c('div', {
-    staticClass: "ui two column grid"
+    staticClass: "ui one column grid"
   }, [_c('div', {
-    staticClass: "three wide column"
-  }, [_c('div', {
-    staticClass: "left-floated-icon"
-  }, [(_vm.summoner2Loaded) ? _c('img', {
-    staticClass: "ui fluid centered image",
-    attrs: {
-      "src": _vm.summoner2ProfileIconUrl
-    }
-  }) : _vm._e()])]), _vm._v(" "), _c('div', {
-    staticClass: "thirteen wide column"
+    staticClass: "sixteen wide column"
   }, [_c('div', {
     staticClass: "ui raised segment",
     class: {
@@ -94455,7 +94499,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "keyup": function($event) {
         if (_vm._k($event.keyCode, "enter", 13)) { return; }
-        _vm.getInfo(2)
+        _vm.getAllSummonerData('2')
       },
       "input": function($event) {
         if ($event.target.composing) { return; }
@@ -94475,10 +94519,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "src": _vm.summoner2ProfileIconUrl
     }
-  }) : _vm._e()]), _vm._v(" "), _vm._m(1)])]) : _vm._e()])]), _vm._v(" "), (_vm.summoner2Loaded) ? _c('div', {
-    staticClass: "three wide column"
-  }) : _vm._e(), _vm._v(" "), (_vm.summoner2Loaded && !_vm.loading) ? _c('div', {
-    staticClass: "thirteen wide column"
+  }) : _vm._e()]), _vm._v(" "), _vm._m(1)])]) : _vm._e()])]), _vm._v(" "), (_vm.summoner2Loaded && !_vm.loading) ? _c('div', {
+    staticClass: "sixteen wide column"
   }, [_c('div', {
     staticClass: "ui two item top attached menu"
   }, [_c('a', {

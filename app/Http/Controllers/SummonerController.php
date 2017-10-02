@@ -32,6 +32,144 @@ class SummonerController extends Controller
     }
 
     /**
+     * Return all the data necessary for a single summoner on the front end
+     * This includes:
+     *      Summoner Object
+     *      Matchlist Object
+     *      Defined matches for each match in the matchlist object
+     *      Masteries, Runes, Champion Masteries,
+     *
+     *
+     * @param  string|int  $id
+     * @return \Illuminate\Http\Response
+     */
+    public function getSummonerData($id) {
+        $returnObject = [];         // The object that will be returned to the front end
+        $summonerId = $id;
+
+        // First, find the summoner data
+        try {
+            if (is_numeric($id)) {
+                $summoner = Summoner::findOrFail($id);
+            } else {
+                $summoner = Summoner::where('name', $id)->firstOrFail();
+            }
+        } catch (ModelNotFoundException $e) {
+            $api = new riotapi('na1');
+
+            if (is_numeric($id)) {
+                $returnSummoner = $api->getSummoner($id);
+            } else {
+                $returnSummoner = $api->getSummonerByName($id);
+            }
+
+            $summoner = new Summoner;
+            $summoner->id = $returnSummoner['id'];
+            $summoner->accountId = $returnSummoner['accountId'];
+            $summoner->name = $returnSummoner['name'];
+            $summoner->profileIconId = $returnSummoner['profileIconId'];
+            $summoner->summonerLevel = $returnSummoner['summonerLevel'];
+            $summoner->revisionDate = (string)$returnSummoner['revisionDate'];
+
+            $summoner->save();
+
+            $this->assignMasteries($this->api, $summoner);
+            $this->assignRunes($this->api, $summoner);
+            $this->assignChampionMasteries($this->api, $summoner);
+            $this->assignLeagues($this->api, $summoner);
+        }
+        $returnObject['summoner'] = $summoner;
+
+        $summonerId = $summoner->id;
+        $accountId = $summoner->accountId;
+
+        // Then get the normal and ranked matchlist for that summoner
+        // Normal matchlist first
+        $normalParams = [
+            'queue'=> [2,14,400,430],
+            'season'=> [9],
+            'endIndex'=> 20
+        ];
+        try {
+            $matchListAggregate = MatchList::where('summonerId',$accountId)->get();
+            if (count($matchListAggregate) == 0) {
+                throw new ModelNotFoundException();
+            } else {
+                $found = false;
+                // go through all the matchlists found, then for each matchlist, compare it to the params we were sent
+                // if one of the matchlists matches the params sent in, return that, else we have to throw an exception
+                foreach($matchListAggregate as $matchListEntry) {
+                    // if it's the same season, same list type, and less than a day old
+                    if ($matchListEntry->list_type == 'normal' && strtotime($matchListEntry->updated_at) > (strtotime('-1 day'))) {
+                        $matchListObject = $matchListEntry;
+                        $found = true;
+                    }
+                }
+                // throw the exception since we couldn't find a matchlist that matches!
+                if (!$found) {
+                    throw new ModelNotFoundException();
+                }
+            }
+        } catch (ModelNotFoundException $e) {
+            $matches = $this->api->getMatchList($accountId, $normalParams);
+            $matchListObject = new MatchList;
+            $matchListObject->summonerId = $accountId;
+            $matchListObject->season = '["9"]';
+            $matchListObject->list_type = 'normal';
+            $matchListObject->matches = json_encode($matches['matches']);
+            $matchListObject->save();
+        }
+
+        $this->saveMatchListMatches($this->api, $matchListObject);
+
+        $returnObject['normalMatchList'] = $matchListObject;
+        $returnObject['normalDefinedMatchList'] = $this->getMatchListMatches($matchListObject);
+
+        // Ranked matchlist and matches next
+        $rankedParams = [
+            'queue' => [410, 420, 440, 6, 41, 42],
+            'season' => [9],
+            'endIndex' => 20
+        ];
+        try {
+            $matchListAggregate = MatchList::where('summonerId',$accountId)->get();
+            if (count($matchListAggregate) == 0) {
+                throw new ModelNotFoundException();
+            } else {
+                $found = false;
+                // go through all the matchlists found, then for each matchlist, compare it to the params we were sent
+                // if one of the matchlists matches the params sent in, return that, else we have to throw an exception
+                foreach($matchListAggregate as $matchListEntry) {
+                    // if it's the same season, same list type, and less than a day old
+                    if ($matchListEntry->list_type == 'ranked' && strtotime($matchListEntry->updated_at) > (strtotime('-1 day'))) {
+                        $matchListObject = $matchListEntry;
+                        $found = true;
+                    }
+                }
+                // throw the exception since we couldn't find a matchlist that matches!
+                if (!$found) {
+                    throw new ModelNotFoundException();
+                }
+            }
+        } catch (ModelNotFoundException $e) {
+            $matches = $this->api->getMatchList($accountId, $rankedParams);
+            $matchListObject = new MatchList;
+            $matchListObject->summonerId = $accountId;
+            $matchListObject->season = '["9"]';
+            $matchListObject->list_type = 'ranked';
+            $matchListObject->matches = json_encode($matches['matches']);
+            $matchListObject->save();
+        }
+
+        $this->saveMatchListMatches($this->api, $matchListObject);
+
+        $returnObject['rankedMatchList'] = $matchListObject;
+        $returnObject['rankedDefinedMatchList'] = $this->getMatchListMatches($matchListObject);
+
+        return response()->json(json_encode($returnObject));
+    }
+
+    /**
      * Display the specified resource.
      *
      * @param  string|int  $id
@@ -130,11 +268,10 @@ class SummonerController extends Controller
         return $response;
     }
 
-
-
     private function saveMatchListMatches(&$api, $matches) {
         // Now we have to go through each part of the matchlist and see if the match is in our database, if it isn't go find it...
-        forEach($matches['matches'] as $match_entry) {
+        $matches = json_decode($matches['matches'], true);
+        forEach($matches as $match_entry) {
             try {
                 $matchFromDatabase = Match::where('gameId', (string)$match_entry['gameId'])->firstOrFail();
             } catch (ModelNotFoundException $e) {

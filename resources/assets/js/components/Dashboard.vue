@@ -29,16 +29,11 @@
                 </div>
             </div>
             <div class="right floated column summoner-column">
-                <div class="ui two column grid">
-                    <div class="three wide column">
-                        <div class="left-floated-icon">
-                            <img class="ui fluid centered image" v-if="summoner2Loaded" :src="summoner2ProfileIconUrl" />
-                        </div>
-                    </div>
-                    <div class="thirteen wide column">
+                <div class="ui one column grid">
+                    <div class="sixteen wide column">
                         <div class="ui raised segment" :class="{'loading': loading}">
                             <h2>SUMMONER NAME2: </h2>
-                            <input v-model="summoner2Id" placeholder="Summoner Name" v-on:keyup.enter="getInfo(2)"/>
+                            <input v-model="summoner2Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('2')"/>
                             <div v-if="summoner2Loaded" class="season-container">
                                 <span>Season 6: </span>
                                 <span>Season 5:  </span>
@@ -59,10 +54,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="three wide column" v-if="summoner2Loaded">
-
-                    </div>
-                    <div class="thirteen wide column" v-if="summoner2Loaded && !loading">
+                    <div class="sixteen wide column" v-if="summoner2Loaded && !loading">
                         <div class="ui two item top attached menu">
                             <a class="item"
                                :class="{'active' : (currentlyViewedMatchList=='ranked')}"
@@ -126,6 +118,34 @@
 
         },
         methods : {
+            getAllSummonerData : function(summonerNumber) {
+                store.commit('assignLoading', true);
+                if (summonerNumber == "1") {
+                    this.$http.get('/summoner/' + this.summoner1Id + '/allData').then((resp) => {
+
+                    });
+                } else {
+                    this.$http.get('/summoner/' + this.summoner2Id + '/allData').then((resp) => {
+                        resp = JSON.parse(resp.body);
+                        console.log(_.cloneDeep(resp));
+                        // get the summoner information from the response
+                        resp.summoner = this.parseSummonerDataFromResponse(resp.summoner);
+                        resp.normalMatchList.matches = JSON.parse(resp.normalMatchList.matches);
+                        resp.rankedMatchList.matches = JSON.parse(resp.rankedMatchList.matches);
+                        this.parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
+                        this.parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
+                        store.commit('assignSummoner2Summoner', resp.summoner);
+                        store.commit('assignSummoner2Loaded', true);
+                        store.commit('assignSummoner2RankedMatchList', resp.rankedMatchList.matches);
+                        store.commit('assignSummoner2DefinedRankedMatchList', resp.rankedDefinedMatchList);
+                        store.commit('assignSummoner2NormalMatchList', resp.normalMatchList.matches);
+                        store.commit('assignSummoner2DefinedNormalMatchList', resp.normalDefinedMatchList);
+
+                        store.commit('assignLoading', false);
+                    });
+                }
+            },
+
             findSummoner : function(summonerNumber) {
                 if (summonerNumber == "1") {
                     store.commit('assignSummoner1Loaded', true);
@@ -328,7 +348,38 @@
 
             changeView : function(view) {
                 this.currentlyViewedMatchList = view;
+            },
+
+
+            /*
+                parseSummonerDataFromResponse()
+                    turns the json string variables in the object into an actual object and then returns thew new summoner
+             */
+            parseSummonerDataFromResponse(summoner) {
+                var parsedSummoner = summoner;
+                parsedSummoner.championMastery = (typeof summoner.championMastery == 'string' ? JSON.parse(summoner.championMastery) : summoner.championMastery);
+                parsedSummoner.league = (typeof summoner.league == 'string' ? JSON.parse(summoner.league) : summoner.league);
+                parsedSummoner.masteries = (typeof summoner.masteries == 'string' ? JSON.parse(summoner.masteries) : summoner.masteries);
+                parsedSummoner.runes = (typeof summoner.runes == 'string' ? JSON.parse(summoner.runes) : summoner.runes);
+
+                return parsedSummoner;
+            },
+
+            /*
+                Now we have to be able to turn each of the responses data into usable properties on the front end.
+                Let's go through each of the matches, and attach their corresponding defined match to it
+             */
+            parseMatchListDataFromResponse(tempMatchList, tempMatchListDefined) {
+                // Now we're going to add the defined match to each of the regular matches
+                _.forEach(tempMatchList, (match) => {
+                    _.forEach(tempMatchListDefined, (defined_match) => {
+                        if (match.gameId == defined_match.gameId) {
+                            match.defined_match = defined_match;
+                        }
+                    })
+                })
             }
+
         },
         watch : {
             currentYear : function(newYear) {
