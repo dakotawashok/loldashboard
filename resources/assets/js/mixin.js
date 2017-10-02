@@ -22,8 +22,8 @@ export default {
 
         staticSpell : function(id) {
             for (var spell in store.state.staticInfo.spells) {
-                if (store.state.staticInfo.champions[spell].key == id) {
-                    return store.state.staticInfo.champions[spell];
+                if (store.state.staticInfo.spells[spell].key == id) {
+                    return store.state.staticInfo.spells[spell];
                 }
             }
         },

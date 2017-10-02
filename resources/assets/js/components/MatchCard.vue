@@ -3,7 +3,7 @@
         <div class="ui grid">
             <div class="two column row">
                 <div class="ten wide column">
-                    <img class="ui top aligned spaced rounded tiny image summoner-champion-icon" :src="champion_image_url">
+                    <img class="ui middle aligned spaced rounded tiny image summoner-champion-icon" :src="champion_image_url">
                     Role: <span class="card-data right">{{card_title}}</span><br />
                     Date: <span class="card-data right">{{date}}</span><br />
                     Duration: <span class="card-data right">{{duration}}</span><br />
@@ -41,6 +41,8 @@
         ],
         methods : {
             setChampionData : function() { this.champion = this.staticChampion(this.match.champion) },
+
+            setSpellData : function(id) { return this.staticSpell(id); },
 
             loadIntroductoryData : function() {
                 var summonerId = (this.summoner_number == '1' ? this.summoner1.summoner.accountId : this.summoner2.summoner.accountId);
@@ -194,11 +196,13 @@
 
             summoner_spells : function() {
                 var spell_array = [];
+                var spell1 = this.setSpellData(this.summoner_participant_data.spell1Id);
+                var spell2 = this.setSpellData(this.summoner_participant_data.spell2Id);
                 if (this.summoner_participant_data.spell1Id != undefined && this.summoner_participant_data.spell1Id != '') {
-                    spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+this.summoner_participant_data.spell1Id+'.png');
+                    spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+spell1.id+'.png');
                 }
                 if (this.summoner_participant_data.spell2Id != undefined && this.summoner_participant_data.spell2Id != '') {
-                    spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+this.summoner_participant_data.spell2Id+'.png');
+                    spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+spell2.id+'.png');
                 }
                 if (this.stats.item6 != undefined && this.stats.item6 != '') {
                     spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/item/'+this.stats.item6 +'.png');

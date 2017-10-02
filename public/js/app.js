@@ -60061,8 +60061,8 @@ module.exports = function bind(fn, thisArg) {
 
         staticSpell: function staticSpell(id) {
             for (var spell in __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.spells) {
-                if (__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.champions[spell].key == id) {
-                    return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.champions[spell];
+                if (__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.spells[spell].key == id) {
+                    return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.spells[spell];
                 }
             }
         }
@@ -62767,6 +62767,10 @@ var moment = __webpack_require__(0);
             this.champion = this.staticChampion(this.match.champion);
         },
 
+        setSpellData: function setSpellData(id) {
+            return this.staticSpell(id);
+        },
+
         loadIntroductoryData: function loadIntroductoryData() {
             var _this = this;
 
@@ -62935,11 +62939,13 @@ var moment = __webpack_require__(0);
 
         summoner_spells: function summoner_spells() {
             var spell_array = [];
+            var spell1 = this.setSpellData(this.summoner_participant_data.spell1Id);
+            var spell2 = this.setSpellData(this.summoner_participant_data.spell2Id);
             if (this.summoner_participant_data.spell1Id != undefined && this.summoner_participant_data.spell1Id != '') {
-                spell_array.push('http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/spell/' + this.summoner_participant_data.spell1Id + '.png');
+                spell_array.push('http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/spell/' + spell1.id + '.png');
             }
             if (this.summoner_participant_data.spell2Id != undefined && this.summoner_participant_data.spell2Id != '') {
-                spell_array.push('http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/spell/' + this.summoner_participant_data.spell2Id + '.png');
+                spell_array.push('http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/spell/' + spell2.id + '.png');
             }
             if (this.stats.item6 != undefined && this.stats.item6 != '') {
                 spell_array.push('http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/item/' + this.stats.item6 + '.png');
@@ -94193,7 +94199,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_c('div', {
     staticClass: "ten wide column"
   }, [_c('img', {
-    staticClass: "ui top aligned spaced rounded tiny image summoner-champion-icon",
+    staticClass: "ui middle aligned spaced rounded tiny image summoner-champion-icon",
     attrs: {
       "src": _vm.champion_image_url
     }
