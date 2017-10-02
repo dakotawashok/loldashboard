@@ -1,8 +1,10 @@
 <template>
-    <div class="ui segment match-card" :class="{'green-win' : match_won, 'red-loss' : !match_won}" @click="showModal()">
+    <div class="ui segment match-card"
+         :class="{'green-win' : match_won, 'red-loss' : !match_won, 'loading' : match_loading}"
+         @click="showModal()">
         <div class="ui grid">
             <div class="two column row">
-                <div class="ten wide column">
+                <div class="eight wide column">
                     <img class="ui middle aligned spaced rounded tiny image summoner-champion-icon" :src="champion_image_url">
                     Role: <span class="card-data right">{{card_title}}</span><br />
                     Date: <span class="card-data right">{{date}}</span><br />
@@ -17,8 +19,19 @@
                         </div>
                     </div>
                 </div>
-                <div class="six wide column">
-
+                <div class="eight wide column" v-if="!match_loading">
+                    <div class="summoner-team-container">
+                        <div class="summoner-participant" v-for="participant in summoner_team.participants">
+                            <img class="ui middle aligned spaced rounded tiny image small-champion-icon" :src="getChampionImageUrl(participant.championId)">
+                            <span>{{participant.identity.summonerName}}</span>
+                        </div>
+                    </div>
+                    <div class="enemy-team-container">
+                        <div class="enemy-participant" v-for="participant in enemy_team.participants">
+                            <span>{{participant.identity.summonerName}}</span>
+                            <img class="ui middle aligned spaced rounded tiny image small-champion-icon" :src="getChampionImageUrl(participant.championId)">
+                        </div>
+                    </div>
                 </div>
             </div>
         </div>
@@ -44,10 +57,21 @@
 
             setSpellData : function(id) { return this.staticSpell(id); },
 
+            getChampionImageUrl : function(id) {
+                var tempChamp =  this.staticChampion(id);
+                if (tempChamp != undefined && tempChamp.id != undefined) {
+                    var parsedChampName = tempChamp.id.split(' ').join('').split('\'').join('');
+                    return 'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/champion/'+parsedChampName+'.png';
+                } else {
+                    var vue = (this);
+                }
+            },
+
             loadIntroductoryData : function() {
                 var summonerId = (this.summoner_number == '1' ? this.summoner1.summoner.accountId : this.summoner2.summoner.accountId);
                 var summonerTeamId = 0;
                 var enemyTeamId = 0;
+                this.match_loading = true;
 
                 // for every participant, add the id to that object
                 _.forEach(this.defined_match.participants, (participant) => {
@@ -75,6 +99,20 @@
                 this.summoner_team = _.find(this.defined_match.teams, ['teamId', summonerTeamId]);
                 this.enemy_team = _.find(this.defined_match.teams, ['teamId', enemyTeamId]);
 
+                // put each participant into their respective team
+                // first the summoner team
+                var summoner_participant_array = [];
+                var enemy_participant_array = [];
+                _.forEach(this.defined_match.participants, (participant) => {
+                    if (participant.teamId == summonerTeamId) {
+                        summoner_participant_array.push(participant);
+                    } else {
+                        enemy_participant_array.push(participant);
+                    }
+                });
+                this.summoner_team.participants = summoner_participant_array;
+                this.enemy_team.participants = enemy_participant_array;
+
 
                 // determine if the summoner won this match or not
                 if (this.summoner_team.win === 'Win') {
@@ -85,6 +123,7 @@
 
                 // get the summoner stats for this game
                 this.stats = this.summoner_participant_data.stats;
+                this.match_loading = false;
             },
 
             parseMatchParticipantData : function() {
@@ -118,6 +157,8 @@
                 enemy_team : {},
                 stats: {},
                 summoner_participant_data : {},
+
+                match_loading: true,
             }
         },
         computed :  {
@@ -126,8 +167,8 @@
             },
 
             champion_image_url : function() {
-                if (this.champion != undefined && this.champion.name != undefined) {
-                    var parsedChampName = this.champion.name.split(' ').join('').split('\'').join('');
+                if (this.champion != undefined && this.champion.id != undefined) {
+                    var parsedChampName = this.champion.id.split(' ').join('').split('\'').join('');
                     return 'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/champion/'+parsedChampName+'.png';
                 } else {
                     return 'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/champion/aatrox.png';
@@ -257,4 +298,50 @@
         margin-right: 5px!important;
         margin-bottom: 0px!important;
     }
+    .summoner-team-container, .enemy-team-container {
+        margin: 0px!important;
+        padding: 0px!important;
+        width: 50%;
+        height: 100%;
+        position: absolute;
+    }
+    .summoner-team-container {
+        left: 0px;
+    }
+    .enemy-team-container {
+        right: 0px;
+    }
+    .summoner-participant, .enemy-participant {
+        display: inline-block;
+        width: 100%;
+        height: 22px;
+    }
+    .summoner-participant > span {
+        position: absolute;
+        left: 25px;
+        padding-left: 5px;
+        padding-top: 2px;
+    }
+    .summoner-participant > .small-champion-icon {
+        width: 20px!important;
+        height: auto;
+        position: absolute;
+        left: 0;
+    }
+    .enemy-participant > span {
+        position: absolute;
+        right: 45px;
+        padding-right: 5px;
+        padding-top: 2px;
+    }
+    .enemy-participant > .small-champion-icon {
+        width: 20px!important;
+        height: auto;
+        position: absolute;
+        right: 0;
+        margin-right: 20px;
+    }
+
+
+
 </style>

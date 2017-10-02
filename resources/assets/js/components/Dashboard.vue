@@ -20,12 +20,47 @@
         </div>
         <div class="two column row" id="main-grid-container">
             <div class="left floated column summoner-column">
-                <div class="right-floated-icon">
-                    <img v-if="summoner1Loaded" :src="summoner1ProfileIconUrl" />
-                </div>
-                <div class="summoner-form" style="float: right; text-align: right;">
-                    <h2>SUMMONER NAME1: </h2>
-                    <input v-model="summoner1Id" placeholder="Summoner Name" v-on:keyup.enter="getInfo(1)"/>
+                <div class="ui one column grid">
+                    <div class="sixteen wide column">
+                        <div class="ui raised segment" :class="{'loading': loading}">
+                            <h2>SUMMONER NAME1: </h2>
+                            <input v-model="summoner1Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('1')"/>
+                            <div v-if="summoner1Loaded" class="season-container">
+                                <span>Season 6: </span>
+                                <span>Season 5:  </span>
+                                <span>Season 4: </span>
+                            </div>
+                            <div v-if="summoner1Loaded" class="ui grid ranked-info-container">
+                                <div class="two column row">
+                                    <div class="four wide column">
+                                        <img class="ui centered small image" v-if="summoner1Loaded" :src="summoner1ProfileIconUrl" />
+                                    </div>
+                                    <div class="twelve wide column">
+                                        <p>Current Rank</p>
+                                        <p>LP / W / L</p>
+                                        <p>Win Ratio</p>
+                                        <p>League Name</p>
+                                    </div>
+                                </div>
+                            </div>
+                        </div>
+                    </div>
+                    <div class="sixteen wide column" v-if="summoner2Loaded && !loading">
+                        <div class="ui two item top attached menu">
+                            <a class="item"
+                               :class="{'active' : (currentlyViewedMatchList=='ranked')}"
+                               @click="changeView('ranked')">Ranked Games</a>
+                            <a class="item"
+                               :class="{'active' : (currentlyViewedMatchList=='normal')}"
+                               @click="changeView('normal')">Normal Games</a>
+                        </div>
+                        <template v-if="currentlyViewedMatchList=='ranked'">
+                            <matchcard v-for="(match, key, index) in summoner1RankedMatchList" :summoner_number="'1'" :match_type="'ranked'" :match="match"></matchcard>
+                        </template>
+                        <template v-if="currentlyViewedMatchList=='normal'">
+                            <matchcard v-for="(match, key, index) in summoner1NormalMatchList" :summoner_number="'1'" :match_type="'normal'" :match="match"></matchcard>
+                        </template>
+                    </div>
                 </div>
             </div>
             <div class="right floated column summoner-column">
@@ -122,7 +157,22 @@
                 store.commit('assignLoading', true);
                 if (summonerNumber == "1") {
                     this.$http.get('/summoner/' + this.summoner1Id + '/allData').then((resp) => {
+                        resp = JSON.parse(resp.body);
+                        console.log(_.cloneDeep(resp));
+                        // get the summoner information from the response
+                        resp.summoner = this.parseSummonerDataFromResponse(resp.summoner);
+                        resp.normalMatchList.matches = JSON.parse(resp.normalMatchList.matches);
+                        resp.rankedMatchList.matches = JSON.parse(resp.rankedMatchList.matches);
+                        this.parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
+                        this.parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
+                        store.commit('assignSummoner1Summoner', resp.summoner);
+                        store.commit('assignSummoner1Loaded', true);
+                        store.commit('assignSummoner1RankedMatchList', resp.rankedMatchList.matches);
+                        store.commit('assignSummoner1DefinedRankedMatchList', resp.rankedDefinedMatchList);
+                        store.commit('assignSummoner1NormalMatchList', resp.normalMatchList.matches);
+                        store.commit('assignSummoner1DefinedNormalMatchList', resp.normalDefinedMatchList);
 
+                        store.commit('assignLoading', false);
                     });
                 } else {
                     this.$http.get('/summoner/' + this.summoner2Id + '/allData').then((resp) => {

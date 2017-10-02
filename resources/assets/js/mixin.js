@@ -43,6 +43,13 @@ export default {
         summoner1Loaded : function() { return store.state.summoner1.loaded; },
         summoner2Loaded : function() { return store.state.summoner2.loaded; },
 
+        summoner1RankedMatchList : function() {
+            return store.state.summoner1.rankedMatchList;
+        },
+        summoner1NormalMatchList : function() {
+            return store.state.summoner1.normalMatchList;
+        },
+
         summoner2RankedMatchList : function() {
             return store.state.summoner2.rankedMatchList;
         },
