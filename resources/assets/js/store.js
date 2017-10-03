@@ -10,6 +10,7 @@ var store = new Vuex.Store({
             loaded : false,
             dataLoaded : false,
             summoner : {},
+            summonerName : '',
             normalMatchList :{},
             rankedMatchList : {},
             definedNormalMatchList: {},
@@ -19,6 +20,7 @@ var store = new Vuex.Store({
             loaded : false,
             dataLoaded: false,
             summoner : {},
+            summonerName : '',
             normalMatchList :{},
             rankedMatchList : {},
             definedNormalMatchList: {},
@@ -77,7 +79,22 @@ var store = new Vuex.Store({
             } else {
                 state.summoner2.dataLoaded = loaded;
             }
-        }
+        },
+
+        assignSummonerName (state, summonerObject) {
+            var summonerNumber  = summonerObject.summonerNumber;
+            var summonerName  = summonerObject.summonerName;
+            if (summonerNumber === 1) {
+                state.summoner1.summonerName = summonerName;
+            } else {
+                state.summoner2.summonerName = summonerName;
+            }
+        },
+
+
+
+
+        // Other methods that we need like the loading summoners from the match Card
     }
 });
 

@@ -21,13 +21,15 @@
                 </div>
                 <div class="eight wide column" v-if="!match_loading">
                     <div class="summoner-team-container">
-                        <div class="summoner-participant" v-for="participant in summoner_team.participants">
+                        <div class="summoner-participant" v-for="participant in summoner_team.participants"
+                             @click="loadSummonerFromMatchCard(participant.identity.summonerName)">
                             <img class="ui middle aligned spaced rounded tiny image small-champion-icon" :src="getChampionImageUrl(participant.championId)">
                             <span>{{participant.identity.summonerName}}</span>
                         </div>
                     </div>
                     <div class="enemy-team-container">
-                        <div class="enemy-participant" v-for="participant in enemy_team.participants">
+                        <div class="enemy-participant" v-for="participant in enemy_team.participants"
+                             @click="loadSummonerFromMatchCard(participant.identity.summonerName)">
                             <span>{{participant.identity.summonerName}}</span>
                             <img class="ui middle aligned spaced rounded tiny image small-champion-icon" :src="getChampionImageUrl(participant.championId)">
                         </div>
@@ -140,7 +142,18 @@
             },
 
             showModal : function() {
-                $('.ui.modal').modal('show');
+//                $('.ui.modal').modal('show');
+            },
+
+            loadSummonerFromMatchCard : function(summonerName) {
+                if (this.summoner_number == '1') {
+                    store.commit('assignSummonerName', {summonerNumber: 2, summonerName: summonerName});
+                    this.getAllSummonerData('2');
+                } else if (this.summoner_number == '2') {
+                    store.commit('assignSummonerName', {summonerNumber: 1, summonerName: summonerName});
+                    this.getAllSummonerData('1');
+                }
+
             },
         },
         mounted() {
