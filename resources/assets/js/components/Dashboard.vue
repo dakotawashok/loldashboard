@@ -79,7 +79,7 @@
                                     <div class="four wide column">
                                         <img class="ui centered small image" v-if="summoner2Loaded" :src="summoner2ProfileIconUrl" />
                                     </div>
-                                    <div class="twelve wide column">
+                                    <div class="twelve wide column ranked-stats-container">
                                         <p>Current Rank: {{summoner2CurrentRank}}</p>
                                         <p>{{summoner2Ratio}}</p>
                                         <p>Win Ratio: {{summoner2RatioPercent}}</p>
@@ -564,5 +564,13 @@
 
     .summoner-column {
         padding: 30px!important;
+    }
+
+    input {
+        margin-bottom: 12px;
+    }
+
+    .ranked-stats-container > p {
+        line-height: 10px;
     }
 </style>
