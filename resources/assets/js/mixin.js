@@ -75,7 +75,7 @@ export default {
         summoner1RatioPercent : function() {
             var wins = parseInt(this.summoner1.summoner.rankedData.wins);
             var total = parseInt(this.summoner1.summoner.rankedData.wins) + parseInt(this.summoner1.summoner.rankedData.losses);
-            return ((wins / total) * 100) + '%';
+            return ((wins / total) * 100).toFixed(2) + '%';
         },
         summoner2CurrentRank : function() {
             return this.summoner2.summoner.rankedData.tier + ' ' + this.summoner2.summoner.rankedData.rank;
@@ -91,7 +91,7 @@ export default {
         summoner2RatioPercent : function() {
             var wins = parseInt(this.summoner2.summoner.rankedData.wins);
             var total = parseInt(this.summoner2.summoner.rankedData.wins) + parseInt(this.summoner2.summoner.rankedData.losses);
-            return ((wins / total) * 100) + '%';
+            return ((wins / total) * 100).toFixed(2) + '%';
         },
     }
 }
