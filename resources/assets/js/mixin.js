@@ -29,8 +29,8 @@ export default {
         },
 
         getAllSummonerData : function(summonerNumber) {
-            store.commit('assignLoading', true);
             if (summonerNumber == "1") {
+                store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : true});
                 this.$http.get('/summoner/' + this.summoner1.summonerName + '/allData').then((resp) => {
                     resp = JSON.parse(resp.body);
                     // get the summoner information from the response
@@ -48,9 +48,10 @@ export default {
 
                     this.assignRankedData(summonerNumber);
 
-                    store.commit('assignLoading', false);
+                    store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : false});
                 });
             } else {
+                store.commit('assignSummonerLoading', {'summonerNumber' : 2, 'loading' : true});
                 this.$http.get('/summoner/' + this.summoner2.summonerName + '/allData').then((resp) => {
                     resp = JSON.parse(resp.body);
                     // get the summoner information from the response
@@ -68,7 +69,7 @@ export default {
 
                     this.assignRankedData(summonerNumber);
 
-                    store.commit('assignLoading', false);
+                    store.commit('assignSummonerLoading', {'summonerNumber' : 2, 'loading' : false});
                 });
             }
         },
@@ -236,6 +237,9 @@ export default {
 
         summoner1Loaded : function() { return store.state.summoner1.loaded; },
         summoner2Loaded : function() { return store.state.summoner2.loaded; },
+
+        summoner1Loading : function() { return store.state.summoner1.loading; },
+        summoner2Loading : function() { return store.state.summoner2.loading; },
 
         summoner1RankedMatchList : function() {
             return store.state.summoner1.rankedMatchList;

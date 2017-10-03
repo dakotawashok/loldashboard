@@ -22,7 +22,7 @@
             <div class="left floated column summoner-column">
                 <div class="ui one column grid">
                     <div class="sixteen wide column">
-                        <div class="ui raised segment" :class="{'loading': !summoner1Loaded && loading}">
+                        <div class="ui raised segment" :class="{'loading': summoner1Loading}">
                             <h2>SUMMONER NAME1: </h2>
                             <input v-model="summoner1Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('1')"/>
                             <!--<div v-if="summoner1Loaded" class="season-container">-->
@@ -46,7 +46,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="sixteen wide column" v-if="summoner1Loaded && !loading">
+                    <div class="sixteen wide column" v-if="summoner1Loaded && !summoner1Loading">
                         <div class="ui two item top attached menu">
                             <a class="item"
                                :class="{'active' : (currentlyViewedMatchList=='ranked')}"
@@ -67,7 +67,7 @@
             <div class="right floated column summoner-column">
                 <div class="ui one column grid">
                     <div class="sixteen wide column">
-                        <div class="ui raised segment" :class="{'loading': !summoner2Loaded && loading}">
+                        <div class="ui raised segment" :class="{'loading': summoner2Loading}">
                             <h2>SUMMONER NAME2: </h2>
                             <input v-model="summoner2Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('2')"/>
                             <!--<div v-if="summoner2Loaded" class="season-container">-->
@@ -91,7 +91,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="sixteen wide column" v-if="summoner2Loaded && !loading">
+                    <div class="sixteen wide column" v-if="summoner2Loaded && !summoner2Loading">
                         <div class="ui two item top attached menu">
                             <a class="item"
                                :class="{'active' : (currentlyViewedMatchList=='ranked')}"

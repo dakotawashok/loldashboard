@@ -8,7 +8,7 @@ var store = new Vuex.Store({
         },
         summoner1 : {
             loaded : false,
-            dataLoaded : false,
+            loading : false,
             summoner : {},
             summonerName : '',
             normalMatchList :{},
@@ -18,7 +18,7 @@ var store = new Vuex.Store({
         },
         summoner2 : {
             loaded : false,
-            dataLoaded: false,
+            loading : false,
             summoner : {},
             summonerName : '',
             normalMatchList :{},
@@ -28,7 +28,6 @@ var store = new Vuex.Store({
         },
         currentYear : "2017",
 
-        loading : false,
     },
     mutations : {
         assignChampions (state, championsList) {
@@ -70,14 +69,14 @@ var store = new Vuex.Store({
         },
         assignSummoner1Loaded (state, loaded) { state.summoner1.loaded = loaded; },
         assignSummoner2Loaded (state, loaded) { state.summoner2.loaded = loaded; },
-        assignCurrentYear(state, year) { state.currentYear = year; },
-        assignLoading(state, loading ) { state.loading = loading; },
 
-        assignSummonerDataLoaded (state, summonerNumber, loaded) {
+        assignSummonerLoading (state, summonerObject) {
+            var summonerNumber  = summonerObject.summonerNumber;
+            var loading  = summonerObject.loading;
             if (summonerNumber === 1) {
-                state.summoner1.dataLoaded = loaded;
+                state.summoner1.loading = loading;
             } else {
-                state.summoner2.dataLoaded = loaded;
+                state.summoner2.loading = loading;
             }
         },
 
