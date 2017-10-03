@@ -26,6 +26,8 @@ Route::get('summoner/{id}', 'SummonerController@getSummoner');
 
 Route::get('summoner/{id}/allData', 'SummonerController@getSummonerData');
 
+Route::get('summoner/{accountId}/refreshRankedStats', 'SummonerController@refreshRankedStats');
+
 Route::get('summoner/{accountId}/{type}/data/{season}', 'SummonerController@getSummonerData');
 
 Route::post('summoner/{identifier}/matchlist', 'SummonerController@getMatchList');

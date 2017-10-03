@@ -22,7 +22,7 @@
             <div class="left floated column summoner-column">
                 <div class="ui one column grid">
                     <div class="sixteen wide column">
-                        <div class="ui raised segment" :class="{'loading': loading}">
+                        <div class="ui raised segment" :class="{'loading': !summoner1Loaded && loading}">
                             <h2>SUMMONER NAME1: </h2>
                             <input v-model="summoner1Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('1')"/>
                             <!--<div v-if="summoner1Loaded" class="season-container">-->
@@ -36,7 +36,8 @@
                                         <img class="ui centered small image" v-if="summoner1Loaded" :src="summoner1ProfileIconUrl" />
                                     </div>
                                     <div class="twelve wide column">
-                                        <p>Current Rank: {{summoner1CurrentRank}}</p>
+                                        <p>Current Rank: {{summoner1CurrentRank}}
+                                            <i class="refresh icon" @click="refreshSummonerRankedData('1', summoner1.summoner.accountId)"></i></p>
                                         <p>{{summoner1Ratio}}</p>
                                         <p>Win Ratio: {{summoner1RatioPercent}}</p>
                                         <p>League Name: {{summoner1RankName}}</p>
@@ -66,7 +67,7 @@
             <div class="right floated column summoner-column">
                 <div class="ui one column grid">
                     <div class="sixteen wide column">
-                        <div class="ui raised segment" :class="{'loading': loading}">
+                        <div class="ui raised segment" :class="{'loading': !summoner2Loaded && loading}">
                             <h2>SUMMONER NAME2: </h2>
                             <input v-model="summoner2Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('2')"/>
                             <!--<div v-if="summoner2Loaded" class="season-container">-->
@@ -80,7 +81,8 @@
                                         <img class="ui centered small image" v-if="summoner2Loaded" :src="summoner2ProfileIconUrl" />
                                     </div>
                                     <div class="twelve wide column ranked-stats-container">
-                                        <p>Current Rank: {{summoner2CurrentRank}}</p>
+                                        <p>Current Rank: {{summoner2CurrentRank}}
+                                            <i class="refresh icon" @click="refreshSummonerRankedData('2', summoner2.summoner.accountId)"></i></p>
                                         <p>{{summoner2Ratio}}</p>
                                         <p>Win Ratio: {{summoner2RatioPercent}}</p>
                                         <p>League Name: {{summoner2RankName}}</p>
@@ -198,131 +200,37 @@
                 }
             },
 
-            findSummoner : function(summonerNumber) {
-                if (summonerNumber == "1") {
-                    store.commit('assignSummoner1Loaded', true);
-                    return this.$http.get('/summoner/' + this.summoner1Id);
-                } else {
-                    store.commit('assignSummoner2Loaded', true);
-                    return this.$http.get('/summoner/' + this.summoner2Id);
-                }
+            /*
+                refreshSummonerRankedData()
+                    sends a request to the server to get new ranked data for the summoner
+            */
+            refreshSummonerRankedData(summonerNumber, accountId) {
+                if (summonerNumber == '1') { store.commit('assignSummoner1Loaded', false);}
+                if (summonerNumber == '2') { store.commit('assignSummoner2Loaded', false);}
+                this.$http.get('/summoner/'+accountId+'/refreshRankedStats').then((resp) => {
+                    if (summonerNumber == '1') {
+                        // get the summoner, put the new ranked data in that summoner, then reassign the summoner
+                        // then we have to recall the assignRankedData to parse it all back out baby
+                        var tempSummoner = _.cloneDeep(this.summoner1.summoner);
+                        tempSummoner.league = JSON.parse(resp.body);
+                        store.commit('assignSummoner1Summoner', tempSummoner);
+                    } else if (summonerNumber == '2') {
+                        // get the summoner, put the new ranked data in that summoner, then reassign the summoner
+                        // then we have to recall the assignRankedData to parse it all back out baby
+                        var tempSummoner = _.cloneDeep(this.summoner2.summoner);
+                        tempSummoner.league = JSON.parse(resp.body);
+                        store.commit('assignSummoner2Summoner', tempSummoner);
+                    }
+                    this.assignRankedData(summonerNumber);
+                    if (summonerNumber == '1') { store.commit('assignSummoner1Loaded', true);}
+                    if (summonerNumber == '2') { store.commit('assignSummoner2Loaded', true);}
+                })
             },
+
             findMatchList : function(identifier, matchlistType, parameters) {
                 var body = {'matchlistType': matchlistType, 'params' : parameters};
                 var headers = {'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')};
                 return this.$http.post('/summoner/' + identifier + '/matchlist', body, {headers: headers});
-            },
-
-            // assignRankedMatchList()
-            //      gets the ranked matchlist, parses it, then puts it into the stored object
-            assignRankedMatchList : function() {
-                // created the ranked parameters needed by the back-end
-                var tempParams = {'queue' : [410, 420, 440, 6, 41, 42], 'season' : [9], 'endIndex' : 20};
-                var params = [];
-                for (var key in tempParams) {params.push(key+'='+encodeURIComponent(tempParams[key]));}
-                params = params.join('&');
-
-                if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
-                    this.findMatchList(store.state.summoner1.summoner.accountId, 'ranked', params).then(
-                        response => {
-                            var tempRankedMatchList = JSON.parse(response.body);
-                            tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
-                            store.commit('assignSummoner1RankedMatchList', tempRankedMatchList);
-                        }
-                    );
-                } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    this.findMatchList(store.state.summoner2.summoner.accountId, 'ranked', params).then(
-                        response => {
-                            var tempMatchList = JSON.parse(response.body);
-                            var tempMatchListDefined = tempMatchList.matches_defined;
-                            tempMatchList = JSON.parse(tempMatchList.matches.matches);
-                            // Now we're going to add the defined match to each of the regular matches
-                            _.forEach(tempMatchList, (match) => {
-                                _.forEach(tempMatchListDefined, (defined_match) => {
-                                    if (match.gameId == defined_match.gameId) {
-                                        match.defined_match = defined_match;
-                                    }
-                                })
-                            })
-
-                            store.commit('assignSummoner2RankedMatchList', tempMatchList);
-                        }
-                    );
-                } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    // I make temporary variables like this so that I can commit both of them at the same time which fixes
-                    // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
-                    var tempRankedMatchList1 = {};
-                    var tempRankedMatchList2 = {};
-                    this.findMatchList(this.summoner1.summoner.accountId, 'ranked', params).then(response => {
-                        var tempRankedMatchList = JSON.parse(response.body);
-                        tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
-                        tempRankedMatchList1 = tempRankedMatchList;
-                        return this.findMatchList(this.summoner2.summoner.accountId, 'ranked', params)
-                    }).then(resp => {
-                        var tempRankedMatchList = JSON.parse(response.body);
-                        tempRankedMatchList.matches = JSON.parse(tempRankedMatchList.matches);
-                        tempRankedMatchList2 = tempRankedMatchList;
-
-                        store.commit('assignSummoner1RankedMatchList', tempRankedMatchList1);
-                        store.commit('assignSummoner2RankedMatchList', tempRankedMatchList2);
-                    });
-                }
-            },
-
-            // assignNormalMatchList()
-            //      gets the normal match list, parses it, then puts it into the stored object
-            assignNormalMatchList : function() {
-                // created the ranked parameters needed by the back-end
-                var tempParams = {'queue' : [2, 8, 14, 400, 430, 460], 'season' : [9], 'endIndex' : 20};
-                var params = [];
-                for (var key in tempParams) {params.push(key+'='+encodeURIComponent(tempParams[key]));}
-                params = params.join('&');
-
-                if (store.state.summoner1.loaded && !store.state.summoner2.loaded) {
-                    this.findMatchList(store.state.summoner1.summoner.accountId, 'normal', params).then(
-                        response => {
-                            var tempMatchList = JSON.parse(response.body);
-                            tempMatchList.matches = JSON.parse(tempMatchList.matches.matches);
-                            store.commit('assignSummoner1NormalMatchList', tempMatchList);
-                        }
-                    );
-                } else if (!store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    this.findMatchList(store.state.summoner2.summoner.accountId, 'normal', params).then(
-                        response => {
-                            var tempMatchList = JSON.parse(response.body);
-                            var tempMatchListDefined = tempMatchList.matches_defined;
-                            tempMatchList = JSON.parse(tempMatchList.matches.matches);
-                            // Now we're going to add the defined match to each of the regular matches
-                            _.forEach(tempMatchList, (match) => {
-                                _.forEach(tempMatchListDefined, (defined_match) => {
-                                    if (match.gameId == defined_match.gameId) {
-                                        match.defined_match = defined_match;
-                                    }
-                                })
-                            })
-
-                            store.commit('assignSummoner2NormalMatchList', tempMatchList);
-                        }
-                    );
-                } else if (store.state.summoner1.loaded && store.state.summoner2.loaded) {
-                    // I make temporary variables like this so that I can commit both of them at the same time which fixes
-                    // the problem of the menu being loaded once the first dataset is loaded, but then reloading once the second is done
-                    var tempMatchList1 = {};
-                    var tempMatchList2 = {};
-                    this.findMatchList(this.summoner1.summoner.accountId, 'normal', params).then(response => {
-                        var tempMatchList = JSON.parse(response.body);
-                        tempMatchList.matches = JSON.parse(tempMatchList.matches);
-                        tempMatchList1 = tempMatchList;
-                        return this.findMatchList(this.summoner2.summoner.accountId, 'normal', params)
-                    }).then(resp => {
-                        var tempMatchList = JSON.parse(response.body);
-                        tempMatchList.matches = JSON.parse(tempMatchList.matches);
-                        tempMatchList2 = tempMatchList;
-
-                        store.commit('assignSummoner1NormalMatchList', tempMatchList1);
-                        store.commit('assignSummoner2NormalMatchList', tempMatchList2);
-                    });
-                }
             },
 
             // Go through all the summoner league ranked data and find the specific data that matches with this summoner
@@ -412,41 +320,6 @@
                 }
             },
 
-            // This getInfo method is called when the user loads up a summoner.
-            /*
-             It:
-                Finds the summoner data from the database/api including mastery, masteries, leagues, and runes
-                Finds the ranked matchlist for specified user from the database/api
-                Finds the normal matchlist for specified user from the database/api
-             */
-            getInfo : function(summonerNumber) {
-                store.commit('assignLoading', true);
-
-                if (summonerNumber == "1") {
-                    store.commit('assignSummoner1Loaded', false);
-                } else {
-                    store.commit('assignSummoner2Loaded', false);
-                }
-                this.clearData(summonerNumber);
-                this.findSummoner(summonerNumber).then(response => {
-                    if (summonerNumber == "1") {
-                        store.commit('assignSummoner1Summoner', JSON.parse(response.body));
-                        store.commit('assignSummoner1Loaded', true);
-                    } else {
-                        store.commit('assignSummoner2Summoner', JSON.parse(response.body));
-                        store.commit('assignSummoner2Loaded', true);
-                    }
-                    return this.assignRankedMatchList();
-                }).then(response => {
-                    return this.assignNormalMatchList();
-                }).then(response => {
-                    store.commit('assignLoading', false);
-                }).catch(
-                    response => {
-                        console.log(response)
-                    }
-                );
-            },
 
             clearData : function(summonerNumber) {
                 if (summonerNumber == '1') {

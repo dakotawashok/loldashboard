@@ -186,12 +186,10 @@ class SummonerController extends Controller
 
             return response()->json(json_encode($summoner));
         } catch (ModelNotFoundException $e) {
-            $api = new riotapi('na1');
-
             if (is_numeric($id)) {
-                $returnSummoner = $api->getSummoner($id);
+                $returnSummoner = $this->api->getSummoner($id);
             } else {
-                $returnSummoner = $api->getSummonerByName($id);
+                $returnSummoner = $this->api->getSummonerByName($id);
             }
 
             $summoner = new Summoner;
@@ -215,6 +213,28 @@ class SummonerController extends Controller
         }
 
     }
+
+
+    /**
+     * Query the API for new ranked stats, save them to the summoner with the specified account id, then return the new
+     * ranked stats
+     *
+     *
+     * @param  string|int  $accountId
+     * @return \Illuminate\Http\Response
+     */
+    public function refreshRankedStats($accountId) {
+        try {
+            $summoner = Summoner::where('accountId', $accountId)->firstOrFail();
+            $this->assignLeagues($this->api, $summoner);
+
+            return response()->json($summoner->league);
+        } catch (ModelNotFoundException $e) {
+            $returnObject = ['error' => 'That account wasn\'t found in our database...', 'error_e' => $e];
+            return response()->json(json_encode($returnObject));
+        }
+    }
+
 
     public function getMatchList(Request  $request, $summonerId) {
         $matchlistType = $request->input('matchlistType');  // get the matchlisttype from the post request
@@ -267,7 +287,6 @@ class SummonerController extends Controller
         $response = response()->json(json_encode($returnObject));
         return $response;
     }
-
     private function saveMatchListMatches(&$api, $matches) {
         // Now we have to go through each part of the matchlist and see if the match is in our database, if it isn't go find it...
         $matches = json_decode($matches['matches'], true);
@@ -367,7 +386,6 @@ class SummonerController extends Controller
         }
         return $matchArray;
     }
-
     private function createNormalMatchData($summonerId, $params = null) {
         // if the summoner isn't in here, maybe we should build some stats for them?
         // First lets get a list of regular matches I guess then get a list of ranked matches?
@@ -399,7 +417,6 @@ class SummonerController extends Controller
 
         $this->saveMatchListMatches($this->api, $matches);
     }
-
     private function createRankedMatchData($summonerId, $params = null) {
         if (isset($params)) {
             $rankedParams = [
@@ -430,31 +447,23 @@ class SummonerController extends Controller
     }
 
     private function assignMasteries(&$api, &$summoner) {
-        if (strlen($summoner->masteries) == 0) {
-            $masteries = $api->getMasteries($summoner->id);
-            $summoner->masteries = json_encode($masteries);
-            $summoner->save();
-        }
+        $masteries = $api->getMasteries($summoner->id);
+        $summoner->masteries = json_encode($masteries);
+        $summoner->save();
     }
     private function assignRunes(&$api, &$summoner) {
-        if (strlen($summoner->runes) == 0) {
-            $runes = $api->getRunes($summoner->id);
-            $summoner->runes = json_encode($runes);
-            $summoner->save();
-        }
+        $runes = $api->getRunes($summoner->id);
+        $summoner->runes = json_encode($runes);
+        $summoner->save();
     }
     private function assignChampionMasteries(&$api, &$summoner) {
-        if (strlen($summoner->championMastery) == 0) {
-            $championMastery = $api->getChampionMastery($summoner->id);
-            $summoner->championMastery = json_encode($championMastery);
-            $summoner->save();
-        }
+        $championMastery = $api->getChampionMastery($summoner->id);
+        $summoner->championMastery = json_encode($championMastery);
+        $summoner->save();
     }
     private function assignLeagues(&$api, &$summoner) {
-        if (strlen($summoner->league) == 0) {
-            $league = $api->getLeague($summoner->id);
-            $summoner->league = json_encode($league);
-            $summoner->save();
-        }
+        $league = $api->getLeague($summoner->id);
+        $summoner->league = json_encode($league);
+        $summoner->save();
     }
 }
