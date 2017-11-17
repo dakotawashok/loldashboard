@@ -1,7 +1,7 @@
-#League of Legends Dashboard#
+# League of Legends Dashboard
 This is a small app that allows a user to compare games from two different league of legends profiles in one screen
 
-##To get this project running locally##
+## To get this project running locally
 1. Clone the repo from https://github.com/dakotawashok/loldashboard.git
 2. Make a new table in your local database for the app
 3. Copy the .env.example into a .env file and enter your database credentials
@@ -18,7 +18,7 @@ This is a small app that allows a user to compare games from two different leagu
 13. In the `./vender/riotapi/php-riot-api.php` file, replace __INSERT_API_KEY_HERE__ with your actual riot api key
 11. Run `npm run watch` and go to your URL you set up and voila, you're good to go!
 
-##Notes##
+## Notes
 
 Since Riot comes out with updates to their game fairly often, sometimes the json files stored in `./public/jsonfiles/` 
 get outdated. To counter this, I've made a quick little script that goes to their datadragon service and updates the json 
@@ -28,3 +28,8 @@ files that we have. From the project root directory, run:
 
 The --update option also goes into the javascript mixin file and changes the riot_api_version constant to the most up to 
 date version from their website.
+
+***
+
+You might have to remove a line of code in the `./vendor/riotapi/php-riot-api.php` file. It's line 381 and it should 
+read `echo("sleeping for".($interval - $timeSinceOldest + 1)." seconds\n");`
