@@ -28479,7 +28479,7 @@ module.exports = function bind(fn, thisArg) {
 
     data: function data() {
         return {
-            API_VERSION: '7.19.1'
+            API_VERSION: '7.22.1'
         };
     },
 
@@ -31237,8 +31237,6 @@ var moment = __webpack_require__(0);
 
     data: function data() {
         return {
-            API_VERSION: '7.19.1',
-
             champion: {},
             match_won: false,
             summoner_team: {},

@@ -162,8 +162,6 @@
         },
         data : function() {
             return {
-                API_VERSION: '7.19.1',
-
                 champion : {},
                 match_won : false,
                 summoner_team : {},
