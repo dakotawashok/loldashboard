@@ -28,10 +28,10 @@ export default {
             }
         },
 
-        getAllSummonerData : function(summonerNumber) {
+        getAllSummonerData : function(summonerNumber, useAccountId = false) {
             if (summonerNumber == "1") {
                 store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : true});
-                this.$http.get('/summoner/' + this.summoner1.summonerName + '/allData').then((resp) => {
+                this.$http.get('/summoner/' + (useAccountId ?  this.summoner1.accountId : this.summoner1.summonerName) + '/allData').then((resp) => {
                     resp = JSON.parse(resp.body);
                     // get the summoner information from the response
                     resp.summoner = this.parseSummonerDataFromResponse(resp.summoner);
@@ -49,10 +49,12 @@ export default {
                     this.assignRankedData(summonerNumber);
 
                     store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : false});
+                    $('#summoner1-input').text(this.summoner1.summoner.name);
+                    console.log($('#summoner1-input').text());
                 });
             } else {
                 store.commit('assignSummonerLoading', {'summonerNumber' : 2, 'loading' : true});
-                this.$http.get('/summoner/' + this.summoner2.summonerName + '/allData').then((resp) => {
+                this.$http.get('/summoner/' + (useAccountId ?  this.summoner2.accountId : this.summoner2.summonerName) + '/allData').then((resp) => {
                     resp = JSON.parse(resp.body);
                     // get the summoner information from the response
                     resp.summoner = this.parseSummonerDataFromResponse(resp.summoner);
@@ -70,7 +72,10 @@ export default {
                     this.assignRankedData(summonerNumber);
 
                     store.commit('assignSummonerLoading', {'summonerNumber' : 2, 'loading' : false});
-                });
+                    console.log(this.summoner2.summoner.name);
+                    $('#summoner2-input').text(this.summoner2.summoner.name);
+                    console.log($('#summoner2-input').text());
+                })
             }
         },
 

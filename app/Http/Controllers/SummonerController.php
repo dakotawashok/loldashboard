@@ -50,7 +50,7 @@ class SummonerController extends Controller
         // First, find the summoner data
         try {
             if (is_numeric($id)) {
-                $summoner = Summoner::findOrFail($id);
+                $summoner = Summoner::where('accountId', $id)->firstOrFail();
             } else {
                 $summoner = Summoner::where('name', $id)->firstOrFail();
             }
@@ -58,7 +58,7 @@ class SummonerController extends Controller
             $api = new riotapi('na1');
 
             if (is_numeric($id)) {
-                $returnSummoner = $api->getSummoner($id);
+                $returnSummoner = $api->getSummoner($id, true);
             } else {
                 $returnSummoner = $api->getSummonerByName($id);
             }

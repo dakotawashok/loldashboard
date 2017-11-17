@@ -24,7 +24,7 @@
                     <div class="sixteen wide column">
                         <div class="ui raised segment" :class="{'loading': summoner1Loading}">
                             <h2>SUMMONER NAME1: </h2>
-                            <input v-model="summoner1Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('1')"/>
+                            <input id="summoner1-input" v-model="summoner1Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('1')"/>
                             <!--<div v-if="summoner1Loaded" class="season-container">-->
                                 <!--<span>Season 6: </span>-->
                                 <!--<span>Season 5:  </span>-->
@@ -69,7 +69,7 @@
                     <div class="sixteen wide column">
                         <div class="ui raised segment" :class="{'loading': summoner2Loading}">
                             <h2>SUMMONER NAME2: </h2>
-                            <input v-model="summoner2Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('2')"/>
+                            <input id="summoner2-input" v-model="summoner2Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('2')"/>
                             <!--<div v-if="summoner2Loaded" class="season-container">-->
                                 <!--<span>Season 6: </span>-->
                                 <!--<span>Season 5:  </span>-->
@@ -145,8 +145,6 @@
             return {
                 summoner1Id : "",
                 summoner2Id : "",
-
-                currentYear : 9,
 
                 currentlyViewedMatchList : 'ranked'
             }

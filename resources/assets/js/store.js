@@ -90,6 +90,16 @@ var store = new Vuex.Store({
             }
         },
 
+        assignSummonerAccountId (state, summonerObject) {
+            var summonerNumber  = summonerObject.summonerNumber;
+            var accountId  = summonerObject.accountId;
+            if (summonerNumber === 1) {
+                state.summoner1.accountId = accountId;
+            } else {
+                state.summoner2.accountId = accountId;
+            }
+        },
+
 
 
 

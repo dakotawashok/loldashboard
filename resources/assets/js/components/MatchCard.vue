@@ -22,14 +22,14 @@
                 <div class="eight wide column" v-if="!match_loading">
                     <div class="summoner-team-container">
                         <div class="summoner-participant" v-for="participant in summoner_team.participants"
-                             @click="loadSummonerFromMatchCard(participant.identity.summonerName)">
+                             @click="loadSummonerFromMatchCard(participant.identity.accountId)">
                             <img class="ui middle aligned spaced rounded tiny image small-champion-icon" :src="getChampionImageUrl(participant.championId)">
                             <span>{{participant.identity.summonerName}}</span>
                         </div>
                     </div>
                     <div class="enemy-team-container">
                         <div class="enemy-participant" v-for="participant in enemy_team.participants"
-                             @click="loadSummonerFromMatchCard(participant.identity.summonerName)">
+                             @click="loadSummonerFromMatchCard(participant.identity.accountId)">
                             <span>{{participant.identity.summonerName}}</span>
                             <img class="ui middle aligned spaced rounded tiny image small-champion-icon" :src="getChampionImageUrl(participant.championId)">
                         </div>
@@ -145,13 +145,13 @@
 //                $('.ui.modal').modal('show');
             },
 
-            loadSummonerFromMatchCard : function(summonerName) {
+            loadSummonerFromMatchCard : function(accountId) {
                 if (this.summoner_number == '1') {
-                    store.commit('assignSummonerName', {summonerNumber: 2, summonerName: summonerName});
-                    this.getAllSummonerData('2');
+                    store.commit('assignSummonerAccountId', {summonerNumber: 2, accountId: accountId});
+                    this.getAllSummonerData('2', true);
                 } else if (this.summoner_number == '2') {
-                    store.commit('assignSummonerName', {summonerNumber: 1, summonerName: summonerName});
-                    this.getAllSummonerData('1');
+                    store.commit('assignSummonerAccountId', {summonerNumber: 1, accountId: accountId});
+                    this.getAllSummonerData('1', true);
                 }
 
             },
@@ -197,7 +197,7 @@
                     var seconds = parseInt(this.defined_match.gameDuration) % 60;
                     var minutes = (parseInt(this.defined_match.gameDuration) - seconds) / 60;
 
-                    return minutes + ' minutes ' + seconds + ' seconds';
+                    return minutes + 'm ' + seconds + 's';
                 }
             },
 
