@@ -14,6 +14,7 @@ class CreateMatchListsTable extends Migration
     public function up()
     {
         Schema::create('match_lists', function (Blueprint $table) {
+            $table->increments('id');
             $table->integer('summonerId');
             $table->string('season')->nullable();
             $table->string('list_type')->nullable();

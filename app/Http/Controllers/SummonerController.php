@@ -31,6 +31,12 @@ class SummonerController extends Controller
         $this->api = new riotapi('NA1');
     }
 
+    function log($message) {
+        $file = './log.txt';
+        $message = file_get_contents($file) . "\n" . $message;
+        file_put_contents($file, $message);
+    }
+
     /**
      * Return all the data necessary for a single summoner on the front end
      * This includes:
@@ -100,9 +106,15 @@ class SummonerController extends Controller
                 // if one of the matchlists matches the params sent in, return that, else we have to throw an exception
                 foreach($matchListAggregate as $matchListEntry) {
                     // if it's the same season, same list type, and less than a day old
-                    if ($matchListEntry->list_type == 'normal' && strtotime($matchListEntry->updated_at) > (strtotime('-1 day'))) {
+                    if ($matchListEntry->list_type == 'normal') {
                         $matchListObject = $matchListEntry;
                         $found = true;
+                        if (strtotime($matchListObject->updated_at) < (strtotime('-1 day'))) {
+                            $matches = $this->api->getMatchList($accountId, $normalParams);
+                            $matchListObject->matches = json_encode($matches['matches']);
+                            $matchListObject->save();
+                            $this->saveMatchListMatches($this->api, $matchListObject);
+                        }
                     }
                 }
                 // throw the exception since we couldn't find a matchlist that matches!
@@ -118,9 +130,8 @@ class SummonerController extends Controller
             $matchListObject->list_type = 'normal';
             $matchListObject->matches = json_encode($matches['matches']);
             $matchListObject->save();
+            $this->saveMatchListMatches($this->api, $matchListObject);
         }
-
-        $this->saveMatchListMatches($this->api, $matchListObject);
 
         $returnObject['normalMatchList'] = $matchListObject;
         $returnObject['normalDefinedMatchList'] = $this->getMatchListMatches($matchListObject);
@@ -141,9 +152,15 @@ class SummonerController extends Controller
                 // if one of the matchlists matches the params sent in, return that, else we have to throw an exception
                 foreach($matchListAggregate as $matchListEntry) {
                     // if it's the same season, same list type, and less than a day old
-                    if ($matchListEntry->list_type == 'ranked' && strtotime($matchListEntry->updated_at) > (strtotime('-1 day'))) {
+                    if ($matchListEntry->list_type == 'ranked') {
                         $matchListObject = $matchListEntry;
                         $found = true;
+                        if (strtotime($matchListObject->updated_at) < (strtotime('-1 day'))) {
+                            $matches = $this->api->getMatchList($accountId, $rankedParams);
+                            $matchListObject->matches = json_encode($matches['matches']);
+                            $matchListObject->save();
+                            $this->saveMatchListMatches($this->api, $matchListObject);
+                        }
                     }
                 }
                 // throw the exception since we couldn't find a matchlist that matches!
@@ -159,9 +176,8 @@ class SummonerController extends Controller
             $matchListObject->list_type = 'ranked';
             $matchListObject->matches = json_encode($matches['matches']);
             $matchListObject->save();
+            $this->saveMatchListMatches($this->api, $matchListObject);
         }
-
-        $this->saveMatchListMatches($this->api, $matchListObject);
 
         $returnObject['rankedMatchList'] = $matchListObject;
         $returnObject['rankedDefinedMatchList'] = $this->getMatchListMatches($matchListObject);
