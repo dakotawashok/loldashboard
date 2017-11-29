@@ -24,7 +24,7 @@
                     <div class="sixteen wide column">
                         <div class="ui raised segment" :class="{'loading': summoner1Loading}">
                             <h2>SUMMONER NAME1: </h2>
-                            <input id="summoner1-input" v-model="summoner1Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('1')"/>
+                            <input id="summoner1-input" v-model="summoner1Name" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('1')"/>
                             <!--<div v-if="summoner1Loaded" class="season-container">-->
                                 <!--<span>Season 6: </span>-->
                                 <!--<span>Season 5:  </span>-->
@@ -69,7 +69,7 @@
                     <div class="sixteen wide column">
                         <div class="ui raised segment" :class="{'loading': summoner2Loading}">
                             <h2>SUMMONER NAME2: </h2>
-                            <input id="summoner2-input" v-model="summoner2Id" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('2')"/>
+                            <input id="summoner2-input" v-model="summoner2Name" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('2')"/>
                             <!--<div v-if="summoner2Loaded" class="season-container">-->
                                 <!--<span>Season 6: </span>-->
                                 <!--<span>Season 5:  </span>-->
@@ -150,7 +150,22 @@
             }
         },
         computed : {
-
+            summoner1Name : {
+                get: function() {
+                    return store.state.summoner1.summonerName;
+                },
+                set: function(newName) {
+                    store.commit('assignSummonerName', {summonerNumber: 1, summonerName: newName});
+                },
+            },
+            summoner2Name : {
+                get: function() {
+                    return store.state.summoner2.summonerName;
+                },
+                set: function(newName) {
+                    store.commit('assignSummonerName', {summonerNumber: 2, summonerName: newName});
+                },
+            },
         },
         methods : {
             clearData : function(summonerNumber) {
@@ -216,14 +231,6 @@
             },
         },
         watch : {
-            summoner1Id : function(newName) {
-                store.commit('assignSummonerName', {summonerNumber: 1, summonerName: newName});
-            },
-
-            summoner2Id : function(newName) {
-                store.commit('assignSummonerName', {summonerNumber: 2, summonerName: newName});
-            },
-
 
         }
     }

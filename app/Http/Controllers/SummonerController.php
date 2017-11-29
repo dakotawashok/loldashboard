@@ -61,12 +61,11 @@ class SummonerController extends Controller
                 $summoner = Summoner::where('name', $id)->firstOrFail();
             }
         } catch (ModelNotFoundException $e) {
-            $api = new riotapi('na1');
 
             if (is_numeric($id)) {
-                $returnSummoner = $api->getSummoner($id, true);
+                $returnSummoner = $this->api->getSummoner($id, true);
             } else {
-                $returnSummoner = $api->getSummonerByName($id);
+                $returnSummoner = $this->api->getSummonerByName($id);
             }
 
             $summoner = new Summoner;
@@ -81,7 +80,7 @@ class SummonerController extends Controller
 
             $this->assignMasteries($this->api, $summoner);
             $this->assignRunes($this->api, $summoner);
-            $this->assignChampionMasteries($this->api, $summoner);
+            //$this->assignChampionMasteries($this->api, $summoner);
             $this->assignLeagues($this->api, $summoner);
         }
         $returnObject['summoner'] = $summoner;
@@ -473,7 +472,7 @@ class SummonerController extends Controller
         $summoner->save();
     }
     private function assignChampionMasteries(&$api, &$summoner) {
-        $championMastery = $api->getChampionMastery($summoner->id);
+        $championMastery = $api->getChampionMastery($summoner->accountId);
         $summoner->championMastery = json_encode($championMastery);
         $summoner->save();
     }

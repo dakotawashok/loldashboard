@@ -7,7 +7,7 @@ export default {
 
     data () {
         return {
-            API_VERSION: '7.22.1'
+            API_VERSION: '7.23.1'
         }
     },
 
@@ -29,6 +29,7 @@ export default {
         },
 
         getAllSummonerData : function(summonerNumber, useAccountId = false) {
+            console.log('hello');
             if (summonerNumber == "1") {
                 store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : true});
                 this.$http.get('/summoner/' + (useAccountId ?  this.summoner1.accountId : this.summoner1.summonerName) + '/allData').then((resp) => {
