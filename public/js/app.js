@@ -28518,6 +28518,7 @@ module.exports = function bind(fn, thisArg) {
                     _this.parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
                     _this.parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1Summoner', resp.summoner);
+                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.summoner1.summonerName = resp.summoner.name;
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1Loaded', true);
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1RankedMatchList', resp.rankedMatchList.matches);
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1DefinedRankedMatchList', resp.rankedDefinedMatchList);
@@ -28527,8 +28528,6 @@ module.exports = function bind(fn, thisArg) {
                     _this.assignRankedData(summonerNumber);
 
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 1, 'loading': false });
-                    $('#summoner1-input').text(_this.summoner1.summoner.name);
-                    console.log($('#summoner1-input').text());
                 });
             } else {
                 __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 2, 'loading': true });
@@ -28541,6 +28540,7 @@ module.exports = function bind(fn, thisArg) {
                     _this.parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
                     _this.parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2Summoner', resp.summoner);
+                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.summoner2.summonerName = resp.summoner.name;
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2Loaded', true);
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2RankedMatchList', resp.rankedMatchList.matches);
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2DefinedRankedMatchList', resp.rankedDefinedMatchList);
@@ -28550,9 +28550,6 @@ module.exports = function bind(fn, thisArg) {
                     _this.assignRankedData(summonerNumber);
 
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 2, 'loading': false });
-                    console.log(_this.summoner2.summoner.name);
-                    $('#summoner2-input').text(_this.summoner2.summoner.name);
-                    console.log($('#summoner2-input').text());
                 });
             }
         },

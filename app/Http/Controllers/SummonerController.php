@@ -78,8 +78,8 @@ class SummonerController extends Controller
 
             $summoner->save();
 
-            $this->assignMasteries($this->api, $summoner);
-            $this->assignRunes($this->api, $summoner);
+            //$this->assignMasteries($this->api, $summoner);
+            //$this->assignRunes($this->api, $summoner);
             //$this->assignChampionMasteries($this->api, $summoner);
             $this->assignLeagues($this->api, $summoner);
         }
@@ -289,7 +289,6 @@ class SummonerController extends Controller
             $matchesObject->matches = json_encode($matches['matches']);
             $matchesObject->save();
         }
-//        echo "<pre>".print_r($matchesObject,true)."</pre>";
         if ($matchlistType == 'normal') {
             $this->createNormalMatchData($summonerId);
         } else if ($matchlistType == 'ranked') {

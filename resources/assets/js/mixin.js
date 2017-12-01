@@ -41,6 +41,7 @@ export default {
                     this.parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
                     this.parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
                     store.commit('assignSummoner1Summoner', resp.summoner);
+                    store.state.summoner1.summonerName = resp.summoner.name;
                     store.commit('assignSummoner1Loaded', true);
                     store.commit('assignSummoner1RankedMatchList', resp.rankedMatchList.matches);
                     store.commit('assignSummoner1DefinedRankedMatchList', resp.rankedDefinedMatchList);
@@ -50,8 +51,6 @@ export default {
                     this.assignRankedData(summonerNumber);
 
                     store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : false});
-                    $('#summoner1-input').text(this.summoner1.summoner.name);
-                    console.log($('#summoner1-input').text());
                 });
             } else {
                 store.commit('assignSummonerLoading', {'summonerNumber' : 2, 'loading' : true});
@@ -64,6 +63,7 @@ export default {
                     this.parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
                     this.parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
                     store.commit('assignSummoner2Summoner', resp.summoner);
+                    store.state.summoner2.summonerName = resp.summoner.name;
                     store.commit('assignSummoner2Loaded', true);
                     store.commit('assignSummoner2RankedMatchList', resp.rankedMatchList.matches);
                     store.commit('assignSummoner2DefinedRankedMatchList', resp.rankedDefinedMatchList);
@@ -73,9 +73,6 @@ export default {
                     this.assignRankedData(summonerNumber);
 
                     store.commit('assignSummonerLoading', {'summonerNumber' : 2, 'loading' : false});
-                    console.log(this.summoner2.summoner.name);
-                    $('#summoner2-input').text(this.summoner2.summoner.name);
-                    console.log($('#summoner2-input').text());
                 })
             }
         },
