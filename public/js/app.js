@@ -28604,7 +28604,6 @@ module.exports = function bind(fn, thisArg) {
                 // make a temp object that we will use to replace the summoner
                 var tempSummoner = _.cloneDeep(this.summoner1.summoner);
                 tempSummoner.rankedData = {};
-                console.log(tempSummoner);
                 if (tempSummoner != undefined && tempSummoner.league != undefined) {
                     _.forEach(tempSummoner.league, function (league) {
                         if (league.queue == 'RANKED_SOLO_5x5') {
@@ -28646,7 +28645,6 @@ module.exports = function bind(fn, thisArg) {
                 if (tempSummoner != undefined && tempSummoner.league != undefined) {
                     _.forEach(tempSummoner.league, function (league) {
                         if (league.queue == 'RANKED_SOLO_5x5') {
-                            console.log(league);
                             tempSummoner.rankedData.tier = league.tier;
                             tempSummoner.rankedData.name = league.name;
                             tempSummoner.rankedData.queue = league.queue;
@@ -28655,7 +28653,6 @@ module.exports = function bind(fn, thisArg) {
                             var found = false;
                             _.forEach(league.entries, function (league_summoner) {
                                 if (league_summoner.playerOrTeamName === tempSummoner.name) {
-                                    console.log(league_summoner);
                                     found = true;
                                     tempSummoner.rankedData.freshBlood = league_summoner.freshBlood;
                                     tempSummoner.rankedData.hotStreak = league_summoner.hotStreak;
@@ -28676,12 +28673,7 @@ module.exports = function bind(fn, thisArg) {
                             } else {}
                         }
                     });
-                } else {
-                    console.log('super wtf');
-                    return '';
                 }
-            } else {
-                console.log('wtf');
             }
         },
 
@@ -28783,7 +28775,7 @@ module.exports = function bind(fn, thisArg) {
             return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData) ? 'Unranked' : this.summoner1.summoner.rankedData.leaguePoints + ' LP / ' + this.summoner1.summoner.rankedData.wins + ' wins / ' + this.summoner1.summoner.rankedData.losses + ' losses';
         },
         summoner1RatioPercent: function summoner1RatioPercent() {
-            if (this.summoner1.summoner.rankedData = undefined || _.isEmpty(this.summoner1.summoner.rankedData)) {
+            if (this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData)) {
                 return 'Unranked';
             } else {
                 var wins = parseInt(this.summoner1.summoner.rankedData.wins);
@@ -45293,7 +45285,7 @@ exports = module.exports = __webpack_require__(7)(undefined);
 
 
 // module
-exports.push([module.i, "\n.match-card[data-v-280cbfe6] {\n    font-size: 12px;\n    line-height: 12px;\n    height: 134px;\n}\n.summoner-champion-icon[data-v-280cbfe6] {\n    float: left;\n    margin-right: 15px!important;\n}\n.green-win[data-v-280cbfe6] {\n    background-color: #beffbe!important;\n}\n.red-loss[data-v-280cbfe6] {\n    background-color: #ffc3be!important;\n}\n.card-data.right[data-v-280cbfe6] {\n    float: right;\n}\n.summoner-spells-and-items[data-v-280cbfe6] {\n    float: left;\n}\n.summoner-items[data-v-280cbfe6], .summoner-spells[data-v-280cbfe6] {\n    margin-top: 5px;\n    margin-bottom: 0px;\n    display: block;\n    float: left;\n    width: 100%;\n}\n.summoner-items > img[data-v-280cbfe6], .summoner-spells > img[data-v-280cbfe6] {\n    width: 25px!important;\n    height: auto;\n    margin-right: 5px!important;\n    margin-bottom: 0px!important;\n}\n.summoner-team-container[data-v-280cbfe6], .enemy-team-container[data-v-280cbfe6] {\n    margin: 0px!important;\n    padding: 0px!important;\n    width: 50%;\n    height: 100%;\n    position: absolute;\n}\n.summoner-team-container[data-v-280cbfe6] {\n    left: 0px;\n}\n.enemy-team-container[data-v-280cbfe6] {\n    right: 0px;\n}\n.summoner-participant[data-v-280cbfe6], .enemy-participant[data-v-280cbfe6] {\n    display: inline-block;\n    width: 100%;\n    height: 22px;\n}\n.summoner-participant > span[data-v-280cbfe6] {\n    position: absolute;\n    left: 25px;\n    padding-left: 5px;\n    padding-top: 2px;\n}\n.summoner-participant > .small-champion-icon[data-v-280cbfe6] {\n    width: 20px!important;\n    height: auto;\n    position: absolute;\n    left: 0;\n}\n.enemy-participant > span[data-v-280cbfe6] {\n    position: absolute;\n    right: 45px;\n    padding-right: 5px;\n    padding-top: 2px;\n}\n.enemy-participant > .small-champion-icon[data-v-280cbfe6] {\n    width: 20px!important;\n    height: auto;\n    position: absolute;\n    right: 0;\n    margin-right: 20px;\n}\n\n\n\n", ""]);
+exports.push([module.i, "\n.match-card[data-v-280cbfe6] {\n    font-size: 12px;\n    line-height: 12px;\n    height: 134px;\n}\n.summoner-champion-icon[data-v-280cbfe6] {\n    float: left;\n    margin-right: 15px!important;\n}\n.green-win[data-v-280cbfe6] {\n    background-color: #beffbe!important;\n}\n.red-loss[data-v-280cbfe6] {\n    background-color: #ffc3be!important;\n}\n.card-data.right[data-v-280cbfe6] {\n    float: right;\n}\n.summoner-spells-and-items[data-v-280cbfe6] {\n    float: left;\n}\n.summoner-items[data-v-280cbfe6], .summoner-spells[data-v-280cbfe6] {\n    margin-top: 5px;\n    margin-bottom: 0px;\n    display: block;\n    float: left;\n    width: 100%;\n}\n.summoner-items > img[data-v-280cbfe6], .summoner-spells > img[data-v-280cbfe6] {\n    width: 25px!important;\n    height: auto;\n    margin-right: 2px!important;\n    margin-bottom: 0px!important;\n}\n.summoner-team-container[data-v-280cbfe6], .enemy-team-container[data-v-280cbfe6] {\n    margin: 0px!important;\n    padding: 0px!important;\n    width: 50%;\n    height: 100%;\n    position: absolute;\n}\n.summoner-team-container[data-v-280cbfe6] {\n    left: 0px;\n}\n.enemy-team-container[data-v-280cbfe6] {\n    right: 0px;\n}\n.summoner-participant[data-v-280cbfe6], .enemy-participant[data-v-280cbfe6] {\n    display: inline-block;\n    width: 100%;\n    height: 22px;\n}\n.summoner-participant > span[data-v-280cbfe6] {\n    position: absolute;\n    left: 25px;\n    padding-left: 5px;\n    padding-top: 2px;\n}\n.summoner-participant > .small-champion-icon[data-v-280cbfe6] {\n    width: 20px!important;\n    height: auto;\n    position: absolute;\n    left: 0;\n}\n.enemy-participant > span[data-v-280cbfe6] {\n    position: absolute;\n    right: 45px;\n    padding-right: 5px;\n    padding-top: 2px;\n}\n.enemy-participant > .small-champion-icon[data-v-280cbfe6] {\n    width: 20px!important;\n    height: auto;\n    position: absolute;\n    right: 0;\n    margin-right: 20px;\n}\n\n\n\n", ""]);
 
 // exports
 

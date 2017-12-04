@@ -116,7 +116,6 @@ export default {
                 // make a temp object that we will use to replace the summoner
                 var tempSummoner = _.cloneDeep(this.summoner1.summoner);
                 tempSummoner.rankedData = {};
-                console.log(tempSummoner);
                 if (tempSummoner != undefined && tempSummoner.league != undefined) {
                     _.forEach(tempSummoner.league, (league) => {
                         if (league.queue == 'RANKED_SOLO_5x5') {
@@ -158,7 +157,6 @@ export default {
                 if (tempSummoner != undefined && tempSummoner.league != undefined) {
                     _.forEach(tempSummoner.league, (league) => {
                         if (league.queue == 'RANKED_SOLO_5x5') {
-                            console.log(league);
                             tempSummoner.rankedData.tier = league.tier;
                             tempSummoner.rankedData.name = league.name;
                             tempSummoner.rankedData.queue = league.queue;
@@ -167,7 +165,6 @@ export default {
                             var found = false;
                             _.forEach(league.entries, (league_summoner) => {
                                 if (league_summoner.playerOrTeamName === tempSummoner.name) {
-                                    console.log(league_summoner);
                                     found = true;
                                     tempSummoner.rankedData.freshBlood = league_summoner.freshBlood;
                                     tempSummoner.rankedData.hotStreak = league_summoner.hotStreak;
@@ -189,12 +186,7 @@ export default {
                             }
                         }
                     })
-                } else {
-                    console.log('super wtf');
-                    return '';
                 }
-            } else {
-                console.log('wtf');
             }
         },
 
@@ -279,7 +271,7 @@ export default {
                 this.summoner1.summoner.rankedData.losses + ' losses';
         },
         summoner1RatioPercent : function() {
-            if (this.summoner1.summoner.rankedData = undefined || _.isEmpty(this.summoner1.summoner.rankedData) ) {
+            if (this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData) ) {
                 return 'Unranked';
             } else {
                 var wins = parseInt(this.summoner1.summoner.rankedData.wins);

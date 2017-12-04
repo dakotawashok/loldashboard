@@ -307,7 +307,7 @@
     .summoner-items > img, .summoner-spells > img {
         width: 25px!important;
         height: auto;
-        margin-right: 5px!important;
+        margin-right: 2px!important;
         margin-bottom: 0px!important;
     }
     .summoner-team-container, .enemy-team-container {
