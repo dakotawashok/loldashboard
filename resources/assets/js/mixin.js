@@ -116,6 +116,7 @@ export default {
                 // make a temp object that we will use to replace the summoner
                 var tempSummoner = _.cloneDeep(this.summoner1.summoner);
                 tempSummoner.rankedData = {};
+                console.log(tempSummoner);
                 if (tempSummoner != undefined && tempSummoner.league != undefined) {
                     _.forEach(tempSummoner.league, (league) => {
                         if (league.queue == 'RANKED_SOLO_5x5') {
@@ -263,36 +264,52 @@ export default {
 
 
         summoner1CurrentRank : function() {
-            return this.summoner1.summoner.rankedData.tier + ' ' + this.summoner1.summoner.rankedData.rank;
+            return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData)
+                ? 'Unranked' : this.summoner1.summoner.rankedData.tier + ' ' + this.summoner1.summoner.rankedData.rank
         },
         summoner1RankName : function() {
-            return this.summoner1.summoner.rankedData.name;
+            return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData)
+                ? 'Unranked' : this.summoner1.summoner.rankedData.name
         },
         summoner1Ratio : function() {
-            return this.summoner1.summoner.rankedData.leaguePoints + ' LP / ' +
+            return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData)
+                ? 'Unranked' :
+                this.summoner1.summoner.rankedData.leaguePoints + ' LP / ' +
                 this.summoner1.summoner.rankedData.wins + ' wins / ' +
                 this.summoner1.summoner.rankedData.losses + ' losses';
         },
         summoner1RatioPercent : function() {
-            var wins = parseInt(this.summoner1.summoner.rankedData.wins);
-            var total = parseInt(this.summoner1.summoner.rankedData.wins) + parseInt(this.summoner1.summoner.rankedData.losses);
-            return ((wins / total) * 100).toFixed(2) + '%';
+            if (this.summoner1.summoner.rankedData = undefined || _.isEmpty(this.summoner1.summoner.rankedData) ) {
+                return 'Unranked';
+            } else {
+                var wins = parseInt(this.summoner1.summoner.rankedData.wins);
+                var total = parseInt(this.summoner1.summoner.rankedData.wins) + parseInt(this.summoner1.summoner.rankedData.losses);
+                return ((wins / total) * 100).toFixed(2) + '%';
+            }
         },
         summoner2CurrentRank : function() {
-            return this.summoner2.summoner.rankedData.tier + ' ' + this.summoner2.summoner.rankedData.rank;
+            return this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData)
+                ? 'Unranked' : this.summoner2.summoner.rankedData.tier + ' ' + this.summoner2.summoner.rankedData.rank
         },
         summoner2RankName : function() {
-            return this.summoner2.summoner.rankedData.name;
+            return this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData)
+                ? 'Unranked' : this.summoner2.summoner.rankedData.name
         },
         summoner2Ratio : function() {
-            return this.summoner2.summoner.rankedData.leaguePoints + ' LP / ' +
+            return this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData)
+                ? 'Unranked' :
+                this.summoner2.summoner.rankedData.leaguePoints + ' LP / ' +
                 this.summoner2.summoner.rankedData.wins + ' wins / ' +
                 this.summoner2.summoner.rankedData.losses + ' losses';
         },
         summoner2RatioPercent : function() {
-            var wins = parseInt(this.summoner2.summoner.rankedData.wins);
-            var total = parseInt(this.summoner2.summoner.rankedData.wins) + parseInt(this.summoner2.summoner.rankedData.losses);
-            return ((wins / total) * 100).toFixed(2) + '%';
+            if (this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData)) {
+                return 'Unranked';
+            } else {
+                var wins = parseInt(this.summoner2.summoner.rankedData.wins);
+                var total = parseInt(this.summoner2.summoner.rankedData.wins) + parseInt(this.summoner2.summoner.rankedData.losses);
+                return ((wins / total) * 100).toFixed(2) + '%';
+            }
         },
     }
 }
