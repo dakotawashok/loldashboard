@@ -276,6 +276,7 @@
     .match-card {
         font-size: 12px;
         line-height: 12px;
+        height: 134px;
     }
     .summoner-champion-icon {
         float: left;
