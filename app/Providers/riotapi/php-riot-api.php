@@ -29,9 +29,12 @@ CONNECTION WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
 
 */
 
+require_once('CacheInterface.php');
+require_once('NullCache.php');
+require_once('RateLimitHandler.php');
+require_once('RateLimitSleeper.php');
 
 class riotapi {
-
     const API_URL_PLATFORM_3 = "https://{platform}.api.riotgames.com/lol/platform/v3/";
     const API_URL_CHAMPION_MASTERY_3 = "https://{platform}.api.riotgames.com/lol/champion-mastery/v3/";
     const API_URL_SPECTATOR_3 = 'https://{platform}.api.riotgames.com/lol/spectator/v3/';
@@ -40,6 +43,8 @@ class riotapi {
     const API_URL_LEAGUE_3 = 'https://{platform}.api.riotgames.com/lol/league/v3/';
     const API_URL_SUMMONER_3 = 'https://{platform}.api.riotgames.com/lol/summoner/v3/';
 
+    const HTTP_OK = 200;
+	const HTTP_RATE_LIMIT = 429;
 
     const API_KEY = 'RGAPI-7e2224e5-1d7d-43f7-81bd-e412e9f56f84';
 
@@ -76,15 +81,14 @@ class riotapi {
     // Remove this commit if you want. - Ahubers
     const DECODE_ENABLED = TRUE;
 
-    public function __construct($platform, CacheInterface $cache = null)
-    {
+	public function __construct($platform, CacheInterface $cache = null, RateLimitHandler $rateLimitHandler = null)
+	{
         $this->PLATFORM = $platform;
 
-        $this->shortLimitQueue = new SplQueue();
-        $this->longLimitQueue = new SplQueue();
-
-        $this->cache = $cache;
-    }
+		// if a cache and rate limiter weren't provided, then we'll just use these default ones
+		$this->cache = $cache = $cache !== null ? $cache : new NullCache();
+		$this->rateLimitHandler = $rateLimitHandler !== null ? $rateLimitHandler : new RateLimitSleeper();
+	}
 
     //Returns all champion information.
     //Set $free at true to get only free champions.
@@ -161,6 +165,42 @@ class riotapi {
         ));
         $data["data"]["timeline"] = $data["timeline"];
         return $data["data"];
+    }
+
+    public function getMatches($ids, $includeTimeline = true){
+
+        $calls=array();
+
+        foreach($ids as $matchId){
+            $call = self::API_URL_MATCH_3  . 'matches/' . $matchId;
+            $calls["match-".$matchId] = $call;
+
+            if($includeTimeline)
+                $calls["timeline-".$matchId] = self::API_URL_MATCH_3  . 'timelines/by-match/' . $matchId;
+        }
+
+        if(!$includeTimeline)
+            return $this->requestMultiple($calls);
+
+        $results = array();
+
+        $data = $this->requestMultiple($calls);
+
+        foreach($data as $k=>$d){
+            $e = explode("-", $k);
+
+            //Check if it's match data
+            if($e[0]=="match"){
+                //Check if the timeline exists
+                //Timeline is only stored by Riot for one year, too old games may not have it
+                if(isset($data["timeline-".$e[1]]["frames"]))
+                    //add the matching timeline
+                    $d["timeline"] = $data["timeline-".$e[1]];
+                array_push($results, $d);
+            }
+        }
+
+        return $results;
     }
 
     //Returns timeline of a match
@@ -313,217 +353,100 @@ class riotapi {
         return $this->request($call);
     }
 
-    //Gets data of matches, given array of id.
-    public function getMatches($ids, $includeTimeline = true){
+	public function getLastResponseHeaders(){
+		return $this->responseHeaders;
+	}
 
-        $calls=array();
+	public function getLastResponseBody(){
+		return $this->responseBody;
+	}
 
-        foreach($ids as $matchId){
-            $call = self::API_URL_MATCH_3  . 'matches/' . $matchId;
-            $calls["match-".$matchId] = $call;
+	public function getLastResponseCode(){
+		return $this->responseCode;
+	}
 
-            if($includeTimeline)
-                $calls["timeline-".$matchId] = self::API_URL_MATCH_3  . 'timelines/by-match/' . $matchId;
-        }
+	private function request($call, $otherQueries=false, $static = false) {
+				//format the full URL
+		$url = $this->format_url($call, $otherQueries);
 
-        if(!$includeTimeline)
-            return $this->requestMultiple($calls);
+		$result = $this->cache->remember($url, self::CACHE_LIFETIME_MINUTES * 60, function () use ($url, $call, $otherQueries, $static)
+		{
+			$this->curlExecute($url);
 
-        $results = array();
+			/**
+			 * Here we are going to check if we were rate limited. If we WERE rate limited, then lets call our rate limit
+			 * handler and let that class deal with it.
+			 */
+			if ($this->responseCode == self::HTTP_RATE_LIMIT) {
+			    $this->log('we were rate limited...');
+				$retryAfter = (int) $this->responseHeaders['Retry-After'];
+				$this->rateLimitHandler->handleLimit($retryAfter);
 
-        $data = $this->requestMultiple($calls);
+				if ($this->rateLimitHandler->retryEnabled()) {
+					return $this->request($call, $otherQueries, $static);
+				}
+			}
 
-        foreach($data as $k=>$d){
-            $e = explode("-", $k);
+			if ($this->responseCode != self::HTTP_OK) {
+                $this->log('we got an error...');
+				throw new Exception(self::$errorCodes[$this->responseCode]);
+			}
 
-            //Check if it's match data
-            if($e[0]=="match"){
-                //Check if the timeline exists
-                //Timeline is only stored by Riot for one year, too old games may not have it
-                if(isset($data["timeline-".$e[1]]["frames"]))
-                    //add the matching timeline
-                    $d["timeline"] = $data["timeline-".$e[1]];
-                array_push($results, $d);
-            }
-        }
+			$result = $this->responseBody;
+			if (self::DECODE_ENABLED) {
+				$result = json_decode($result, true);
+			}
 
-        return $results;
+			return $result;
+		});
+
+		return $result;
+	}
+
+	private function curlExecute($url){
+		//call the API and return the result
+		$ch = curl_init($url);
+		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
+		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
+        curl_setopt($ch, CURLOPT_HTTPHEADER, array(
+            'X-Riot-Token: '. self::API_KEY
+        ));
+		curl_setopt($ch, CURLOPT_HEADER, 1);
+		$result = curl_exec($ch);
+
+		list($header, $body) = explode("\r\n\r\n", $result, 2);
+		$this->responseHeaders = $this->parseHeaders($header);
+		$this->responseBody = $body;
+		$this->responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
+		curl_close($ch);
+	}
+
+	//creates a full URL you can query on the API
+	private function format_url($call, $otherQueries=false){
+		//because sometimes your url looks like .../something/foo?query=blahblah&api_key=dfsdfaefe
+		return str_replace('{platform}', $this->PLATFORM, $call) . ($otherQueries ? '&' : '?');
+	}
+
+	private function parseHeaders($header) {
+		$headers = array();
+		$headerLines = explode("\r\n", $header);
+		foreach ($headerLines as $headerLine) {
+			@list($key, $val) = explode(': ', $headerLine, 2);
+			$headers[$key] = $val;
+		}
+		return $headers;
+	}
+
+	public function debug($message) {
+		echo "<pre>";
+		print_r($message);
+		echo "</pre>";
+	}
+
+	public function log($message) {
+        $file = './log.txt';
+        $message = file_get_contents($file) . "\n" . $message;
+        file_put_contents($file, $message);
     }
-
-    private function updateLimitQueue($queue, $interval, $call_limit){
-
-        while(!$queue->isEmpty()){
-
-            /* Three possibilities here.
-            1: There are timestamps outside the window of the interval,
-            which means that the requests associated with them were long
-            enough ago that they can be removed from the queue.
-            2: There have been more calls within the previous interval
-            of time than are allowed by the rate limit, in which case
-            the program blocks to ensure the rate limit isn't broken.
-            3: There are openings in window, more requests are allowed,
-            and the program continues.*/
-
-            $timeSinceOldest = time() - $queue->bottom();
-            // I recently learned that the "bottom" of the
-            // queue is the beginning of the queue. Go figure.
-
-            // Remove timestamps from the queue if they're older than
-            // the length of the interval
-            if($timeSinceOldest > $interval){
-                $queue->dequeue();
-            }
-
-            // Check to see whether the rate limit would be broken; if so,
-            // block for the appropriate amount of time
-            elseif($queue->count() >= $call_limit){
-                if($timeSinceOldest < $interval){ //order of ops matters
-                    echo("sleeping for".($interval - $timeSinceOldest + 1)." seconds\n");
-                    sleep($interval - $timeSinceOldest);
-                }
-            }
-            // Otherwise, pass through and let the program continue.
-            else {
-                break;
-            }
-        }
-
-        // Add current timestamp to back of queue; this represents
-        // the current request.
-        $queue->enqueue(time());
-    }
-
-    private function request($call, $static = false) {
-        //format the full URL
-
-        $url = $this->format_url($call);
-        //echo $url;
-        //caching
-        if($this->cache !== null && $this->cache->has($url)){
-            $result = $this->cache->get($url);
-        } else {
-            // Check rate-limiting queues if this is not a static call.
-            if (!$static) {
-                $this->updateLimitQueue($this->longLimitQueue, self::LONG_LIMIT_INTERVAL, self::RATE_LIMIT_LONG);
-                $this->updateLimitQueue($this->shortLimitQueue, self::SHORT_LIMIT_INTERVAL, self::RATE_LIMIT_SHORT);
-            }
-
-            //call the API and return the result
-            $ch = curl_init($url);
-            curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
-            curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
-            curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-                'X-Riot-Token: '. self::API_KEY
-            ));
-            $result = curl_exec($ch);
-            $this->responseCode = curl_getinfo($ch, CURLINFO_HTTP_CODE);
-            curl_close($ch);
-
-
-            if($this->responseCode == 200) {
-                if($this->cache !== null){
-                    $this->cache->put($url, $result, self::CACHE_LIFETIME_MINUTES * 60);
-                }
-            } else {
-                throw new Exception(self::$errorCodes[$this->responseCode]);
-            }
-        }
-        if (self::DECODE_ENABLED) {
-            $result = json_decode($result, true);
-        }
-        return $result;
-    }
-
-    private function requestMultiple($calls) {
-
-        $urls=array();
-        $results=array();
-
-        foreach($calls as $k=>$call){
-            $url = $this->format_url($call);
-            //Put cached data in resulsts and urls to call in urls
-            if($this->cache !== null && $this->cache->has($url)){
-
-                if (self::DECODE_ENABLED) {
-                    $results[$k] = json_decode($this->cache->get($url), true);
-                }else{
-                    $results[$k] = $this->cache->get($url);
-                }
-
-            } else {
-                $urls[$k] = $url;
-            }
-        }
-
-        $callResult=$this->multiple_threads_request($urls);
-
-        foreach($callResult as $k=>$result){
-            if($this->cache !== null){
-                $this->cache->put($urls[$k], $result, self::CACHE_LIFETIME_MINUTES * 60);
-            }
-            if (self::DECODE_ENABLED) {
-                $results[$k] = json_decode($result, true);
-            }else{
-                $results[$k] = $result;
-            }
-        }
-
-        return array_merge($results);
-    }
-
-    //creates a full URL you can query on the API
-    private function format_url($call){
-        return str_replace('{platform}', $this->PLATFORM, $call);
-    }
-
-
-    public function getLastResponseCode(){
-        return $this->responseCode;
-    }
-
-    public function debug($message) {
-        echo "<pre>";
-        print_r($message);
-        echo "</pre>";
-    }
-
-
-    public function setPlatform($platform) {
-        $this->PLATFORM = $platform;
-    }
-
-    private function multiple_threads_request($nodes){
-        $mh = curl_multi_init();
-        $curl_array = array();
-        foreach($nodes as $i => $url)
-        {
-            $curl_array[$i] = curl_init($url);
-            curl_setopt($curl_array[$i], CURLOPT_RETURNTRANSFER, true);
-            curl_setopt($curl_array[$i], CURLOPT_HTTPHEADER, array(
-                'X-Riot-Token: '. self::API_KEY
-            ));
-            curl_multi_add_handle($mh, $curl_array[$i]);
-        }
-        $running = NULL;
-        do {
-            usleep(10000);
-            curl_multi_exec($mh,$running);
-        } while($running > 0);
-
-        $res = array();
-        foreach($nodes as $i => $url)
-        {
-            $res[$i] = curl_multi_getcontent($curl_array[$i]);
-        }
-
-        foreach($nodes as $i => $url){
-            curl_multi_remove_handle($mh, $curl_array[$i]);
-        }
-        curl_multi_close($mh);
-        return $res;
-    }
-
-
 }
-
