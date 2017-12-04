@@ -20,15 +20,17 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 
-require '../vendor/riotapi/php-riot-api.php';
+require '../app/Providers/riotapi/php-riot-api.php';
+require '../app/Providers/riotapi/FileSystemCache.php';
 use riotapi;
+use FileSystemCache;
 
 class SummonerController extends Controller
 {
     public $api;
 
     function __construct() {
-        $this->api = new riotapi('NA1');
+        $this->api = new riotapi('NA1', new FileSystemCache('cache/'));
     }
 
     function log($message) {
