@@ -46,8 +46,6 @@ class riotapi {
     const HTTP_OK = 200;
 	const HTTP_RATE_LIMIT = 429;
 
-    const API_KEY = 'RGAPI-7e2224e5-1d7d-43f7-81bd-e412e9f56f84';
-
     // Rate limit for 10 minutes
     const LONG_LIMIT_INTERVAL = 120;
     const RATE_LIMIT_LONG = 100;
@@ -61,6 +59,7 @@ class riotapi {
     private $cache;
 
     private $PLATFORM;
+    private $API_KEY;
     //variable to retrieve last response code
     private $responseCode;
 
@@ -84,6 +83,7 @@ class riotapi {
 	public function __construct($platform, CacheInterface $cache = null, RateLimitHandler $rateLimitHandler = null)
 	{
         $this->PLATFORM = $platform;
+        $this->API_KEY = env('RIOT_API_KEY');
 
 		// if a cache and rate limiter weren't provided, then we'll just use these default ones
 		$this->cache = $cache = $cache !== null ? $cache : new NullCache();
@@ -405,12 +405,13 @@ class riotapi {
 
 	private function curlExecute($url){
 		//call the API and return the result
+        $this->log($this->API_KEY);
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYHOST, false);
         curl_setopt($ch, CURLOPT_HTTPHEADER, array(
-            'X-Riot-Token: '. self::API_KEY
+            'X-Riot-Token: '. $this->API_KEY
         ));
 		curl_setopt($ch, CURLOPT_HEADER, 1);
 		$result = curl_exec($ch);
@@ -424,7 +425,6 @@ class riotapi {
 
 	//creates a full URL you can query on the API
 	private function format_url($call, $otherQueries=false){
-		//because sometimes your url looks like .../something/foo?query=blahblah&api_key=dfsdfaefe
 		return str_replace('{platform}', $this->PLATFORM, $call) . ($otherQueries ? '&' : '?');
 	}
 
