@@ -37,7 +37,7 @@
                                     </div>
                                     <div class="twelve wide column ranked-stats-container">
                                         <p>Current Rank: {{summoner1CurrentRank}}
-                                            <i class="refresh icon" @click="refreshSummonerRankedData('1', summoner1.summoner.accountId)"></i></p>
+                                            <i class="refresh icon" @click="refreshSummonerRankedData(1, summoner1.summoner.accountId)"></i></p>
                                         <p>{{summoner1Ratio}}</p>
                                         <p>Win Ratio: {{summoner1RatioPercent}}</p>
                                         <p>League Name: {{summoner1RankName}}</p>
@@ -82,7 +82,7 @@
                                     </div>
                                     <div class="twelve wide column ranked-stats-container">
                                         <p>Current Rank: {{summoner2CurrentRank}}
-                                            <i class="refresh icon" @click="refreshSummonerRankedData('2', summoner2.summoner.accountId)"></i></p>
+                                            <i class="refresh icon" @click="refreshSummonerRankedData(2, summoner2.summoner.accountId)"></i></p>
                                         <p>{{summoner2Ratio}}</p>
                                         <p>Win Ratio: {{summoner2RatioPercent}}</p>
                                         <p>League Name: {{summoner2RankName}}</p>
@@ -183,7 +183,7 @@
                     store.commit('assignSummoner2DefinedNormalMatchList', {});
 
                 } else {
-                    console.log('errorrrrr');
+                    console.log('Error in clearData method');
                 }
             },
 

@@ -74,8 +74,10 @@ var store = new Vuex.Store({
             var summonerNumber  = summonerObject.summonerNumber;
             var loading  = summonerObject.loading;
             if (summonerNumber === 1) {
+                console.log('summoner 1 loading');
                 state.summoner1.loading = loading;
             } else {
+                console.log('summoner 2 loading');
                 state.summoner2.loading = loading;
             }
         },

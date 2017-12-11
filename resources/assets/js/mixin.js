@@ -29,7 +29,6 @@ export default {
         },
 
         getAllSummonerData : function(summonerNumber, useAccountId = false) {
-            console.log('hello');
             if (summonerNumber == "1") {
                 store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : true});
                 this.$http.get('/summoner/' + (useAccountId ?  this.summoner1.accountId : this.summoner1.summonerName) + '/allData').then((resp) => {
@@ -82,16 +81,15 @@ export default {
          sends a request to the server to get new ranked data for the summoner
          */
         refreshSummonerRankedData(summonerNumber, accountId) {
-            if (summonerNumber == '1') { store.commit('assignSummoner1Loaded', false);}
-            if (summonerNumber == '2') { store.commit('assignSummoner2Loaded', false);}
+            store.commit('assignSummonerLoading', {'summonerNumber' : summonerNumber, 'loading' : true});
             this.$http.get('/summoner/'+accountId+'/refreshRankedStats').then((resp) => {
-                if (summonerNumber == '1') {
+                if (summonerNumber == 1) {
                     // get the summoner, put the new ranked data in that summoner, then reassign the summoner
                     // then we have to recall the assignRankedData to parse it all back out baby
                     var tempSummoner = _.cloneDeep(this.summoner1.summoner);
                     tempSummoner.league = JSON.parse(resp.body);
                     store.commit('assignSummoner1Summoner', tempSummoner);
-                } else if (summonerNumber == '2') {
+                } else if (summonerNumber == 2) {
                     // get the summoner, put the new ranked data in that summoner, then reassign the summoner
                     // then we have to recall the assignRankedData to parse it all back out baby
                     var tempSummoner = _.cloneDeep(this.summoner2.summoner);
@@ -99,8 +97,7 @@ export default {
                     store.commit('assignSummoner2Summoner', tempSummoner);
                 }
                 this.assignRankedData(summonerNumber);
-                if (summonerNumber == '1') { store.commit('assignSummoner1Loaded', true);}
-                if (summonerNumber == '2') { store.commit('assignSummoner2Loaded', true);}
+                store.commit('assignSummonerLoading', {'summonerNumber' : summonerNumber, 'loading' : false});
             })
         },
 

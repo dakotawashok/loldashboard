@@ -5132,8 +5132,10 @@ var store = new Vuex.Store({
             var summonerNumber = summonerObject.summonerNumber;
             var loading = summonerObject.loading;
             if (summonerNumber === 1) {
+                console.log('summoner 1 loading');
                 state.summoner1.loading = loading;
             } else {
+                console.log('summoner 2 loading');
                 state.summoner2.loading = loading;
             }
         },
@@ -28506,7 +28508,6 @@ module.exports = function bind(fn, thisArg) {
 
             var useAccountId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
-            console.log('hello');
             if (summonerNumber == "1") {
                 __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 1, 'loading': true });
                 this.$http.get('/summoner/' + (useAccountId ? this.summoner1.accountId : this.summoner1.summonerName) + '/allData').then(function (resp) {
@@ -28561,20 +28562,15 @@ module.exports = function bind(fn, thisArg) {
         refreshSummonerRankedData: function refreshSummonerRankedData(summonerNumber, accountId) {
             var _this2 = this;
 
-            if (summonerNumber == '1') {
-                __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1Loaded', false);
-            }
-            if (summonerNumber == '2') {
-                __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2Loaded', false);
-            }
+            __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': summonerNumber, 'loading': true });
             this.$http.get('/summoner/' + accountId + '/refreshRankedStats').then(function (resp) {
-                if (summonerNumber == '1') {
+                if (summonerNumber == 1) {
                     // get the summoner, put the new ranked data in that summoner, then reassign the summoner
                     // then we have to recall the assignRankedData to parse it all back out baby
                     var tempSummoner = _.cloneDeep(_this2.summoner1.summoner);
                     tempSummoner.league = JSON.parse(resp.body);
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1Summoner', tempSummoner);
-                } else if (summonerNumber == '2') {
+                } else if (summonerNumber == 2) {
                     // get the summoner, put the new ranked data in that summoner, then reassign the summoner
                     // then we have to recall the assignRankedData to parse it all back out baby
                     var tempSummoner = _.cloneDeep(_this2.summoner2.summoner);
@@ -28582,12 +28578,7 @@ module.exports = function bind(fn, thisArg) {
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2Summoner', tempSummoner);
                 }
                 _this2.assignRankedData(summonerNumber);
-                if (summonerNumber == '1') {
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1Loaded', true);
-                }
-                if (summonerNumber == '2') {
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2Loaded', true);
-                }
+                __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': summonerNumber, 'loading': false });
             });
         },
 
@@ -31022,7 +31013,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner2DefinedRankedMatchList', {});
                 __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner2DefinedNormalMatchList', {});
             } else {
-                console.log('errorrrrr');
+                console.log('Error in clearData method');
             }
         },
 
@@ -31255,10 +31246,6 @@ var moment = __webpack_require__(0);
         };
     },
     computed: {
-        styleObject: function styleObject() {
-            return "";
-        },
-
         champion_image_url: function champion_image_url() {
             if (this.champion != undefined && this.champion.id != undefined) {
                 var parsedChampName = this.champion.id.split(' ').join('').split('\'').join('');
@@ -67087,7 +67074,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "refresh icon",
     on: {
       "click": function($event) {
-        _vm.refreshSummonerRankedData('1', _vm.summoner1.summoner.accountId)
+        _vm.refreshSummonerRankedData(1, _vm.summoner1.summoner.accountId)
       }
     }
   })]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.summoner1Ratio))]), _vm._v(" "), _c('p', [_vm._v("Win Ratio: " + _vm._s(_vm.summoner1RatioPercent))]), _vm._v(" "), _c('p', [_vm._v("League Name: " + _vm._s(_vm.summoner1RankName))])])])]) : _vm._e()])]), _vm._v(" "), (_vm.summoner1Loaded && !_vm.summoner1Loading) ? _c('div', {
@@ -67182,7 +67169,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "refresh icon",
     on: {
       "click": function($event) {
-        _vm.refreshSummonerRankedData('2', _vm.summoner2.summoner.accountId)
+        _vm.refreshSummonerRankedData(2, _vm.summoner2.summoner.accountId)
       }
     }
   })]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.summoner2Ratio))]), _vm._v(" "), _c('p', [_vm._v("Win Ratio: " + _vm._s(_vm.summoner2RatioPercent))]), _vm._v(" "), _c('p', [_vm._v("League Name: " + _vm._s(_vm.summoner2RankName))])])])]) : _vm._e()])]), _vm._v(" "), (_vm.summoner2Loaded && !_vm.summoner2Loading) ? _c('div', {

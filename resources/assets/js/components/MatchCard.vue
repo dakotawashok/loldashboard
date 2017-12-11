@@ -173,10 +173,6 @@
             }
         },
         computed :  {
-            styleObject : function() {
-                return "";
-            },
-
             champion_image_url : function() {
                 if (this.champion != undefined && this.champion.id != undefined) {
                     var parsedChampName = this.champion.id.split(' ').join('').split('\'').join('');
