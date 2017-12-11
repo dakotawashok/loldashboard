@@ -110,6 +110,14 @@
                 </div>
             </div>
         </div>
+        <div class="ui modal" id="match-modal">
+            <div class="header">
+                Match {{modalMatch.gameId}}
+            </div>
+            <div class="content">
+
+            </div>
+        </div>
     </div>
 </template>
 
@@ -131,12 +139,15 @@
         mounted() {
             this.setStaticData();
 
-            $('.ui.modal').modal({
+            $('#match-modal').modal({
                 closable  : true,
                 detachable: true,
                 onApprove: () => {
-                    console.log('closed');
-                }
+                    console.log('approved');
+                },
+                onDeny: () => {
+                    console.log('denied')
+                },
             })
 
 
@@ -235,6 +246,16 @@
         }
     }
 </script>
+
+<style>
+    .match-modal-button {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        margin-top: 6px;
+        cursor: pointer;
+    }
+</style>
 
 <style scoped>
     #main-grid-container > *:first-child {

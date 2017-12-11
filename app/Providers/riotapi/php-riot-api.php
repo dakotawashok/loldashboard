@@ -368,6 +368,7 @@ class riotapi {
 	private function request($call, $otherQueries=false, $static = false) {
 				//format the full URL
 		$url = $this->format_url($call, $otherQueries);
+		$this->log($url);
 
 		$result = $this->cache->remember($url, self::CACHE_LIFETIME_MINUTES * 60, function () use ($url, $call, $otherQueries, $static)
 		{

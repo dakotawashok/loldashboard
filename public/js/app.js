@@ -5082,8 +5082,11 @@ var store = new Vuex.Store({
             definedNormalMatchList: {},
             definedRankedMatchList: {}
         },
-        currentYear: "2017"
-
+        currentYear: "2017",
+        modalMatch: {
+            gameId: 0
+        },
+        matchModalLoading: false
     },
     mutations: {
         assignChampions: function assignChampions(state, championsList) {
@@ -5132,10 +5135,8 @@ var store = new Vuex.Store({
             var summonerNumber = summonerObject.summonerNumber;
             var loading = summonerObject.loading;
             if (summonerNumber === 1) {
-                console.log('summoner 1 loading');
                 state.summoner1.loading = loading;
             } else {
-                console.log('summoner 2 loading');
                 state.summoner2.loading = loading;
             }
         },
@@ -5156,7 +5157,16 @@ var store = new Vuex.Store({
             } else {
                 state.summoner2.accountId = accountId;
             }
+        },
+        assignModalMatch: function assignModalMatch(state, modalMatch) {
+            state.modalMatch = modalMatch;
+        },
+        assignMatchModalLoading: function assignMatchModalLoading(state, loading) {
+            state.matchModalLoading = loading;
         }
+
+        // Other methods that we need like the loading summoners from the match Card
+
     }
 });
 
@@ -28696,10 +28706,77 @@ module.exports = function bind(fn, thisArg) {
                     }
                 });
             });
+        },
+        openMatchModal: function openMatchModal(matchId) {
+            var _this3 = this;
+
+            __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignMatchModalLoading', true);
+            $('#match-modal').modal('show');
+
+            this.$http.get('/match/' + matchId).then(function (resp) {
+                resp = JSON.parse(resp.body);
+
+                var parsedMatch = _this3.parseMatchDataFromResponse(resp);
+
+                __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignModalMatch', parsedMatch);
+                __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignMatchModalLoading', false);
+            });
+        },
+
+
+        // Go through all the data in the match and parse out all the json text in it
+        parseMatchDataFromResponse: function parseMatchDataFromResponse($match) {
+            var tempMatch = _.cloneDeep($match);
+            _.forEach(tempMatch.matchTeams, function (match, matchIndex) {
+                if (match.bans != undefined) {
+                    var parsedBans = JSON.parse(match.bans);
+                    tempMatch.matchTeams[matchIndex].bans = parsedBans;
+                }
+            });
+
+            // while we're going through each match participant in the match, lets put the respective match participant identies in the object
+            // so it's easier to manipulate later in the code
+            _.forEach(tempMatch.matchParticipants, function (participant, participantIndex) {
+                var parsedStats = JSON.parse(participant.stats);
+                tempMatch.matchParticipants[participantIndex].stats = parsedStats;
+
+                if (participant.runes != undefined && participant.runes != "") {
+                    var parsedRunes = JSON.parse(participant.runes);
+                    tempMatch.matchParticipants[participantIndex].runes = parsedRunes;
+                }
+
+                if (participant.timeline != undefined && participant.timeline != "") {
+                    var parsedTimeline = JSON.parse(participant.timeline);
+                    tempMatch.matchParticipants[participantIndex].timeline = parsedTimeline;
+                }
+
+                var tempParsedIdentity = {};
+                _.forEach(tempMatch.MatchParticipantIdentities, function (identity, identityIndex) {
+                    if (identity.participantId === participant.participantId) {
+                        tempParsedIdentity = identity;
+                    }
+                });
+                tempMatch.matchParticipants[participantIndex].participantIdentity = tempParsedIdentity;
+            });
+
+            delete tempMatch.participant_identities;
+            delete tempMatch.participants;
+            delete tempMatch.teams;
+
+            console.log(tempMatch);
+
+            return tempMatch;
         }
     },
 
     computed: {
+        modalMatch: function modalMatch() {
+            return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.modalMatch;
+        },
+        matchModalLoading: function matchModalLoading() {
+            return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.matchLoading;
+        },
+
         summoner1ProfileIconUrl: function summoner1ProfileIconUrl() {
             return "http://ddragon.leagueoflegends.com/cdn/" + this.API_VERSION + "/img/profileicon/" + this.summoner1.summoner.profileIconId + ".png";
         },
@@ -30949,6 +31026,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -30963,11 +31048,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
     mounted: function mounted() {
         this.setStaticData();
 
-        $('.ui.modal').modal({
+        $('#match-modal').modal({
             closable: true,
             detachable: true,
             onApprove: function onApprove() {
-                console.log('closed');
+                console.log('approved');
+            },
+            onDeny: function onDeny() {
+                console.log('denied');
             }
         });
     },
@@ -31072,6 +31160,9 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(5);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixin_js__ = __webpack_require__(142);
+//
+//
+//
 //
 //
 //
@@ -45269,7 +45360,7 @@ exports = module.exports = __webpack_require__(7)(undefined);
 
 
 // module
-exports.push([module.i, "\n.match-card[data-v-280cbfe6] {\n    font-size: 12px;\n    line-height: 12px;\n    height: 134px;\n}\n.summoner-champion-icon[data-v-280cbfe6] {\n    float: left;\n    margin-right: 15px!important;\n}\n.green-win[data-v-280cbfe6] {\n    background-color: #beffbe!important;\n}\n.red-loss[data-v-280cbfe6] {\n    background-color: #ffc3be!important;\n}\n.card-data.right[data-v-280cbfe6] {\n    float: right;\n}\n.summoner-spells-and-items[data-v-280cbfe6] {\n    float: left;\n}\n.summoner-items[data-v-280cbfe6], .summoner-spells[data-v-280cbfe6] {\n    margin-top: 5px;\n    margin-bottom: 0px;\n    display: block;\n    float: left;\n    width: 100%;\n}\n.summoner-items > img[data-v-280cbfe6], .summoner-spells > img[data-v-280cbfe6] {\n    width: 25px!important;\n    height: auto;\n    margin-right: 2px!important;\n    margin-bottom: 0px!important;\n}\n.summoner-team-container[data-v-280cbfe6], .enemy-team-container[data-v-280cbfe6] {\n    margin: 0px!important;\n    padding: 0px!important;\n    width: 50%;\n    height: 100%;\n    position: absolute;\n}\n.summoner-team-container[data-v-280cbfe6] {\n    left: 0px;\n}\n.enemy-team-container[data-v-280cbfe6] {\n    right: 0px;\n}\n.summoner-participant[data-v-280cbfe6], .enemy-participant[data-v-280cbfe6] {\n    display: inline-block;\n    width: 100%;\n    height: 22px;\n}\n.summoner-participant > span[data-v-280cbfe6] {\n    position: absolute;\n    left: 25px;\n    padding-left: 5px;\n    padding-top: 2px;\n}\n.summoner-participant > .small-champion-icon[data-v-280cbfe6] {\n    width: 20px!important;\n    height: auto;\n    position: absolute;\n    left: 0;\n}\n.enemy-participant > span[data-v-280cbfe6] {\n    position: absolute;\n    right: 45px;\n    padding-right: 5px;\n    padding-top: 2px;\n}\n.enemy-participant > .small-champion-icon[data-v-280cbfe6] {\n    width: 20px!important;\n    height: auto;\n    position: absolute;\n    right: 0;\n    margin-right: 20px;\n}\n.small-champion-icon[data-v-280cbfe6] {\n    width: 22px!important;\n    cursor: pointer;\n}\n\n\n\n", ""]);
+exports.push([module.i, "\n.match-card[data-v-280cbfe6] {\n    font-size: 12px;\n    line-height: 12px;\n    height: 134px;\n}\n.summoner-champion-icon[data-v-280cbfe6] {\n    float: left;\n    margin-right: 15px!important;\n}\n.green-win[data-v-280cbfe6] {\n    background-color: #beffbe!important;\n}\n.red-loss[data-v-280cbfe6] {\n    background-color: #ffc3be!important;\n}\n.card-data.right[data-v-280cbfe6] {\n    float: right;\n}\n.summoner-spells-and-items[data-v-280cbfe6] {\n    float: left;\n}\n.summoner-items[data-v-280cbfe6], .summoner-spells[data-v-280cbfe6] {\n    margin-top: 5px;\n    margin-bottom: 0px;\n    display: block;\n    float: left;\n    width: 100%;\n}\n.summoner-items > img[data-v-280cbfe6], .summoner-spells > img[data-v-280cbfe6] {\n    width: 25px!important;\n    height: auto;\n    margin-right: 2px!important;\n    margin-bottom: 0px!important;\n}\n.summoner-team-container[data-v-280cbfe6], .enemy-team-container[data-v-280cbfe6] {\n    margin: 0px!important;\n    padding: 0px!important;\n    width: 50%;\n    height: 100%;\n    position: absolute;\n}\n.summoner-team-container[data-v-280cbfe6] {\n    left: 0px;\n}\n.enemy-team-container[data-v-280cbfe6] {\n    right: 0px;\n}\n.summoner-participant[data-v-280cbfe6], .enemy-participant[data-v-280cbfe6] {\n    display: inline-block;\n    width: 100%;\n    height: 22px;\n}\n.summoner-participant > span[data-v-280cbfe6] {\n    position: absolute;\n    left: 25px;\n    padding-left: 5px;\n    padding-top: 2px;\n}\n.summoner-participant > .small-champion-icon[data-v-280cbfe6] {\n    width: 20px!important;\n    height: auto;\n    position: absolute;\n    left: 0;\n}\n.enemy-participant > span[data-v-280cbfe6] {\n    position: absolute;\n    right: 45px;\n    padding-right: 10px;\n    padding-top: 2px;\n}\n.enemy-participant > .small-champion-icon[data-v-280cbfe6] {\n    width: 20px!important;\n    height: auto;\n    position: absolute;\n    right: 0;\n    margin-right: 28px;\n}\n.small-champion-icon[data-v-280cbfe6] {\n    width: 22px!important;\n    cursor: pointer;\n}\n", ""]);
 
 // exports
 
@@ -45317,20 +45408,7 @@ exports.push([module.i, "\n.champion-stats-list[data-v-5713f938] {\n    text-ali
 
 
 /***/ }),
-/* 230 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(7)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "\n#main-grid-container > *[data-v-57152485]:first-child {\n    border-right-color: #555557;\n    border-right-style: solid;\n    border-right-width: 2px;\n}\n.summoner-header[data-v-57152485] {\n    margin: 15px!important;\n}\n.summoner-column[data-v-57152485] {\n    padding: 30px!important;\n}\ninput[data-v-57152485] {\n    margin-bottom: 12px;\n}\n.ranked-stats-container > p[data-v-57152485] {\n    line-height: 10px;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
+/* 230 */,
 /* 231 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -66538,7 +66616,8 @@ module.exports = Component.exports
 
 
 /* styles */
-__webpack_require__(284)
+__webpack_require__(296)
+__webpack_require__(297)
 
 var Component = __webpack_require__(9)(
   /* script */
@@ -66879,7 +66958,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "src": _vm.getChampionImageUrl(participant.championId)
       }
     })])
-  }))]) : _vm._e()])])])
+  }))]) : _vm._e()])]), _vm._v(" "), _c('div', {
+    staticClass: "match-modal-button"
+  }, [_c('i', {
+    staticClass: "external icon",
+    on: {
+      "click": function($event) {
+        _vm.openMatchModal(_vm.match.gameId)
+      }
+    }
+  })])])
 },staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
@@ -67209,7 +67297,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "match": match
       }
     })
-  }) : _vm._e()], 2) : _vm._e()])])])])
+  }) : _vm._e()], 2) : _vm._e()])])]), _vm._v(" "), _c('div', {
+    staticClass: "ui modal",
+    attrs: {
+      "id": "match-modal"
+    }
+  }, [_c('div', {
+    staticClass: "header"
+  }, [_vm._v("\n            Match " + _vm._s(_vm.modalMatch.gameId) + "\n        ")]), _vm._v(" "), _c('div', {
+    staticClass: "content"
+  })])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "ui modal"
@@ -69165,32 +69262,7 @@ if(false) {
 }
 
 /***/ }),
-/* 284 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(230);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(10)("723ac0c6", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-57152485&scoped=true!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Dashboard.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-57152485&scoped=true!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Dashboard.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
+/* 284 */,
 /* 285 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -80925,6 +80997,87 @@ var index_esm = {
 __webpack_require__(148);
 module.exports = __webpack_require__(149);
 
+
+/***/ }),
+/* 293 */,
+/* 294 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(7)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.match-modal-button {\n    position: absolute;\n    right: 0px;\n    top: 0px;\n    margin-top: 6px;\n    cursor: pointer;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 295 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(7)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n#main-grid-container > *[data-v-57152485]:first-child {\n    border-right-color: #555557;\n    border-right-style: solid;\n    border-right-width: 2px;\n}\n.summoner-header[data-v-57152485] {\n    margin: 15px!important;\n}\n.summoner-column[data-v-57152485] {\n    padding: 30px!important;\n}\ninput[data-v-57152485] {\n    margin-bottom: 12px;\n}\n.ranked-stats-container > p[data-v-57152485] {\n    line-height: 10px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 296 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(294);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(10)("729d20d2", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-57152485!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Dashboard.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-57152485!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./Dashboard.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 297 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(295);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(10)("e916fc88", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-57152485&scoped=true!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1!./Dashboard.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-57152485&scoped=true!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1!./Dashboard.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
 
 /***/ })
 /******/ ]);

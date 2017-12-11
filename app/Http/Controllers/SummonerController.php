@@ -203,8 +203,6 @@ class SummonerController extends Controller
 
         $this->formatRankedDataForDelivery($summoner);
 
-
-        $this->log($returnObject);
         return response()->json(json_encode($returnObject));
     }
 
@@ -529,7 +527,6 @@ class SummonerController extends Controller
         $summoner->league = json_encode($leagues);
     }
     private function formatMatchListForDelivery(&$matchListObject) {
-        //$this->log($matchListObject->matches);
 
     }
     private function formatDefinedMatchListForDelivery(&$definedMatchListObject) {

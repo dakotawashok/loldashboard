@@ -27,7 +27,10 @@ var store = new Vuex.Store({
             definedRankedMatchList: {},
         },
         currentYear : "2017",
-
+        modalMatch: {
+            gameId: 0,
+        },
+        matchModalLoading: false,
     },
     mutations : {
         assignChampions (state, championsList) {
@@ -74,10 +77,8 @@ var store = new Vuex.Store({
             var summonerNumber  = summonerObject.summonerNumber;
             var loading  = summonerObject.loading;
             if (summonerNumber === 1) {
-                console.log('summoner 1 loading');
                 state.summoner1.loading = loading;
             } else {
-                console.log('summoner 2 loading');
                 state.summoner2.loading = loading;
             }
         },
@@ -102,7 +103,12 @@ var store = new Vuex.Store({
             }
         },
 
-
+        assignModalMatch (state, modalMatch) {
+            state.modalMatch = modalMatch;
+        },
+        assignMatchModalLoading (state, loading) {
+            state.matchModalLoading = loading;
+        }
 
 
         // Other methods that we need like the loading summoners from the match Card

@@ -37,6 +37,9 @@
                 </div>
             </div>
         </div>
+        <div class="match-modal-button">
+            <i class="external icon" @click="openMatchModal(match.gameId)"></i>
+        </div>
     </div>
 </template>
 
@@ -336,7 +339,7 @@
     .enemy-participant > span {
         position: absolute;
         right: 45px;
-        padding-right: 5px;
+        padding-right: 10px;
         padding-top: 2px;
     }
     .enemy-participant > .small-champion-icon {
@@ -344,13 +347,10 @@
         height: auto;
         position: absolute;
         right: 0;
-        margin-right: 20px;
+        margin-right: 28px;
     }
     .small-champion-icon {
         width: 22px!important;
         cursor: pointer;
     }
-
-
-
 </style>

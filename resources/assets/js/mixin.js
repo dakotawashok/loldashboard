@@ -214,10 +214,71 @@ export default {
                     }
                 })
             })
-        }
+        },
+
+        openMatchModal(matchId) {
+            store.commit('assignMatchModalLoading', true);
+            $('#match-modal').modal('show')
+
+            this.$http.get('/match/' + matchId).then((resp) => {
+                resp = JSON.parse(resp.body);
+
+                var parsedMatch = this.parseMatchDataFromResponse(resp);
+
+                store.commit('assignModalMatch', parsedMatch);
+                store.commit('assignMatchModalLoading', false);
+            });
+        },
+
+        // Go through all the data in the match and parse out all the json text in it
+        parseMatchDataFromResponse($match) {
+            var tempMatch = _.cloneDeep($match);
+            _.forEach(tempMatch.matchTeams, (match, matchIndex) => {
+                if (match.bans != undefined) {
+                    var parsedBans = JSON.parse(match.bans);
+                    tempMatch.matchTeams[matchIndex].bans = parsedBans;
+                }
+            })
+
+            // while we're going through each match participant in the match, lets put the respective match participant identies in the object
+            // so it's easier to manipulate later in the code
+            _.forEach(tempMatch.matchParticipants, (participant, participantIndex) => {
+                var parsedStats = JSON.parse(participant.stats);
+                tempMatch.matchParticipants[participantIndex].stats = parsedStats;
+
+                if (participant.runes != undefined && participant.runes != "") {
+                    var parsedRunes = JSON.parse(participant.runes);
+                    tempMatch.matchParticipants[participantIndex].runes = parsedRunes;
+                }
+
+                if (participant.timeline != undefined && participant.timeline != "") {
+                    var parsedTimeline = JSON.parse(participant.timeline);
+                    tempMatch.matchParticipants[participantIndex].timeline = parsedTimeline;
+                }
+
+                var tempParsedIdentity = {};
+                _.forEach(tempMatch.MatchParticipantIdentities, (identity, identityIndex) => {
+                    if (identity.participantId === participant.participantId) {
+                        tempParsedIdentity = identity;
+                    }
+                });
+                tempMatch.matchParticipants[participantIndex].participantIdentity = tempParsedIdentity;
+            })
+
+            delete tempMatch.participant_identities;
+            delete tempMatch.participants;
+            delete tempMatch.teams;
+
+            console.log(tempMatch);
+
+            return tempMatch;
+        },
     },
 
     computed: {
+        modalMatch : function() { return store.state.modalMatch; },
+        matchModalLoading : function() { return store.state.matchLoading; },
+
         summoner1ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/"+this.API_VERSION+"/img/profileicon/" + this.summoner1.summoner.profileIconId + ".png"; },
         summoner2ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/"+this.API_VERSION+"/img/profileicon/" + this.summoner2.summoner.profileIconId + ".png"; },
 
