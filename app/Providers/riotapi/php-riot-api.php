@@ -405,7 +405,6 @@ class riotapi {
 
 	private function curlExecute($url){
 		//call the API and return the result
-        $this->log($this->API_KEY);
 		$ch = curl_init($url);
 		curl_setopt($ch, CURLOPT_RETURNTRANSFER, 1);
 		curl_setopt($ch, CURLOPT_SSL_VERIFYPEER, false);

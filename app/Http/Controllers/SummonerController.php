@@ -33,9 +33,9 @@ class SummonerController extends Controller
         $this->api = new riotapi('NA1', new FileSystemCache('cache/'));
     }
 
-    function log($message) {
+    public function log($message) {
         $file = './log.txt';
-        $message = file_get_contents($file) . "\n" . $message;
+        $message = file_get_contents($file) . "\n" . json_encode($message);
         file_put_contents($file, $message);
     }
 
@@ -112,7 +112,13 @@ class SummonerController extends Controller
                         $found = true;
                         if (strtotime($matchListObject->updated_at) < (strtotime('-1 day'))) {
                             $matches = $this->api->getMatchList($accountId, $normalParams);
-                            $matchListObject->matches = json_encode($matches['matches']);
+                            $tempType = gettype($matches);
+                            if ($tempType == "object") {
+                                $matchListObject->matches = json_encode($matches->matches);
+                            } else {
+                                $matchListObject->matches = json_encode($matches['matches']);
+                            }
+                            $matchListObject->updated_at = $matchListObject->freshTimestampString();
                             $matchListObject->save();
                             $this->saveMatchListMatches($this->api, $matchListObject);
                         }
@@ -158,7 +164,13 @@ class SummonerController extends Controller
                         $found = true;
                         if (strtotime($matchListObject->updated_at) < (strtotime('-1 day'))) {
                             $matches = $this->api->getMatchList($accountId, $rankedParams);
-                            $matchListObject->matches = json_encode($matches['matches']);
+                            $tempType = gettype($matches);
+                            if ($tempType == "object") {
+                                $matchListObject->matches = json_encode($matches->matches);
+                            } else {
+                                $matchListObject->matches = json_encode($matches['matches']);
+                            }
+                            $matchListObject->updated_at = $matchListObject->freshTimestampString();
                             $matchListObject->save();
                             $this->saveMatchListMatches($this->api, $matchListObject);
                         }
