@@ -140,8 +140,11 @@ class SummonerController extends Controller
             $this->saveMatchListMatches($this->api, $matchListObject);
         }
 
+        $definedMatchListObject = $this->getMatchListMatches($matchListObject);
+        $this->formatMatchListForDelivery($matchListObject);
+        $this->formatDefinedMatchListForDelivery($definedMatchListObject);
+        $returnObject['normalDefinedMatchList'] = $definedMatchListObject;
         $returnObject['normalMatchList'] = $matchListObject;
-        $returnObject['normalDefinedMatchList'] = $this->getMatchListMatches($matchListObject);
 
         // Ranked matchlist and matches next
         $rankedParams = [
@@ -192,9 +195,16 @@ class SummonerController extends Controller
             $this->saveMatchListMatches($this->api, $matchListObject);
         }
 
+        $definedMatchListObject = $this->getMatchListMatches($matchListObject);
+        $this->formatMatchListForDelivery($matchListObject);
+        $this->formatDefinedMatchListForDelivery($definedMatchListObject);
         $returnObject['rankedMatchList'] = $matchListObject;
-        $returnObject['rankedDefinedMatchList'] = $this->getMatchListMatches($matchListObject);
+        $returnObject['rankedDefinedMatchList'] = $definedMatchListObject;
 
+        $this->formatRankedDataForDelivery($summoner);
+
+
+        $this->log($returnObject);
         return response()->json(json_encode($returnObject));
     }
 
@@ -257,6 +267,7 @@ class SummonerController extends Controller
             $summoner = Summoner::where('accountId', $accountId)->firstOrFail();
             $this->assignLeagues($this->api, $summoner);
 
+            $this->formatRankedDataForDelivery($summoner);
             return response()->json($summoner->league);
         } catch (ModelNotFoundException $e) {
             $returnObject = ['error' => 'That account wasn\'t found in our database...', 'error_e' => $e];
@@ -493,5 +504,60 @@ class SummonerController extends Controller
         $league = $api->getLeague($summoner->id);
         $summoner->league = json_encode($league);
         $summoner->save();
+    }
+
+    private function formatRankedDataForDelivery(&$summoner) {
+        $leagues = json_decode($summoner->league);
+        foreach($leagues as $leagueIndex => $league) {
+            $entries = $league->entries;
+            $tempSummoner = null;
+            $found = false;
+
+            foreach($entries as $entry) {
+                if ($entry->playerOrTeamName == $summoner->name) {
+                    $tempSummoner = $entry;
+                    $found = true;
+                    break;
+                }
+            }
+
+            if ($found) {
+                $leagues[$leagueIndex]->entries = [$tempSummoner];
+            }
+        }
+
+        $summoner->league = json_encode($leagues);
+    }
+    private function formatMatchListForDelivery(&$matchListObject) {
+        //$this->log($matchListObject->matches);
+
+    }
+    private function formatDefinedMatchListForDelivery(&$definedMatchListObject) {
+
+        // go through each of the match lists participants and remove unnecessary entries in stats and completely remove the timeline
+        foreach($definedMatchListObject as $matchIndex => $match) {
+            foreach($match->matchParticipants as $participantIndex => $participant) {
+                // unset the timeline, runes, and masteries for each match participant
+                unset($definedMatchListObject[$matchIndex]->matchParticipants[$participantIndex]->timeline);
+                unset($definedMatchListObject[$matchIndex]->matchParticipants[$participantIndex]->runes);
+                unset($definedMatchListObject[$matchIndex]->matchParticipants[$participantIndex]->masteries);
+
+                // make a new stats thing so that we can set it and remove the unecessary stuff
+                $tempStats = [];
+                $parsedStats = json_decode($participant->stats);
+                $tempStats['win'] = $parsedStats->win;
+                $tempStats['item0'] = $parsedStats->item0;
+                $tempStats['item1'] = $parsedStats->item1;
+                $tempStats['item2'] = $parsedStats->item2;
+                $tempStats['item3'] = $parsedStats->item3;
+                $tempStats['item4'] = $parsedStats->item4;
+                $tempStats['item5'] = $parsedStats->item5;
+                $tempStats['item6'] = $parsedStats->item6;
+                $tempStats['kills'] = $parsedStats->kills;
+                $tempStats['assists'] = $parsedStats->assists;
+                $tempStats = json_encode($tempStats);
+                $definedMatchListObject[$matchIndex]->matchParticipants[$participantIndex]->stats = $tempStats;
+            }
+        }
     }
 }

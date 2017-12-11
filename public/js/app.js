@@ -31197,7 +31197,7 @@ var moment = __webpack_require__(0);
             }
 
             // get the summoner stats for this game
-            this.stats = this.summoner_participant_data.stats;
+            this.stats = JSON.parse(this.summoner_participant_data.stats);
             this.match_loading = false;
         },
 
@@ -31206,10 +31206,7 @@ var moment = __webpack_require__(0);
                 // TODO:: FIX THIS SHIT
                 // json parse out all the data! If they're not a string, then they're already parsed or something not sure why but fuck it I'll figure it out later
                 if (typeof participant.masteries === 'string') {
-                    participant.masteries = participant.masteries != '' ? JSON.parse(participant.masteries) : [];
-                    participant.runes = participant.runes != '' ? JSON.parse(participant.runes) : [];
                     participant.stats = participant.stats != '' ? JSON.parse(participant.stats) : [];
-                    participant.timeline = participant.timeline != '' ? JSON.parse(participant.timeline) : [];
                 }
             });
         },
