@@ -346,6 +346,10 @@
         right: 0;
         margin-right: 20px;
     }
+    .small-champion-icon {
+        width: 22px!important;
+        cursor: pointer;
+    }
 
 
 
