@@ -63,7 +63,6 @@ class SummonerController extends Controller
                 $summoner = Summoner::where('name', $id)->firstOrFail();
             }
         } catch (ModelNotFoundException $e) {
-
             if (is_numeric($id)) {
                 $returnSummoner = $this->api->getSummoner($id, true);
             } else {
@@ -81,7 +80,7 @@ class SummonerController extends Controller
             $summoner->save();
 
             //$this->assignMasteries($this->api, $summoner);
-            //$this->assignRunes($this->api, $summoner);
+            $this->assignRunes($this->api, $summoner);
             //$this->assignChampionMasteries($this->api, $summoner);
             $this->assignLeagues($this->api, $summoner);
         }

@@ -1,0 +1,57 @@
+
+""
+"01:    1513185857"
+""
+"01:    1513185886"
+"02:    0"
+"02.5:    -1513185886"
+https://NA1.api.riotgames.com/lol/summoner/v3/summoners/by-account/215598973?
+https://NA1.api.riotgames.com/lol/league/v3/leagues/by-summoner/52706306?
+"03:    -3026371777"
+"04:    -4539557668"
+https://NA1.api.riotgames.com/lol/match/v3/matchlists/by-account/215598973?queue=2&queue=14&queue=400&queue=430&season=9&endIndex=20&?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2669164573?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668961236?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668936223?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668919306?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668038301?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2664361499?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2662900459?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2661955540?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2661981456?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2661836591?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2661808426?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2661790700?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2661256449?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2658701199?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2657807141?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2657521174?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2655265414?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2655236000?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2655186821?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2655009386?
+"05:    -6052743606"
+"06:    -7565929545"
+https://NA1.api.riotgames.com/lol/match/v3/matchlists/by-account/215598973?queue=410&queue=420&queue=440&queue=6&queue=41&queue=42&season=9&endIndex=20&?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2669630237?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2669596353?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2669586518?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2669173112?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668480860?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668461737?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668425390?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668397530?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668328047?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668333187?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668153926?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668119657?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668125558?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668130105?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668095728?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668057596?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2668006606?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2667975707?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2667933713?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2667922337?
+"07:    -9079115501"
+"08:    -10592301459"

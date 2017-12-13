@@ -29852,6 +29852,7 @@ __webpack_require__(177);
 
 Vue.component('dashboard', __webpack_require__(263));
 Vue.component('matchcard', __webpack_require__(147));
+Vue.component('matchmodal', __webpack_require__(300));
 Vue.component('rankedmatchlistview', __webpack_require__(264));
 Vue.component('recentgamecard', __webpack_require__(265));
 Vue.component('recentgamesview', __webpack_require__(266));
@@ -30911,6 +30912,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__mixin_js__ = __webpack_require__(142);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_MatchCard_vue__ = __webpack_require__(147);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_4__components_MatchCard_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_4__components_MatchCard_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_MatchModal_vue__ = __webpack_require__(300);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_5__components_MatchModal_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_5__components_MatchModal_vue__);
 //
 //
 //
@@ -31034,6 +31037,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
+
 
 
 
@@ -31044,7 +31048,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 /* harmony default export */ __webpack_exports__["default"] = {
     mixins: [__WEBPACK_IMPORTED_MODULE_3__mixin_js__["a" /* default */]],
-    components: [__WEBPACK_IMPORTED_MODULE_4__components_MatchCard_vue___default.a],
+    components: [__WEBPACK_IMPORTED_MODULE_4__components_MatchCard_vue___default.a, __WEBPACK_IMPORTED_MODULE_5__components_MatchModal_vue___default.a],
     mounted: function mounted() {
         this.setStaticData();
 
@@ -67306,7 +67310,11 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "header"
   }, [_vm._v("\n            Match " + _vm._s(_vm.modalMatch.gameId) + "\n        ")]), _vm._v(" "), _c('div', {
     staticClass: "content"
-  })])])
+  }, [(_vm.modalMatch.gameId != 0) ? _c('matchmodal', {
+    attrs: {
+      "match": _vm.modalMatch
+    }
+  }) : _vm._e()], 1)])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "ui modal"
@@ -81071,6 +81079,188 @@ if(false) {
  if(!content.locals) {
    module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-57152485&scoped=true!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1!./Dashboard.vue", function() {
      var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-57152485&scoped=true!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1!./Dashboard.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 298 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* WEBPACK VAR INJECTION */(function($) {Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixin_js__ = __webpack_require__(142);
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = {
+    mixins: [__WEBPACK_IMPORTED_MODULE_1__mixin_js__["a" /* default */]],
+    components: [],
+    mounted: function mounted() {
+        // initialize the tabs for the modal
+        $('.menu .item').tab();
+
+        console.log(this.match);
+    },
+
+    props: ["match"],
+    data: function data() {
+        return {};
+    },
+    computed: {},
+    methods: {},
+    watch: {}
+};
+/* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(17)))
+
+/***/ }),
+/* 299 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(7)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 300 */
+/***/ (function(module, exports, __webpack_require__) {
+
+
+/* styles */
+__webpack_require__(302)
+
+var Component = __webpack_require__(9)(
+  /* script */
+  __webpack_require__(298),
+  /* template */
+  __webpack_require__(301),
+  /* scopeId */
+  "data-v-6c1b3c47",
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/dakotawashok/NinjaDev/www/lolDashboard/resources/assets/js/components/MatchModal.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+if (Component.options.functional) {console.error("[vue-loader] MatchModal.vue: functional components are not supported with templates, they should use render functions.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-6c1b3c47", Component.options)
+  } else {
+    hotAPI.reload("data-v-6c1b3c47", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
+
+
+/***/ }),
+/* 301 */
+/***/ (function(module, exports, __webpack_require__) {
+
+module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _vm._m(0, false, false)
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    attrs: {
+      "id": "match-modal-container"
+    }
+  }, [_c('div', {
+    staticClass: "ui top attached tabular menu"
+  }, [_c('div', {
+    staticClass: "active item",
+    attrs: {
+      "data-tab": "overview"
+    }
+  }, [_vm._v("Overview")]), _vm._v(" "), _c('div', {
+    staticClass: "item",
+    attrs: {
+      "data-tab": "timeline"
+    }
+  }, [_vm._v("Timeline")]), _vm._v(" "), _c('div', {
+    staticClass: "item",
+    attrs: {
+      "data-tab": "misc"
+    }
+  }, [_vm._v("Misc")])]), _vm._v(" "), _c('div', {
+    staticClass: "ui bottom attached active tab segment",
+    attrs: {
+      "data-tab": "overview"
+    }
+  }, [_c('h3', [_vm._v("Overview")])]), _vm._v(" "), _c('div', {
+    staticClass: "ui bottom attached tab segment",
+    attrs: {
+      "data-tab": "timeline"
+    }
+  }, [_c('h3', [_vm._v("Timeline")])]), _vm._v(" "), _c('div', {
+    staticClass: "ui bottom attached tab segment",
+    attrs: {
+      "data-tab": "misc"
+    }
+  }, [_c('h3', [_vm._v("Misc")])])])
+}]}
+module.exports.render._withStripped = true
+if (false) {
+  module.hot.accept()
+  if (module.hot.data) {
+     require("vue-hot-reload-api").rerender("data-v-6c1b3c47", module.exports)
+  }
+}
+
+/***/ }),
+/* 302 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(299);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(10)("7101de67", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6c1b3c47&scoped=true!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MatchModal.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6c1b3c47&scoped=true!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MatchModal.vue");
      if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
      update(newContent);
    });

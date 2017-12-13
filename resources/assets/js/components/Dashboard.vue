@@ -115,7 +115,7 @@
                 Match {{modalMatch.gameId}}
             </div>
             <div class="content">
-
+                <matchmodal v-if="modalMatch.gameId != 0" :match="modalMatch"></matchmodal>
             </div>
         </div>
     </div>
@@ -128,6 +128,7 @@
     import mixin from '../mixin.js';
 
     import MatchCard from '../components/MatchCard.vue';
+    import MatchModal from '../components/MatchModal.vue'
 
     export default {
         mixins: [
@@ -135,6 +136,7 @@
         ],
         components: [
             MatchCard,
+            MatchModal,
         ],
         mounted() {
             this.setStaticData();

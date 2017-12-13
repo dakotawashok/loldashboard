@@ -1,0 +1,436 @@
+{
+  "seasons" : {
+    "0" : {
+      "id" : 0,
+      "name" : "Preseason 3"
+    },
+    "1" : {
+      "id" : 1,
+      "name" : "Season 3"
+    },
+    "2" : {
+      "id" : 2,
+      "name" : "Preseason 2014"
+    },
+    "3" : {
+      "id" : 3,
+      "name" : "Season 2014"
+    },
+    "4" : {
+      "id" : 4,
+      "name" : "Preseason 2015"
+    },
+    "5" : {
+      "id" : 5,
+      "name" : "Season 2015"
+    },
+    "6" : {
+      "id" : 6,
+      "name" : "Preseason 2016"
+    },
+    "7" : {
+      "id" : 7,
+      "name" : "Season 2016"
+    },
+    "8" : {
+      "id" : 8,
+      "name" : "Preseason 2017"
+    },
+    "9" : {
+      "id" : 9,
+      "name" : "Season 2017"
+    }
+  },
+  "matchmaking_queues" : {
+    "0" : {
+      "id" : 0,
+      "map" : "Custom Games",
+      "description" : "",
+      "deprecated" : false
+    },
+    "1" : {
+      "id" : 2,
+      "map" : "Summoner's Rift",
+      "description" : "5v5 Blind Pick Games",
+      "deprecated" : true
+    },
+    "2" : {
+      "id" : 4,
+      "map" : "Summoner's Rift",
+      "description" : "5v5 Ranked Solo Games",
+      "deprecated" : true
+    },
+    "3" : {
+      "id" : 6,
+      "map" : "Summoner's Rift",
+      "description" : "5v5 Ranked Premade Games",
+      "deprecated" : true
+    },
+    "4" : {
+      "id" : 7,
+      "map" : "Summoner's Rift",
+      "description" : "Co-op Vs AI Games",
+      "deprecated" : true
+    },
+    "5" : {
+      "id" : 8,
+      "map" : "Twisted Treeline",
+      "description" : "3v3 Normal Games",
+      "deprecated" : true
+    },
+    "6" : {
+      "id" : 9,
+      "map" : "Twisted Treeline",
+      "description" : "3v3 Ranked Flex Games",
+      "deprecated" : true
+    },
+    "7" : {
+      "id" : 14,
+      "map" : "Summoner's Rift",
+      "description" : "5v5 Draft Pick Games",
+      "deprecated" : true
+    },
+    "8" : {
+      "id" : 16,
+      "map" : "Crystal Scar",
+      "description" : "5v5 Dominion Blind Pick Games",
+      "deprecated" : true
+    },
+    "9" : {
+      "id" : 17,
+      "map" : "Crystal Scar",
+      "description" : "5v5 Dominion Draft Pick Games",
+      "deprecated" : true
+    },
+    "10" : {
+      "id" : 25,
+      "map" : "Crystal Scar",
+      "description" : "Dominion Co-op VS AI Games",
+      "deprecated" : true
+    },
+    "11" : {
+      "id" : 31,
+      "map" : "Summoner's Rift",
+      "description" : "Co-op Vs AI Intro Bot Games",
+      "deprecated" : true
+    },
+    "12" : {
+      "id" : 32,
+      "map" : "Summoner's Rift",
+      "description" : "Co-op Vs AI Beginner Bot Games",
+      "deprecated" : true
+    },
+    "13" : {
+      "id" : 33,
+      "map" : "Summoner's Rift",
+      "description" : "Co-op Vs AI Intermediate Bot Games",
+      "deprecated" : true
+    },
+    "14" : {
+      "id" : 41,
+      "map" : "Twisted Treeline",
+      "description" : "3v3 Ranked Team Games",
+      "deprecated" : true
+    },
+    "15" : {
+      "id" : 42,
+      "map" : "Summoner's Rift",
+      "description" : "5v5 Ranked Team Games",
+      "deprecated" : true
+    },
+    "16" : {
+      "id" : 52,
+      "map" : "Twisted Treeline",
+      "description" : "Co-op Vs AI Games",
+      "deprecated" : true
+    },
+    "17" : {
+      "id" : 61,
+      "map" : "Summoner's Rift",
+      "description" : "5v5 Team Builder Games",
+      "deprecated" : true
+    },
+    "18" : {
+      "id" : 65,
+      "map" : "Howling Abyss",
+      "description" : "5v5 ARAM Games",
+      "deprecated" : true
+    },
+    "19" : {
+      "id" : 70,
+      "map" : "Summoner's Rift",
+      "description" : "One for All Games",
+      "deprecated" : false
+    },
+    "20" : {
+      "id" : 72,
+      "map" : "Howling Abyss",
+      "description" : "1v1 Snowdown Showdown Games",
+      "deprecated" : false
+    },
+    "21" : {
+      "id" : 73,
+      "map" : "Howling Abyss",
+      "description" : "2v2 Snowdown Showdown Games",
+      "deprecated" : false
+    },
+    "22" : {
+      "id" : 75,
+      "map" : "Summoner's Rift",
+      "description" : "6v6 Hexakill Games",
+      "deprecated" : false
+    },
+    "23" : {
+      "id" : 76,
+      "map" : "Summoner's Rift",
+      "description" : "Ultra Rapid Fire Games",
+      "deprecated" : false
+    },
+    "24" : {
+      "id" : 78,
+      "map" : "Summoner's Rift",
+      "description" : "Mirrored One for All",
+      "deprecated" : false
+    },
+    "25" : {
+      "id" : 83,
+      "map" : "Summoner's Rift",
+      "description" : "Co-op Vs AI Ultra Rapid Fire Games",
+      "deprecated" : false
+    },
+    "26" : {
+      "id" : 91,
+      "map" : "Summoner's Rift",
+      "description" : "Doom Bots Rank 1 Games",
+      "deprecated" : true
+    },
+    "27" : {
+      "id" : 92,
+      "map" : "Summoner's Rift",
+      "description" : "Doom Bots Rank 2 Games",
+      "deprecated" : true
+    },
+    "28" : {
+      "id" : 93,
+      "map" : "Summoner's Rift",
+      "description" : "Doom Bots Rank 3 Games",
+      "deprecated" : true
+    },
+    "29" : {
+      "id" : 96,
+      "map" : "Crystal Scar",
+      "description" : "Ascension Games",
+      "deprecated" : true
+    },
+    "30" : {
+      "id" : 98,
+      "map" : "Twisted Treeline",
+      "description" : "6v6 Hexakill Games",
+      "deprecated" : false
+    },
+    "31" : {
+      "id" : 100,
+      "map" : "Butcher's Bridge",
+      "description" : "5v5 Aram Games",
+      "deprecated" : false
+    },
+    "32" : {
+      "id" : 300,
+      "map" : "Howling Abyss",
+      "description" : "Legend of the Poro King Games",
+      "deprecated" : true
+    },
+    "33" : {
+      "id" : 310,
+      "map" : "Summoner's Rift",
+      "description" : "Nemesis Games",
+      "deprecated" : false
+    },
+    "34" : {
+      "id" : 313,
+      "map" : "Summoner's Rift",
+      "description" : "Black Market Brawlers Games",
+      "deprecated" : false
+    },
+    "35" : {
+      "id" : 315,
+      "map" : "Summoner's Rift",
+      "description" : "Nexus Siege Games",
+      "deprecated" : true
+    },
+    "36" : {
+      "id" : 317,
+      "map" : "Crystal Scar",
+      "description" : "Definitely Not Dominion Games",
+      "deprecated" : false
+    },
+    "37" : {
+      "id" : 318,
+      "map" : "Summoner's Rift",
+      "description" : "ARURF Games",
+      "deprecated" : true
+    },
+    "38" : {
+      "id" : 325,
+      "map" : "Summoner's Rift",
+      "description" : "All Random Games",
+      "deprecated" : false
+    },
+    "39" : {
+      "id" : 400,
+      "map" : "Summoner's Rift",
+      "description" : "5v5 Draft Pick Games",
+      "deprecated" : false
+    },
+    "40" : {
+      "id" : 410,
+      "map" : "Summoner's Rift",
+      "description" : "5v5 Ranked Dynamic Games",
+      "deprecated" : true
+    },
+    "41" : {
+      "id" : 420,
+      "map" : "Summoner's Rift",
+      "description" : "5v5 Ranked Solo Games",
+      "deprecated" : false
+    },
+    "42" : {
+      "id" : 430,
+      "map" : "Summoner's Rift",
+      "description" : "5v5 Blind Pick Games",
+      "deprecated" : false
+    },
+    "43" : {
+      "id" : 440,
+      "map" : "Summoner's Rift",
+      "description" : "5v5 Ranked Flex Games",
+      "deprecated" : false
+    },
+    "44" : {
+      "id" : 450,
+      "map" : "Howling Abyss",
+      "description" : "5v5 ARAM Games",
+      "deprecated" : false
+    },
+    "45" : {
+      "id" : 460,
+      "map" : "Twisted Treeline",
+      "description" : "3v3 Blind Pick Games",
+      "deprecated" : false
+    },
+    "46" : {
+      "id" : 470,
+      "map" : "Twisted Treeline",
+      "description" : "3v3 Ranked Flex Games",
+      "deprecated" : false
+    },
+    "47" : {
+      "id" : 600,
+      "map" : "Summoner's Rift",
+      "description" : "Blood Hunt Assasin Games",
+      "deprecated" : false
+    },
+    "48" : {
+      "id" : 610,
+      "map" : "Cosmic Ruins",
+      "description" : "Dark Star: Singularity Games",
+      "deprecated" : false
+    },
+    "49" : {
+      "id" : 800,
+      "map" : "Twisted Treeline",
+      "description" : "Co-op Vs AI Intermediate Bot Games",
+      "deprecated" : false
+    },
+    "50" : {
+      "id" : 810,
+      "map" : "Twisted Treeline",
+      "description" : "Co-op Vs AI Intro Bot Games",
+      "deprecated" : false
+    },
+    "51" : {
+      "id" : 820,
+      "map" : "Twisted Treeline",
+      "description" : "Co-op Vs AI Beginner Bot Games",
+      "deprecated" : false
+    },
+    "52" : {
+      "id" : 830,
+      "map" : "Summoner's Rift",
+      "description" : "Co-op Vs AI Intro Bot Games",
+      "deprecated" : false
+    },
+    "53" : {
+      "id" : 840,
+      "map" : "Summoner's Rift",
+      "description" : "Co-op Vs AI Beginner Bot Games",
+      "deprecated" : false
+    },
+    "54" : {
+      "id" : 850,
+      "map" : "Summoner's Rift",
+      "description" : "Co-op Vs AI Intermediate Bot Games",
+      "deprecated" : false
+    },
+    "55" : {
+      "id" : 900,
+      "map" : "Summoner's Rift",
+      "description" : "ARURF Games",
+      "deprecated" : false
+    },
+    "56" : {
+      "id" : 910,
+      "map" : "Crystal Scare",
+      "description" : "Ascension Games",
+      "deprecated" : false
+    },
+    "57" : {
+      "id" : 920,
+      "map" : "Howling Abyss",
+      "description" : "Legend of the Poro King Games",
+      "deprecated" : false
+    },
+    "58" : {
+      "id" : 940,
+      "map" : "Summoner's Rift",
+      "description" : "NExus Siege Games",
+      "deprecated" : false
+    },
+    "59" : {
+      "id" : 950,
+      "map" : "Summoner's Rift",
+      "description" : "Doom Bots Voting Games",
+      "deprecated" : false
+    },
+    "60" : {
+      "id" : 960,
+      "map" : "Summoner's Rift",
+      "description" : "Doom Bots Stand Games",
+      "deprecated" : false
+    },
+    "61" : {
+      "id" : 980,
+      "map" : "Valoran City Park",
+      "description" : "Star Guardian Invasion: Normal Games",
+      "deprecated" : false
+    },
+    "62" : {
+      "id" : 990,
+      "map" : "Valoran City Park",
+      "description" : "Star Guardian Invasion: Onslaught Games",
+      "deprecated" : false
+    },
+    "63" : {
+      "id" : 1000,
+      "map" : "Overcharge",
+      "description" : "PROJECT: Hunters Games",
+      "deprecated" : false
+    },
+    "64" : {
+      "id" : 1010,
+      "map" : "Summoner's Rift",
+      "description" : "Snow ARURF Games",
+      "deprecated" : false
+    }
+  }
+}
