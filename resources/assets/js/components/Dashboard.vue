@@ -1,23 +1,5 @@
 <template>
     <div class="ui grid">
-        <div class="ui modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Modal Title
-            </div>
-            <div class="image content">
-                <div class="image">
-                    An image can appear on left or an icon
-                </div>
-                <div class="description">
-                    A description can appear on the right
-                </div>
-            </div>
-            <div class="actions">
-                <div class="ui button">Cancel</div>
-                <div class="ui button">OK</div>
-            </div>
-        </div>
         <div class="two column row" id="main-grid-container">
             <div class="left floated column summoner-column">
                 <div class="ui one column grid">
@@ -110,12 +92,12 @@
                 </div>
             </div>
         </div>
-        <div class="ui modal" id="match-modal">
+        <div class="ui fullscreen modal" id="match-modal">
             <div class="header">
                 Match {{modalMatch.gameId}}
             </div>
-            <div class="content">
-                <matchmodal v-if="modalMatch.gameId != 0" :match="modalMatch"></matchmodal>
+            <div class="content" v-if="modalMatch.gameId != 0">
+                <matchmodal :match.sync="modalMatch"></matchmodal>
             </div>
         </div>
     </div>
@@ -144,15 +126,27 @@
             $('#match-modal').modal({
                 closable  : true,
                 detachable: true,
-                onApprove: () => {
-                    console.log('approved');
-                },
-                onDeny: () => {
-                    console.log('denied')
-                },
+                onHidden: () => {
+                    store.commit('assignModalMatch', {
+                        gameId: 0,
+                            MatchParticipantIdentities: [],
+                            created_at: "",
+                            gameCreation: "",
+                            gameDuration: "",
+                            gameMode: "",
+                            gameType: "",
+                            gameVersion: "",
+                            id: 0,
+                            mapId: "",
+                            matchParticipants: [],
+                            matchTeams: [],
+                            platformId: "",
+                            queueId: "",
+                            seasonId: "",
+                            updated_at: ""
+                    });
+                }
             })
-
-
         },
         data : function() {
             return {
@@ -201,26 +195,24 @@
             },
 
             setStaticData : function() {
-                this.$http.get('/jsonfiles/champion.json').then(
-                    response => {
-                        var champions = response.body.data;
+                this.$http.get('/jsonfiles/champion.json').then(response => {
+                    var champions = response.body.data;
 
-                        var tempChampionsList = [];
-                        for (var champion in champions) {
-                            tempChampionsList.push(champions[champion]);
-                        };
+                    var tempChampionsList = [];
+                    for (var champion in champions) {
+                        tempChampionsList.push(champions[champion]);
+                    };
 
-                        tempChampionsList.sort(function(championA, championB) {
-                            if (parseInt(championA.key) < parseInt(championB.key)) {
-                                return -1;
-                            } else {
-                                return 1;
-                            }
-                        });
-                        store.commit('assignChampions', tempChampionsList);
-                        return this.$http.get('/jsonfiles/summonerspells.json');
-                    }
-                ).then((resp) => {
+                    tempChampionsList.sort(function(championA, championB) {
+                        if (parseInt(championA.key) < parseInt(championB.key)) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    });
+                    store.commit('assignChampions', tempChampionsList);
+                    return this.$http.get('/jsonfiles/summonerspells.json');
+                }).then((resp) => {
                     var spells = resp.body.data;
 
                     var tempSpellList = [];
@@ -236,6 +228,26 @@
                         }
                     });
                     store.commit('assignSpells', tempSpellList);
+                    return this.$http.get('/jsonfiles/game_constants.json');
+                }).then((resp) => {
+                    var game_constants = resp.body;
+                    var seasons = [];
+                    var matchmaking_queues = [];
+                    var map_names = [];
+
+                    _.forEach(game_constants.matchmaking_queues, (queue, queue_index) => {
+                        matchmaking_queues.push(queue);
+                    });
+                    _.forEach(game_constants.seasons, (season, season_index) => {
+                        seasons.push(season);
+                    });
+                    _.forEach(game_constants.map_names, (map_name, map_names_index) => {
+                        map_names.push(map_name);
+                    });
+
+                    store.commit('assignMatchmakingQueues', matchmaking_queues);
+                    store.commit('assignSeasons', seasons);
+                    store.commit('assignMapNames', map_names);
                 });
             },
 

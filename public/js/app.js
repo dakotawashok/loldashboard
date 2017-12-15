@@ -5060,7 +5060,10 @@ var store = new Vuex.Store({
     state: {
         staticInfo: {
             champions: [],
-            spells: []
+            spells: [],
+            seasons: [],
+            matchmaking_queues: [],
+            map_names: []
         },
         summoner1: {
             loaded: false,
@@ -5084,7 +5087,22 @@ var store = new Vuex.Store({
         },
         currentYear: "2017",
         modalMatch: {
-            gameId: 0
+            gameId: 0,
+            MatchParticipantIdentities: [],
+            created_at: "",
+            gameCreation: "",
+            gameDuration: "",
+            gameMode: "",
+            gameType: "",
+            gameVersion: "",
+            id: 0,
+            mapId: "",
+            matchParticipants: [],
+            matchTeams: [],
+            platformId: "",
+            queueId: "",
+            seasonId: "",
+            updated_at: ""
         },
         matchModalLoading: false
     },
@@ -5094,6 +5112,15 @@ var store = new Vuex.Store({
         },
         assignSpells: function assignSpells(state, spellList) {
             state.staticInfo.spells = spellList;
+        },
+        assignSeasons: function assignSeasons(state, seasonList) {
+            state.staticInfo.seasons = seasonList;
+        },
+        assignMatchmakingQueues: function assignMatchmakingQueues(state, matchmakingQueuesList) {
+            state.staticInfo.matchmaking_queues = matchmakingQueuesList;
+        },
+        assignMapNames: function assignMapNames(state, mapNameList) {
+            state.staticInfo.map_names = mapNameList;
         },
         assignSummoner1Summoner: function assignSummoner1Summoner(state, summoner) {
             state.summoner1.summoner = summoner;
@@ -28513,6 +28540,30 @@ module.exports = function bind(fn, thisArg) {
             }
         },
 
+        staticSeason: function staticSeason(id) {
+            _.forEach(__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.seasons, function (season, season_index) {
+                if (season.id == id) {
+                    return season;
+                }
+            });
+        },
+
+        staticMatchmakingQueue: function staticMatchmakingQueue(id) {
+            _.forEach(__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.matchmaking_queues, function (queue, queue_index) {
+                if (queue.id == id) {
+                    return queue;
+                }
+            });
+        },
+
+        staticMapName: function staticMapName(id) {
+            _.forEach(__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.map_names, function (map_name, map_name_index) {
+                if (map_name.id == id) {
+                    return map_name;
+                }
+            });
+        },
+
         getAllSummonerData: function getAllSummonerData(summonerNumber) {
             var _this = this;
 
@@ -28762,8 +28813,6 @@ module.exports = function bind(fn, thisArg) {
             delete tempMatch.participant_identities;
             delete tempMatch.participants;
             delete tempMatch.teams;
-
-            console.log(tempMatch);
 
             return tempMatch;
         }
@@ -31019,24 +31068,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
-//
 
 
 
@@ -31055,11 +31086,25 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         $('#match-modal').modal({
             closable: true,
             detachable: true,
-            onApprove: function onApprove() {
-                console.log('approved');
-            },
-            onDeny: function onDeny() {
-                console.log('denied');
+            onHidden: function onHidden() {
+                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignModalMatch', {
+                    gameId: 0,
+                    MatchParticipantIdentities: [],
+                    created_at: "",
+                    gameCreation: "",
+                    gameDuration: "",
+                    gameMode: "",
+                    gameType: "",
+                    gameVersion: "",
+                    id: 0,
+                    mapId: "",
+                    matchParticipants: [],
+                    matchTeams: [],
+                    platformId: "",
+                    queueId: "",
+                    seasonId: "",
+                    updated_at: ""
+                });
             }
         });
     },
@@ -31145,6 +31190,26 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                 });
                 __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSpells', tempSpellList);
+                return _this.$http.get('/jsonfiles/game_constants.json');
+            }).then(function (resp) {
+                var game_constants = resp.body;
+                var seasons = [];
+                var matchmaking_queues = [];
+                var map_names = [];
+
+                _.forEach(game_constants.matchmaking_queues, function (queue, queue_index) {
+                    matchmaking_queues.push(queue);
+                });
+                _.forEach(game_constants.seasons, function (season, season_index) {
+                    seasons.push(season);
+                });
+                _.forEach(game_constants.map_names, function (map_name, map_names_index) {
+                    map_names.push(map_name);
+                });
+
+                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignMatchmakingQueues', matchmaking_queues);
+                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSeasons', seasons);
+                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignMapNames', map_names);
             });
         },
 
@@ -67106,7 +67171,7 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "ui grid"
-  }, [_vm._m(0, false, false), _vm._v(" "), _c('div', {
+  }, [_c('div', {
     staticClass: "two column row",
     attrs: {
       "id": "main-grid-container"
@@ -67302,40 +67367,25 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     })
   }) : _vm._e()], 2) : _vm._e()])])]), _vm._v(" "), _c('div', {
-    staticClass: "ui modal",
+    staticClass: "ui fullscreen modal",
     attrs: {
       "id": "match-modal"
     }
   }, [_c('div', {
     staticClass: "header"
-  }, [_vm._v("\n            Match " + _vm._s(_vm.modalMatch.gameId) + "\n        ")]), _vm._v(" "), _c('div', {
+  }, [_vm._v("\n            Match " + _vm._s(_vm.modalMatch.gameId) + "\n        ")]), _vm._v(" "), (_vm.modalMatch.gameId != 0) ? _c('div', {
     staticClass: "content"
-  }, [(_vm.modalMatch.gameId != 0) ? _c('matchmodal', {
+  }, [_c('matchmodal', {
     attrs: {
       "match": _vm.modalMatch
+    },
+    on: {
+      "update:match": function($event) {
+        _vm.modalMatch = $event
+      }
     }
-  }) : _vm._e()], 1)])])
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _c('div', {
-    staticClass: "ui modal"
-  }, [_c('i', {
-    staticClass: "close icon"
-  }), _vm._v(" "), _c('div', {
-    staticClass: "header"
-  }, [_vm._v("\n            Modal Title\n        ")]), _vm._v(" "), _c('div', {
-    staticClass: "image content"
-  }, [_c('div', {
-    staticClass: "image"
-  }, [_vm._v("\n                An image can appear on left or an icon\n            ")]), _vm._v(" "), _c('div', {
-    staticClass: "description"
-  }, [_vm._v("\n                A description can appear on the right\n            ")])]), _vm._v(" "), _c('div', {
-    staticClass: "actions"
-  }, [_c('div', {
-    staticClass: "ui button"
-  }, [_vm._v("Cancel")]), _vm._v(" "), _c('div', {
-    staticClass: "ui button"
-  }, [_vm._v("OK")])])])
-}]}
+  })], 1) : _vm._e()])])
+},staticRenderFns: []}
 module.exports.render._withStripped = true
 if (false) {
   module.hot.accept()
@@ -81114,6 +81164,27 @@ if(false) {
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -81125,16 +81196,47 @@ if(false) {
         // initialize the tabs for the modal
         $('.menu .item').tab();
 
+        console.log('wtf is going on ');
         console.log(this.match);
+        this.calculateStats();
     },
 
     props: ["match"],
     data: function data() {
-        return {};
+        return {
+            red_team: {
+                win: false
+            },
+            blue_team: {
+                win: false
+            },
+            blue_team_participants: [],
+            red_team_participants: []
+        };
     },
     computed: {},
-    methods: {},
-    watch: {}
+    methods: {
+        calculateStats: function calculateStats() {
+            var _this = this;
+
+            console.log('calculating stats');
+            this.red_team = this.match.matchTeams[1];
+            this.blue_team = this.match.matchTeams[0];
+
+            _.forEach(this.match.matchParticipants, function (participant, participant_index) {
+                if (participant.teamId == "100") {
+                    _this.blue_team_participants.push(participant);
+                } else {
+                    _this.red_team_participants.push(participant);
+                }
+            });
+        }
+    },
+    watch: {
+        match: function match(val) {
+            this.calculateStats();
+        }
+    }
 };
 /* WEBPACK VAR INJECTION */}.call(__webpack_exports__, __webpack_require__(17)))
 
@@ -81147,7 +81249,7 @@ exports = module.exports = __webpack_require__(7)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n#red-team-container[data-v-6c1b3c47] {\n    background-color: rgb(255, 230, 231);\n    background-color: rgb(237, 232, 255);\n}\n.blue-team-header[data-v-6c1b3c47], .red-team-header[data-v-6c1b3c47] {\n    text-align: center;\n}\n.blue-team-header > *[data-v-6c1b3c47], .red-team-header > *[data-v-6c1b3c47] {\n    margin: 0px!important\n}\n", ""]);
 
 // exports
 
@@ -81195,13 +81297,35 @@ module.exports = Component.exports
 /***/ (function(module, exports, __webpack_require__) {
 
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
-  return _vm._m(0, false, false)
-},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     attrs: {
       "id": "match-modal-container"
     }
+  }, [_vm._m(0, false, false), _vm._v(" "), _c('div', {
+    staticClass: "ui bottom attached active tab segment",
+    attrs: {
+      "data-tab": "overview",
+      "id": "overview-container"
+    }
   }, [_c('div', {
+    staticClass: "ui segments"
+  }, [_c('div', {
+    staticClass: "ui horizontal segments"
+  }, [_c('div', {
+    staticClass: "ui segment blue-team-header"
+  }, [(_vm.blue_team.win == 'Win') ? _c('h3', [_vm._v("Winners")]) : _vm._e(), _vm._v(" "), (_vm.blue_team.win != 'Win') ? _c('h3', [_vm._v("Losers")]) : _vm._e(), _vm._v(" "), _c('h4', [_vm._v("Blue Team")])]), _vm._v(" "), _c('div', {
+    staticClass: "ui segment red-team-header"
+  }, [(_vm.red_team.win == 'Win') ? _c('h3', [_vm._v("Winners")]) : _vm._e(), _vm._v(" "), (_vm.red_team.win != 'Win') ? _c('h3', [_vm._v("Losers")]) : _vm._e(), _vm._v(" "), _c('h4', [_vm._v("Red Team")])])]), _vm._v(" "), _vm._m(1, false, false), _vm._v(" "), _vm._l((5), function(i) {
+    return _c('div', {
+      staticClass: "ui horizontal segments summoner-data"
+    }, [_c('div', {
+      staticClass: "ui segment left-summoner"
+    }, [_vm._v(_vm._s(i - 1))]), _vm._v(" "), _c('div', {
+      staticClass: "ui segment right-summoner"
+    }, [_vm._v(_vm._s(i - 1))])])
+  })], 2)]), _vm._v(" "), _vm._m(2, false, false), _vm._v(" "), _vm._m(3, false, false)])
+},staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "ui top attached tabular menu"
   }, [_c('div', {
     staticClass: "active item",
@@ -81218,22 +81342,32 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "data-tab": "misc"
     }
-  }, [_vm._v("Misc")])]), _vm._v(" "), _c('div', {
-    staticClass: "ui bottom attached active tab segment",
+  }, [_vm._v("Misc")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
+    staticClass: "ui horizontal segments",
     attrs: {
-      "data-tab": "overview"
+      "id": "team-stats"
     }
-  }, [_c('h3', [_vm._v("Overview")])]), _vm._v(" "), _c('div', {
+  }, [_c('div', {
+    staticClass: "ui segment"
+  }, [_vm._v("stat 1")]), _vm._v(" "), _c('div', {
+    staticClass: "ui segment"
+  }, [_vm._v("stat 2")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "ui bottom attached tab segment",
     attrs: {
       "data-tab": "timeline"
     }
-  }, [_c('h3', [_vm._v("Timeline")])]), _vm._v(" "), _c('div', {
+  }, [_c('h3', [_vm._v("Timeline")])])
+},function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
+  return _c('div', {
     staticClass: "ui bottom attached tab segment",
     attrs: {
       "data-tab": "misc"
     }
-  }, [_c('h3', [_vm._v("Misc")])])])
+  }, [_c('h3', [_vm._v("Misc")])])
 }]}
 module.exports.render._withStripped = true
 if (false) {

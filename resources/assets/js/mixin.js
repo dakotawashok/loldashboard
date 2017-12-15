@@ -28,6 +28,30 @@ export default {
             }
         },
 
+        staticSeason : function(id) {
+            _.forEach(store.state.staticInfo.seasons, (season, season_index) => {
+                if (season.id == id) {
+                    return season;
+                }
+            });
+        },
+
+        staticMatchmakingQueue : function(id) {
+            _.forEach(store.state.staticInfo.matchmaking_queues, (queue, queue_index) => {
+                if (queue.id == id) {
+                    return queue;
+                }
+            });
+        },
+
+        staticMapName : function(id) {
+            _.forEach(store.state.staticInfo.map_names, (map_name, map_name_index) => {
+                if (map_name.id == id) {
+                    return map_name;
+                }
+            });
+        },
+
         getAllSummonerData : function(summonerNumber, useAccountId = false) {
             if (summonerNumber == "1") {
                 store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : true});
@@ -269,7 +293,6 @@ export default {
             delete tempMatch.participants;
             delete tempMatch.teams;
 
-            console.log(tempMatch);
 
             return tempMatch;
         },

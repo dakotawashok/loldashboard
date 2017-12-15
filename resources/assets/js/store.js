@@ -5,6 +5,9 @@ var store = new Vuex.Store({
         staticInfo : {
             champions : [],
             spells : [],
+            seasons : [],
+            matchmaking_queues : [],
+            map_names : []
         },
         summoner1 : {
             loaded : false,
@@ -29,6 +32,21 @@ var store = new Vuex.Store({
         currentYear : "2017",
         modalMatch: {
             gameId: 0,
+            MatchParticipantIdentities: [],
+            created_at: "",
+            gameCreation: "",
+            gameDuration: "",
+            gameMode: "",
+            gameType: "",
+            gameVersion: "",
+            id: 0,
+            mapId: "",
+            matchParticipants: [],
+            matchTeams: [],
+            platformId: "",
+            queueId: "",
+            seasonId: "",
+            updated_at: ""
         },
         matchModalLoading: false,
     },
@@ -38,6 +56,15 @@ var store = new Vuex.Store({
         },
         assignSpells (state, spellList) {
             state.staticInfo.spells = spellList;
+        },
+        assignSeasons (state, seasonList) {
+            state.staticInfo.seasons = seasonList;
+        },
+        assignMatchmakingQueues (state, matchmakingQueuesList) {
+            state.staticInfo.matchmaking_queues = matchmakingQueuesList;
+        },
+        assignMapNames (state, mapNameList) {
+            state.staticInfo.map_names = mapNameList;
         },
         assignSummoner1Summoner (state, summoner) {
             state.summoner1.summoner = summoner;
