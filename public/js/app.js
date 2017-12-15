@@ -28491,7 +28491,7 @@ module.exports = function bind(fn, thisArg) {
 
     data: function data() {
         return {
-            API_VERSION: '7.24.1'
+            API_VERSION: '7.24.2'
         };
     },
 

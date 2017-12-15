@@ -79,9 +79,7 @@ class SummonerController extends Controller
 
             $summoner->save();
 
-            //$this->assignMasteries($this->api, $summoner);
-            $this->assignRunes($this->api, $summoner);
-            //$this->assignChampionMasteries($this->api, $summoner);
+            $this->assignChampionMasteries($this->api, $summoner);
             $this->assignLeagues($this->api, $summoner);
         }
         $returnObject['summoner'] = $summoner;
@@ -238,8 +236,6 @@ class SummonerController extends Controller
 
             $summoner->save();
 
-            $this->assignMasteries($this->api, $summoner);
-            $this->assignRunes($this->api, $summoner);
             $this->assignChampionMasteries($this->api, $summoner);
             $this->assignLeagues($this->api, $summoner);
 
@@ -482,18 +478,8 @@ class SummonerController extends Controller
         $this->saveMatchListMatches($this->api, $matches);
     }
 
-    private function assignMasteries(&$api, &$summoner) {
-        $masteries = $api->getMasteries($summoner->id);
-        $summoner->masteries = json_encode($masteries);
-        $summoner->save();
-    }
-    private function assignRunes(&$api, &$summoner) {
-        $runes = $api->getRunes($summoner->id);
-        $summoner->runes = json_encode($runes);
-        $summoner->save();
-    }
     private function assignChampionMasteries(&$api, &$summoner) {
-        $championMastery = $api->getChampionMastery($summoner->accountId);
+        $championMastery = $api->getChampionMastery($summoner->id);
         $summoner->championMastery = json_encode($championMastery);
         $summoner->save();
     }

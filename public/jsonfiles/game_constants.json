@@ -432,5 +432,13 @@
       "description" : "Snow ARURF Games",
       "deprecated" : false
     }
-  }
+  },
+  "map_names" : {
+    "1" : {
+      "mapId" : 1,
+      "name" : "Summoner's Rift",
+      "notes" : "Original Summer Variant"
+    },
+
+  },
 }

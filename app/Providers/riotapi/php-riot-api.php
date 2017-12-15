@@ -67,6 +67,7 @@ class riotapi {
     private static $errorCodes = array(0   => 'NO_RESPONSE',
         400 => 'BAD_REQUEST',
         401 => 'UNAUTHORIZED',
+        403 => 'FORBIDDEN',
         404 => 'NOT_FOUND',
         429 => 'RATE_LIMIT_EXCEEDED',
         500 => 'SERVER_ERROR',
@@ -333,26 +334,6 @@ class riotapi {
         return $this->request($call);
     }
 
-    //Gets a summoner's masteries.
-    public function getMasteries($id){
-        $call = 'masteries/by-summoner/' . $id;
-
-        //add API URL to the call
-        $call = self::API_URL_PLATFORM_3 . $call;
-
-        return $this->request($call);
-    }
-
-    //Gets a summoner's runes.
-    public function getRunes($id){
-        $call = 'runes/by-summoner/' . $id;
-
-        //add API URL to the call
-        $call = self::API_URL_PLATFORM_3 . $call;
-
-        return $this->request($call);
-    }
-
 	public function getLastResponseHeaders(){
 		return $this->responseHeaders;
 	}
@@ -394,12 +375,13 @@ class riotapi {
 			}
 
 			$result = $this->responseBody;
-			if (self::DECODE_ENABLED) {
-				$result = json_decode($result, true);
-			}
 
 			return $result;
 		});
+
+        if (self::DECODE_ENABLED) {
+            $result = json_decode($result, true);
+        }
 
 		return $result;
 	}
@@ -449,4 +431,29 @@ class riotapi {
         $message = file_get_contents($file) . "\n" . $message;
         file_put_contents($file, $message);
     }
+
+
+    /* DEPRECATED: THESE FUNCTIONS ARE NO LONGER IN USE AND ARE ONLY BEING SAVED IN CASE RIOT BRINGS THEM BACK FOR SOME GOOBY REASON
+
+    //Gets a summoner's masteries.
+    public function getMasteries($id){
+        $call = 'masteries/by-summoner/' . $id;
+
+        //add API URL to the call
+        $call = self::API_URL_PLATFORM_3 . $call;
+
+        return $this->request($call);
+    }
+
+    //Gets a summoner's runes.
+    public function getRunes($id){
+        $call = 'runes/by-summoner/' . $id;
+
+        //add API URL to the call
+        $call = self::API_URL_PLATFORM_3 . $call;
+
+        return $this->request($call);
+    }
+
+    */ // /DEPRECATED
 }
