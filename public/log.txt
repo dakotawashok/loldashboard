@@ -166,3 +166,13 @@ https://NA1.api.riotgames.com/lol/match/v3/matches/2489931841?
 https://NA1.api.riotgames.com/lol/match/v3/matches/2483859489?
 https://NA1.api.riotgames.com/lol/match/v3/matches/2483852496?
 https://NA1.api.riotgames.com/lol/match/v3/matches/2445995695?
+https://NA1.api.riotgames.com/lol/match/v3/matchlists/by-account/49564064?queue=2&queue=14&queue=400&queue=430&season=9&endIndex=20&?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2673590473?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2672956091?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2672917004?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2672908253?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2672176050?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2672171724?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2672161196?
+https://NA1.api.riotgames.com/lol/match/v3/matches/2672136339?
+https://NA1.api.riotgames.com/lol/match/v3/matchlists/by-account/49564064?queue=410&queue=420&queue=440&queue=6&queue=41&queue=42&season=9&endIndex=20&?

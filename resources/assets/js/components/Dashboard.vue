@@ -92,14 +92,7 @@
                 </div>
             </div>
         </div>
-        <div class="ui fullscreen modal" id="match-modal">
-            <div class="header">
-                Match {{modalMatch.gameId}}
-            </div>
-            <div class="content" v-if="modalMatch.gameId != 0">
-                <matchmodal :match.sync="modalMatch"></matchmodal>
-            </div>
-        </div>
+        <matchmodal :match.sync="modalMatch" id="match-modal"></matchmodal>
     </div>
 </template>
 
@@ -122,31 +115,6 @@
         ],
         mounted() {
             this.setStaticData();
-
-            $('#match-modal').modal({
-                closable  : true,
-                detachable: true,
-                onHidden: () => {
-                    store.commit('assignModalMatch', {
-                        gameId: 0,
-                            MatchParticipantIdentities: [],
-                            created_at: "",
-                            gameCreation: "",
-                            gameDuration: "",
-                            gameMode: "",
-                            gameType: "",
-                            gameVersion: "",
-                            id: 0,
-                            mapId: "",
-                            matchParticipants: [],
-                            matchTeams: [],
-                            platformId: "",
-                            queueId: "",
-                            seasonId: "",
-                            updated_at: ""
-                    });
-                }
-            })
         },
         data : function() {
             return {

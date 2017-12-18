@@ -536,6 +536,7 @@ class SummonerController extends Controller
                 $tempStats['item5'] = $parsedStats->item5;
                 $tempStats['item6'] = $parsedStats->item6;
                 $tempStats['kills'] = $parsedStats->kills;
+                $tempStats['deaths'] = $parsedStats->deaths;
                 $tempStats['assists'] = $parsedStats->assists;
                 $tempStats = json_encode($tempStats);
                 $definedMatchListObject[$matchIndex]->matchParticipants[$participantIndex]->stats = $tempStats;
