@@ -3,6 +3,7 @@ var Vuex = require('vuex');
 var store = new Vuex.Store({
     state : {
         staticInfo : {
+            items : [],
             champions : [],
             spells : [],
             seasons : [],
@@ -51,6 +52,9 @@ var store = new Vuex.Store({
         matchModalLoading: false,
     },
     mutations : {
+        assignItems (state, itemList) {
+            state.staticInfo.items = itemList;
+        },
         assignChampions (state, championsList) {
             state.staticInfo.champions = championsList;
         },

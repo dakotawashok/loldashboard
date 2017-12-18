@@ -5019,6 +5019,7 @@ var Vuex = __webpack_require__(297);
 var store = new Vuex.Store({
     state: {
         staticInfo: {
+            items: [],
             champions: [],
             spells: [],
             seasons: [],
@@ -5067,6 +5068,9 @@ var store = new Vuex.Store({
         matchModalLoading: false
     },
     mutations: {
+        assignItems: function assignItems(state, itemList) {
+            state.staticInfo.items = itemList;
+        },
         assignChampions: function assignChampions(state, championsList) {
             state.staticInfo.champions = championsList;
         },
@@ -6560,6 +6564,16 @@ module.exports = defaults;
 
 
     methods: {
+        staticItem: function staticItem(id) {
+            var return_item = {};
+            _.forEach(__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.items.data, function (item, item_index) {
+                if (item_index == id) {
+                    return_item = item;
+                }
+            });
+            return return_item;
+        },
+
         staticChampion: function staticChampion(id) {
             for (var champion in __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.champions) {
                 if (__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.champions[champion].key == id) {
@@ -6577,19 +6591,23 @@ module.exports = defaults;
         },
 
         staticSeason: function staticSeason(id) {
+            var return_season = {};
             _.forEach(__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.seasons, function (season, season_index) {
                 if (season.id == id) {
-                    return season;
+                    return_season = season;
                 }
             });
+            return return_season;
         },
 
         staticMatchmakingQueue: function staticMatchmakingQueue(id) {
+            var return_queue = {};
             _.forEach(__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.matchmaking_queues, function (queue, queue_index) {
                 if (queue.id == id) {
-                    return queue;
+                    return_queue = queue;
                 }
             });
+            return return_queue;
         },
 
         staticMapName: function staticMapName(id) {
@@ -6859,7 +6877,7 @@ module.exports = defaults;
             return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.modalMatch;
         },
         matchModalLoading: function matchModalLoading() {
-            return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.matchLoading;
+            return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.matchModalLoading;
         },
 
         summoner1ProfileIconUrl: function summoner1ProfileIconUrl() {
@@ -6912,10 +6930,6 @@ module.exports = defaults;
         },
         summoner2NormalMatchList: function summoner2NormalMatchList() {
             return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.summoner2.normalMatchList;
-        },
-
-        loading: function loading() {
-            return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.loading;
         },
 
         summoner1CurrentRank: function summoner1CurrentRank() {
@@ -31186,7 +31200,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                 var tempSpellList = [];
                 for (var spell in spells) {
                     tempSpellList.push(spells[spell]);
-                };
+                }
+                ;
 
                 tempSpellList.sort(function (spellA, spellB) {
                     if (parseInt(spellA.key) < parseInt(spellB.key)) {
@@ -31196,6 +31211,12 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
                     }
                 });
                 __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSpells', tempSpellList);
+                return _this.$http.get('/jsonfiles/item.json');
+            }).then(function (resp) {
+                console.log(resp);
+                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignItems', resp.body);
+                console.log(__WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.staticInfo.items);
+
                 return _this.$http.get('/jsonfiles/game_constants.json');
             }).then(function (resp) {
                 var game_constants = resp.body;
@@ -31613,9 +31634,41 @@ var moment = __webpack_require__(0);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
+
+var moment = __webpack_require__(0);
 
 /* harmony default export */ __webpack_exports__["default"] = {
     mixins: [__WEBPACK_IMPORTED_MODULE_1__mixin_js__["a" /* default */]],
@@ -31646,7 +31699,36 @@ var moment = __webpack_require__(0);
             red_team_participants: []
         };
     },
-    computed: {},
+    computed: {
+        date: function date() {
+            return moment.unix(this.match.gameCreation / 1000).format('LLL');
+        },
+
+        duration: function duration() {
+            if (this.match != undefined && this.match.gameDuration != undefined) {
+                var seconds = parseInt(this.match.gameDuration) % 60;
+                var minutes = (parseInt(this.match.gameDuration) - seconds) / 60;
+
+                return minutes + 'm ' + seconds + 's';
+            }
+        },
+
+        summoner_spells: function summoner_spells() {
+            var spell_array = [];
+            var spell1 = this.setSpellData(this.summoner_participant_data.spell1Id);
+            var spell2 = this.setSpellData(this.summoner_participant_data.spell2Id);
+            if (this.summoner_participant_data.spell1Id != undefined && this.summoner_participant_data.spell1Id != '') {
+                spell_array.push('http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/spell/' + spell1.id + '.png');
+            }
+            if (this.summoner_participant_data.spell2Id != undefined && this.summoner_participant_data.spell2Id != '') {
+                spell_array.push('http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/spell/' + spell2.id + '.png');
+            }
+            if (this.stats.item6 != undefined && this.stats.item6 != '') {
+                spell_array.push('http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/item/' + this.stats.item6 + '.png');
+            }
+            return spell_array;
+        }
+    },
     methods: {
         calculateStats: function calculateStats() {
             var _this = this;
@@ -31661,6 +31743,27 @@ var moment = __webpack_require__(0);
                     _this.red_team_participants.push(participant);
                 }
             });
+        },
+        getChampionImageUrl: function getChampionImageUrl(id) {
+            var tempChamp = this.staticChampion(id);
+            if (tempChamp != undefined && tempChamp.id != undefined) {
+                var parsedChampName = tempChamp.id.split(' ').join('').split('\'').join('');
+                return 'http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/champion/' + parsedChampName + '.png';
+            }
+        },
+        getSpellImageUrl: function getSpellImageUrl(id) {
+            var tempSpell = this.staticSpell(id);
+            console.log(tempSpell);
+            if (tempSpell != undefined && tempSpell.id != undefined) {
+                'http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/spell/' + tempSpell.id + '.png';
+            }
+        },
+        getItemImageUrl: function getItemImageUrl(id) {
+            var tempItem = this.staticItem(id);
+            console.log(tempItem);
+            if (tempItem != undefined && tempItem.id != undefined) {
+                'http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/spell/' + tempItem.id + '.png';
+            }
         }
     },
     watch: {
@@ -45673,7 +45776,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n#red-team-container[data-v-6c1b3c47] {\n    background-color: rgb(255, 230, 231);\n    background-color: rgb(237, 232, 255);\n}\n.blue-team-header[data-v-6c1b3c47], .red-team-header[data-v-6c1b3c47] {\n    text-align: center;\n}\n.blue-team-header > *[data-v-6c1b3c47], .red-team-header > *[data-v-6c1b3c47] {\n    margin: 0px!important\n}\n.stats-container > .column[data-v-6c1b3c47] {\n    padding: 5px 10px!important;\n    font-size: 10px;\n}\n.stats-container > * > span > i[data-v-6c1b3c47] {\n    display: inline;\n}\n", ""]);
+exports.push([module.i, "\n.header[data-v-6c1b3c47] {\n    text-align: center;\n}\nh4[data-v-6c1b3c47] {\n    margin-top: 5px!important;\n}\n#red-team-container[data-v-6c1b3c47] {\n    background-color: rgb(255, 230, 231);\n    background-color: rgb(237, 232, 255);\n}\n.blue-team-header[data-v-6c1b3c47], .red-team-header[data-v-6c1b3c47] {\n    text-align: center;\n}\n.blue-team-header > *[data-v-6c1b3c47], .red-team-header > *[data-v-6c1b3c47] {\n    margin: 0px!important\n}\n.stats-container > .column[data-v-6c1b3c47] {\n    padding: 5px 10px!important;\n    font-size: 10px;\n}\n.stats-container > * > span > i[data-v-6c1b3c47] {\n    display: inline;\n}\n", ""]);
 
 // exports
 
@@ -67594,12 +67697,15 @@ if (false) {
 module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "ui fullscreen modal",
+    staticStyle: {
+      "height": "1000px"
+    },
     attrs: {
       "id": "match-modal"
     }
   }, [_c('div', {
     staticClass: "header"
-  }, [_vm._v("\n        Match " + _vm._s(_vm.match.gameId) + "\n    ")]), _vm._v(" "), _c('div', {
+  }, [_c('h3', [_vm._v("Match " + _vm._s(_vm.match.gameId))]), _vm._v(" "), _c('h4', [_vm._v(_vm._s(_vm.date))]), _vm._v(" "), _c('h4', [_vm._v(_vm._s(_vm.duration))]), _vm._v(" "), _c('h4', [_vm._v(_vm._s(_vm.staticMatchmakingQueue(_vm.match.queueId).map))]), _vm._v(" "), _c('h4', [_vm._v(_vm._s(_vm.staticMatchmakingQueue(_vm.match.queueId).description))])]), _vm._v(" "), _c('div', {
     staticClass: "content"
   }, [_vm._m(0, false, false), _vm._v(" "), _c('div', {
     staticClass: "ui bottom attached active tab segment",
@@ -67693,9 +67799,60 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       staticClass: "ui horizontal segments summoner-data"
     }, [_c('div', {
       staticClass: "ui segment left-summoner"
-    }, [_vm._v(_vm._s(i - 1))]), _vm._v(" "), _c('div', {
+    }, [_c('div', {
+      staticClass: "ui four column grid"
+    }, [_c('div', {
+      staticClass: "column picture-column"
+    }, [_c('div', {
+      staticClass: "ui grid"
+    }, [_c('div', {
+      staticClass: "ui eight wide column"
+    }, [_c('img', {
+      staticClass: "ui middle aligned spaced rounded tiny image",
+      attrs: {
+        "src": _vm.getChampionImageUrl(_vm.blue_team_participants[i - 1].championId)
+      }
+    }), _vm._v(" "), _c('img', {
+      staticClass: "ui middle aligned spaced rounded tiny image",
+      attrs: {
+        "src": _vm.getSpellImageUrl(_vm.blue_team_participants[i - 1].championId)
+      }
+    }), _vm._v(" "), _c('img', {
+      staticClass: "ui middle aligned spaced rounded tiny image",
+      attrs: {
+        "src": _vm.getSpellImageUrl(_vm.blue_team_participants[i - 1].championId)
+      }
+    }), _vm._v(" "), _c('img', {
+      staticClass: "ui middle aligned spaced rounded tiny image",
+      attrs: {
+        "src": _vm.getItemImageUrl(_vm.blue_team_participants[i - 1].championId)
+      }
+    })]), _vm._v(" "), _c('div', {
+      staticClass: "ui eight wide column"
+    })])]), _vm._v(" "), _c('div', {
+      staticClass: "column"
+    }), _vm._v(" "), _c('div', {
+      staticClass: "column"
+    }), _vm._v(" "), _c('div', {
+      staticClass: "column"
+    })])]), _vm._v(" "), _c('div', {
       staticClass: "ui segment right-summoner"
-    }, [_vm._v(_vm._s(i - 1))])])
+    }, [_c('div', {
+      staticClass: "ui five column grid"
+    }, [_c('div', {
+      staticClass: "column picture-column"
+    }, [_c('img', {
+      staticClass: "ui middle aligned spaced rounded tiny image",
+      attrs: {
+        "src": _vm.getChampionImageUrl(_vm.red_team_participants[i - 1].championId)
+      }
+    })]), _vm._v(" "), _c('div', {
+      staticClass: "column"
+    }), _vm._v(" "), _c('div', {
+      staticClass: "column"
+    }), _vm._v(" "), _c('div', {
+      staticClass: "column"
+    })])])])
   })], 2) : _vm._e()]), _vm._v(" "), _vm._m(1, false, false), _vm._v(" "), _vm._m(2, false, false)])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {

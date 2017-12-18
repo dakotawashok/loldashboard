@@ -1,7 +1,11 @@
 <template>
-    <div class="ui fullscreen modal" id="match-modal">
+    <div class="ui fullscreen modal" id="match-modal" style="height: 1000px;">
         <div class="header">
-            Match {{match.gameId}}
+            <h3>Match {{match.gameId}}</h3>
+            <h4>{{date}}</h4>
+            <h4>{{duration}}</h4>
+            <h4>{{staticMatchmakingQueue(match.queueId).map}}</h4>
+            <h4>{{staticMatchmakingQueue(match.queueId).description}}</h4>
         </div>
         <div class="content">
             <div class="ui top attached tabular menu">
@@ -72,8 +76,34 @@
                         </div>
                     </div>
                     <div class="ui horizontal segments summoner-data" v-for="i in 5">
-                        <div class="ui segment left-summoner">{{i-1}}</div>
-                        <div class="ui segment right-summoner">{{i-1}}</div>
+                        <div class="ui segment left-summoner">
+                            <div class="ui four column grid">
+                                <div class="column picture-column">
+                                    <div class="ui grid">
+                                        <div class="ui eight wide column">
+                                            <img class="ui middle aligned spaced rounded tiny image" :src="getChampionImageUrl(blue_team_participants[i-1].championId)">
+                                            <img class="ui middle aligned spaced rounded tiny image" :src="getSpellImageUrl(blue_team_participants[i-1].championId)">
+                                            <img class="ui middle aligned spaced rounded tiny image" :src="getSpellImageUrl(blue_team_participants[i-1].championId)">
+                                            <img class="ui middle aligned spaced rounded tiny image" :src="getItemImageUrl(blue_team_participants[i-1].championId)">
+                                        </div>
+                                        <div class="ui eight wide column"></div>
+                                    </div>
+                                </div>
+                                <div class="column"></div>
+                                <div class="column"></div>
+                                <div class="column"></div>
+                            </div>
+                        </div>
+                        <div class="ui segment right-summoner">
+                            <div class="ui five column grid">
+                                <div class="column picture-column">
+                                    <img class="ui middle aligned spaced rounded tiny image" :src="getChampionImageUrl(red_team_participants[i-1].championId)">
+                                </div>
+                                <div class="column"></div>
+                                <div class="column"></div>
+                                <div class="column"></div>
+                            </div>
+                        </div>
                     </div>
                 </div>
             </div>
@@ -90,6 +120,8 @@
 <script>
     import store from '../store.js';
     import mixin from '../mixin.js';
+
+    var moment = require('moment');
 
     export default {
         mixins: [
@@ -128,7 +160,34 @@
             }
         },
         computed : {
+            date : function() {
+                return moment.unix(this.match.gameCreation / 1000).format('LLL');
+            },
 
+            duration : function() {
+                if (this.match != undefined && this.match.gameDuration != undefined) {
+                    var seconds = parseInt(this.match.gameDuration) % 60;
+                    var minutes = (parseInt(this.match.gameDuration) - seconds) / 60;
+
+                    return minutes + 'm ' + seconds + 's';
+                }
+            },
+
+            summoner_spells : function() {
+                var spell_array = [];
+                var spell1 = this.setSpellData(this.summoner_participant_data.spell1Id);
+                var spell2 = this.setSpellData(this.summoner_participant_data.spell2Id);
+                if (this.summoner_participant_data.spell1Id != undefined && this.summoner_participant_data.spell1Id != '') {
+                    spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+spell1.id+'.png');
+                }
+                if (this.summoner_participant_data.spell2Id != undefined && this.summoner_participant_data.spell2Id != '') {
+                    spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+spell2.id+'.png');
+                }
+                if (this.stats.item6 != undefined && this.stats.item6 != '') {
+                    spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/item/'+this.stats.item6 +'.png');
+                }
+                return spell_array;
+            },
         },
         methods : {
             calculateStats() {
@@ -143,6 +202,30 @@
                     }
                 });
             },
+
+            getChampionImageUrl(id) {
+                var tempChamp =  this.staticChampion(id);
+                if (tempChamp != undefined && tempChamp.id != undefined) {
+                    var parsedChampName = tempChamp.id.split(' ').join('').split('\'').join('');
+                    return 'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/champion/'+parsedChampName+'.png';
+                }
+            },
+
+            getSpellImageUrl(id) {
+                var tempSpell = this.staticSpell(id);
+                console.log(tempSpell);
+                if (tempSpell != undefined && tempSpell.id != undefined) {
+                    'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+tempSpell.id+'.png'
+                }
+            },
+
+            getItemImageUrl(id) {
+                var tempItem = this.staticItem(id);
+                console.log(tempItem);
+                if (tempItem != undefined && tempItem.id != undefined) {
+                    'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+tempItem.id+'.png'
+                }
+            },
         },
         watch : {
             match : function(val) {
@@ -153,6 +236,13 @@
 </script>
 
 <style scoped>
+    .header {
+        text-align: center;
+    }
+    h4 {
+        margin-top: 5px!important;
+    }
+
     #red-team-container {
         background-color: rgb(255, 230, 231);
         background-color: rgb(237, 232, 255);

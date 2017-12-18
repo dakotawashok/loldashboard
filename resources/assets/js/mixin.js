@@ -12,6 +12,16 @@ export default {
     },
 
     methods: {
+        staticItem : function(id) {
+            var return_item = {};
+            _.forEach(store.state.staticInfo.items.data, (item, item_index) => {
+                if (item_index == id) {
+                    return_item = item;
+                }
+            });
+            return return_item;
+        },
+
         staticChampion : function(id) {
             for (var champion in store.state.staticInfo.champions) {
                 if (store.state.staticInfo.champions[champion].key == id) {
@@ -29,19 +39,23 @@ export default {
         },
 
         staticSeason : function(id) {
+            var return_season = {};
             _.forEach(store.state.staticInfo.seasons, (season, season_index) => {
                 if (season.id == id) {
-                    return season;
+                    return_season = season;
                 }
             });
+            return return_season;
         },
 
         staticMatchmakingQueue : function(id) {
+            var return_queue = {};
             _.forEach(store.state.staticInfo.matchmaking_queues, (queue, queue_index) => {
                 if (queue.id == id) {
-                    return queue;
+                    return_queue = queue;
                 }
             });
+            return return_queue;
         },
 
         staticMapName : function(id) {
@@ -300,7 +314,7 @@ export default {
 
     computed: {
         modalMatch : function() { return store.state.modalMatch; },
-        matchModalLoading : function() { return store.state.matchLoading; },
+        matchModalLoading : function() { return store.state.matchModalLoading; },
 
         summoner1ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/"+this.API_VERSION+"/img/profileicon/" + this.summoner1.summoner.profileIconId + ".png"; },
         summoner2ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/"+this.API_VERSION+"/img/profileicon/" + this.summoner2.summoner.profileIconId + ".png"; },
@@ -331,9 +345,6 @@ export default {
         summoner2NormalMatchList : function() {
             return store.state.summoner2.normalMatchList;
         },
-
-        loading : function() { return store.state.loading; },
-
 
 
         summoner1CurrentRank : function() {
