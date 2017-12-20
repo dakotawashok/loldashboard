@@ -95,14 +95,19 @@
 
                 // load the teams into their respective object
                 if (this.summoner_participant_data.teamId === '100') {
-                    summonerTeamId = '100';
-                    enemyTeamId = '200';
+                    summonerTeamId = 100;
+                    enemyTeamId = 200;
                 } else {
-                    summonerTeamId = '200';
-                    enemyTeamId = '100';
+                    summonerTeamId = 200;
+                    enemyTeamId = 100;
                 }
-                this.summoner_team = _.find(this.defined_match.teams, ['teamId', summonerTeamId]);
-                this.enemy_team = _.find(this.defined_match.teams, ['teamId', enemyTeamId]);
+
+                this.summoner_team = _.find(this.defined_match.teams, function(o) {
+                       return (parseInt(o.teamId) === summonerTeamId);
+                });
+                this.enemy_team = _.find(this.defined_match.teams, function(o) {
+                    return (parseInt(o.teamId) === enemyTeamId);
+                });
 
                 // put each participant into their respective team
                 // first the summoner team

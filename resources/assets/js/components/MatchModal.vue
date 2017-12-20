@@ -213,7 +213,6 @@
 
             getSpellImageUrl(id) {
                 var tempSpell = this.staticSpell(id);
-                console.log(tempSpell);
                 if (tempSpell != undefined && tempSpell.id != undefined) {
                     'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+tempSpell.id+'.png'
                 }
@@ -221,7 +220,6 @@
 
             getItemImageUrl(id) {
                 var tempItem = this.staticItem(id);
-                console.log(tempItem);
                 if (tempItem != undefined && tempItem.id != undefined) {
                     'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+tempItem.id+'.png'
                 }

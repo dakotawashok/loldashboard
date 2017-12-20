@@ -199,9 +199,7 @@
                     store.commit('assignSpells', tempSpellList);
                     return this.$http.get('/jsonfiles/item.json');
                 }).then((resp) => {
-                    console.log(resp);
                     store.commit('assignItems', resp.body);
-                    console.log(store.state.staticInfo.items);
 
                     return this.$http.get('/jsonfiles/game_constants.json');
                 }).then((resp) => {
