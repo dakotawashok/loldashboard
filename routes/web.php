@@ -2,6 +2,7 @@
 
 use LeagueWrap\Api;
 use App\Http\Controllers\SummonerController;
+use App\Http\Controllers\MatchController;
 
 /*
 |--------------------------------------------------------------------------
@@ -35,3 +36,5 @@ Route::post('summoner/{identifier}/matchlist', 'SummonerController@getMatchList'
 Route::get('summoner/{identifier}/match/{matchId}', 'SummonerController@getMatchData');
 
 Route::get('summoner/{identifier}/recentgames', 'SummonerController@getRecentGames');
+
+Route::get('match/{matchId}', 'MatchController@getMatchById');

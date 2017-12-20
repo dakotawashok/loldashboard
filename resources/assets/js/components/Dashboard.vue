@@ -1,23 +1,5 @@
 <template>
     <div class="ui grid">
-        <div class="ui modal">
-            <i class="close icon"></i>
-            <div class="header">
-                Modal Title
-            </div>
-            <div class="image content">
-                <div class="image">
-                    An image can appear on left or an icon
-                </div>
-                <div class="description">
-                    A description can appear on the right
-                </div>
-            </div>
-            <div class="actions">
-                <div class="ui button">Cancel</div>
-                <div class="ui button">OK</div>
-            </div>
-        </div>
         <div class="two column row" id="main-grid-container">
             <div class="left floated column summoner-column">
                 <div class="ui one column grid">
@@ -37,7 +19,7 @@
                                     </div>
                                     <div class="twelve wide column ranked-stats-container">
                                         <p>Current Rank: {{summoner1CurrentRank}}
-                                            <i class="refresh icon" @click="refreshSummonerRankedData('1', summoner1.summoner.accountId)"></i></p>
+                                            <i class="refresh icon" @click="refreshSummonerRankedData(1, summoner1.summoner.accountId)"></i></p>
                                         <p>{{summoner1Ratio}}</p>
                                         <p>Win Ratio: {{summoner1RatioPercent}}</p>
                                         <p>League Name: {{summoner1RankName}}</p>
@@ -82,7 +64,7 @@
                                     </div>
                                     <div class="twelve wide column ranked-stats-container">
                                         <p>Current Rank: {{summoner2CurrentRank}}
-                                            <i class="refresh icon" @click="refreshSummonerRankedData('2', summoner2.summoner.accountId)"></i></p>
+                                            <i class="refresh icon" @click="refreshSummonerRankedData(2, summoner2.summoner.accountId)"></i></p>
                                         <p>{{summoner2Ratio}}</p>
                                         <p>Win Ratio: {{summoner2RatioPercent}}</p>
                                         <p>League Name: {{summoner2RankName}}</p>
@@ -110,6 +92,7 @@
                 </div>
             </div>
         </div>
+        <matchmodal :match.sync="modalMatch" id="match-modal"></matchmodal>
     </div>
 </template>
 
@@ -120,6 +103,7 @@
     import mixin from '../mixin.js';
 
     import MatchCard from '../components/MatchCard.vue';
+    import MatchModal from '../components/MatchModal.vue'
 
     export default {
         mixins: [
@@ -127,19 +111,10 @@
         ],
         components: [
             MatchCard,
+            MatchModal,
         ],
         mounted() {
             this.setStaticData();
-
-            $('.ui.modal').modal({
-                closable  : true,
-                detachable: true,
-                onApprove: () => {
-                    console.log('closed');
-                }
-            })
-
-
         },
         data : function() {
             return {
@@ -183,39 +158,38 @@
                     store.commit('assignSummoner2DefinedNormalMatchList', {});
 
                 } else {
-                    console.log('errorrrrr');
+                    console.log('Error in clearData method');
                 }
             },
 
             setStaticData : function() {
-                this.$http.get('/jsonfiles/champion.json').then(
-                    response => {
-                        var champions = response.body.data;
+                this.$http.get('/jsonfiles/champion.json').then(response => {
+                    var champions = response.body.data;
 
-                        var tempChampionsList = [];
-                        for (var champion in champions) {
-                            tempChampionsList.push(champions[champion]);
-                        };
+                    var tempChampionsList = [];
+                    for (var champion in champions) {
+                        tempChampionsList.push(champions[champion]);
+                    };
 
-                        tempChampionsList.sort(function(championA, championB) {
-                            if (parseInt(championA.key) < parseInt(championB.key)) {
-                                return -1;
-                            } else {
-                                return 1;
-                            }
-                        });
-                        store.commit('assignChampions', tempChampionsList);
-                        return this.$http.get('/jsonfiles/summonerspells.json');
-                    }
-                ).then((resp) => {
+                    tempChampionsList.sort(function(championA, championB) {
+                        if (parseInt(championA.key) < parseInt(championB.key)) {
+                            return -1;
+                        } else {
+                            return 1;
+                        }
+                    });
+                    store.commit('assignChampions', tempChampionsList);
+                    return this.$http.get('/jsonfiles/summonerspells.json');
+                }).then((resp) => {
                     var spells = resp.body.data;
 
                     var tempSpellList = [];
                     for (var spell in spells) {
                         tempSpellList.push(spells[spell]);
-                    };
+                    }
+                    ;
 
-                    tempSpellList.sort(function(spellA, spellB) {
+                    tempSpellList.sort(function (spellA, spellB) {
                         if (parseInt(spellA.key) < parseInt(spellB.key)) {
                             return -1;
                         } else {
@@ -223,6 +197,32 @@
                         }
                     });
                     store.commit('assignSpells', tempSpellList);
+                    return this.$http.get('/jsonfiles/item.json');
+                }).then((resp) => {
+                    console.log(resp);
+                    store.commit('assignItems', resp.body);
+                    console.log(store.state.staticInfo.items);
+
+                    return this.$http.get('/jsonfiles/game_constants.json');
+                }).then((resp) => {
+                    var game_constants = resp.body;
+                    var seasons = [];
+                    var matchmaking_queues = [];
+                    var map_names = [];
+
+                    _.forEach(game_constants.matchmaking_queues, (queue, queue_index) => {
+                        matchmaking_queues.push(queue);
+                    });
+                    _.forEach(game_constants.seasons, (season, season_index) => {
+                        seasons.push(season);
+                    });
+                    _.forEach(game_constants.map_names, (map_name, map_names_index) => {
+                        map_names.push(map_name);
+                    });
+
+                    store.commit('assignMatchmakingQueues', matchmaking_queues);
+                    store.commit('assignSeasons', seasons);
+                    store.commit('assignMapNames', map_names);
                 });
             },
 
@@ -235,6 +235,16 @@
         }
     }
 </script>
+
+<style>
+    .match-modal-button {
+        position: absolute;
+        right: 0px;
+        top: 0px;
+        margin-top: 6px;
+        cursor: pointer;
+    }
+</style>
 
 <style scoped>
     #main-grid-container > *:first-child {

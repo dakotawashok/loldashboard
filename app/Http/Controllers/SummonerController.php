@@ -20,20 +20,22 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 
-require '../vendor/riotapi/php-riot-api.php';
+require '../app/Providers/riotapi/php-riot-api.php';
+require '../app/Providers/riotapi/FileSystemCache.php';
 use riotapi;
+use FileSystemCache;
 
 class SummonerController extends Controller
 {
     public $api;
 
     function __construct() {
-        $this->api = new riotapi('NA1');
+        $this->api = new riotapi('NA1', new FileSystemCache('cache/'));
     }
 
-    function log($message) {
+    public function log($message) {
         $file = './log.txt';
-        $message = file_get_contents($file) . "\n" . $message;
+        $message = file_get_contents($file) . "\n" . json_encode($message);
         file_put_contents($file, $message);
     }
 
@@ -61,7 +63,6 @@ class SummonerController extends Controller
                 $summoner = Summoner::where('name', $id)->firstOrFail();
             }
         } catch (ModelNotFoundException $e) {
-
             if (is_numeric($id)) {
                 $returnSummoner = $this->api->getSummoner($id, true);
             } else {
@@ -78,9 +79,7 @@ class SummonerController extends Controller
 
             $summoner->save();
 
-            //$this->assignMasteries($this->api, $summoner);
-            //$this->assignRunes($this->api, $summoner);
-            //$this->assignChampionMasteries($this->api, $summoner);
+            $this->assignChampionMasteries($this->api, $summoner);
             $this->assignLeagues($this->api, $summoner);
         }
         $returnObject['summoner'] = $summoner;
@@ -110,7 +109,13 @@ class SummonerController extends Controller
                         $found = true;
                         if (strtotime($matchListObject->updated_at) < (strtotime('-1 day'))) {
                             $matches = $this->api->getMatchList($accountId, $normalParams);
-                            $matchListObject->matches = json_encode($matches['matches']);
+                            $tempType = gettype($matches);
+                            if ($tempType == "object") {
+                                $matchListObject->matches = json_encode($matches->matches);
+                            } else {
+                                $matchListObject->matches = json_encode($matches['matches']);
+                            }
+                            $matchListObject->updated_at = $matchListObject->freshTimestampString();
                             $matchListObject->save();
                             $this->saveMatchListMatches($this->api, $matchListObject);
                         }
@@ -132,8 +137,11 @@ class SummonerController extends Controller
             $this->saveMatchListMatches($this->api, $matchListObject);
         }
 
+        $definedMatchListObject = $this->getMatchListMatches($matchListObject);
+        $this->formatMatchListForDelivery($matchListObject);
+        $this->formatDefinedMatchListForDelivery($definedMatchListObject);
+        $returnObject['normalDefinedMatchList'] = $definedMatchListObject;
         $returnObject['normalMatchList'] = $matchListObject;
-        $returnObject['normalDefinedMatchList'] = $this->getMatchListMatches($matchListObject);
 
         // Ranked matchlist and matches next
         $rankedParams = [
@@ -156,7 +164,13 @@ class SummonerController extends Controller
                         $found = true;
                         if (strtotime($matchListObject->updated_at) < (strtotime('-1 day'))) {
                             $matches = $this->api->getMatchList($accountId, $rankedParams);
-                            $matchListObject->matches = json_encode($matches['matches']);
+                            $tempType = gettype($matches);
+                            if ($tempType == "object") {
+                                $matchListObject->matches = json_encode($matches->matches);
+                            } else {
+                                $matchListObject->matches = json_encode($matches['matches']);
+                            }
+                            $matchListObject->updated_at = $matchListObject->freshTimestampString();
                             $matchListObject->save();
                             $this->saveMatchListMatches($this->api, $matchListObject);
                         }
@@ -178,8 +192,13 @@ class SummonerController extends Controller
             $this->saveMatchListMatches($this->api, $matchListObject);
         }
 
+        $definedMatchListObject = $this->getMatchListMatches($matchListObject);
+        $this->formatMatchListForDelivery($matchListObject);
+        $this->formatDefinedMatchListForDelivery($definedMatchListObject);
         $returnObject['rankedMatchList'] = $matchListObject;
-        $returnObject['rankedDefinedMatchList'] = $this->getMatchListMatches($matchListObject);
+        $returnObject['rankedDefinedMatchList'] = $definedMatchListObject;
+
+        $this->formatRankedDataForDelivery($summoner);
 
         return response()->json(json_encode($returnObject));
     }
@@ -217,8 +236,6 @@ class SummonerController extends Controller
 
             $summoner->save();
 
-            $this->assignMasteries($this->api, $summoner);
-            $this->assignRunes($this->api, $summoner);
             $this->assignChampionMasteries($this->api, $summoner);
             $this->assignLeagues($this->api, $summoner);
 
@@ -243,6 +260,7 @@ class SummonerController extends Controller
             $summoner = Summoner::where('accountId', $accountId)->firstOrFail();
             $this->assignLeagues($this->api, $summoner);
 
+            $this->formatRankedDataForDelivery($summoner);
             return response()->json($summoner->league);
         } catch (ModelNotFoundException $e) {
             $returnObject = ['error' => 'That account wasn\'t found in our database...', 'error_e' => $e];
@@ -460,18 +478,8 @@ class SummonerController extends Controller
         $this->saveMatchListMatches($this->api, $matches);
     }
 
-    private function assignMasteries(&$api, &$summoner) {
-        $masteries = $api->getMasteries($summoner->id);
-        $summoner->masteries = json_encode($masteries);
-        $summoner->save();
-    }
-    private function assignRunes(&$api, &$summoner) {
-        $runes = $api->getRunes($summoner->id);
-        $summoner->runes = json_encode($runes);
-        $summoner->save();
-    }
     private function assignChampionMasteries(&$api, &$summoner) {
-        $championMastery = $api->getChampionMastery($summoner->accountId);
+        $championMastery = $api->getChampionMastery($summoner->id);
         $summoner->championMastery = json_encode($championMastery);
         $summoner->save();
     }
@@ -479,5 +487,60 @@ class SummonerController extends Controller
         $league = $api->getLeague($summoner->id);
         $summoner->league = json_encode($league);
         $summoner->save();
+    }
+
+    private function formatRankedDataForDelivery(&$summoner) {
+        $leagues = json_decode($summoner->league);
+        foreach($leagues as $leagueIndex => $league) {
+            $entries = $league->entries;
+            $tempSummoner = null;
+            $found = false;
+
+            foreach($entries as $entry) {
+                if ($entry->playerOrTeamName == $summoner->name) {
+                    $tempSummoner = $entry;
+                    $found = true;
+                    break;
+                }
+            }
+
+            if ($found) {
+                $leagues[$leagueIndex]->entries = [$tempSummoner];
+            }
+        }
+
+        $summoner->league = json_encode($leagues);
+    }
+    private function formatMatchListForDelivery(&$matchListObject) {
+
+    }
+    private function formatDefinedMatchListForDelivery(&$definedMatchListObject) {
+
+        // go through each of the match lists participants and remove unnecessary entries in stats and completely remove the timeline
+        foreach($definedMatchListObject as $matchIndex => $match) {
+            foreach($match->matchParticipants as $participantIndex => $participant) {
+                // unset the timeline, runes, and masteries for each match participant
+                unset($definedMatchListObject[$matchIndex]->matchParticipants[$participantIndex]->timeline);
+                unset($definedMatchListObject[$matchIndex]->matchParticipants[$participantIndex]->runes);
+                unset($definedMatchListObject[$matchIndex]->matchParticipants[$participantIndex]->masteries);
+
+                // make a new stats thing so that we can set it and remove the unecessary stuff
+                $tempStats = [];
+                $parsedStats = json_decode($participant->stats);
+                $tempStats['win'] = $parsedStats->win;
+                $tempStats['item0'] = $parsedStats->item0;
+                $tempStats['item1'] = $parsedStats->item1;
+                $tempStats['item2'] = $parsedStats->item2;
+                $tempStats['item3'] = $parsedStats->item3;
+                $tempStats['item4'] = $parsedStats->item4;
+                $tempStats['item5'] = $parsedStats->item5;
+                $tempStats['item6'] = $parsedStats->item6;
+                $tempStats['kills'] = $parsedStats->kills;
+                $tempStats['deaths'] = $parsedStats->deaths;
+                $tempStats['assists'] = $parsedStats->assists;
+                $tempStats = json_encode($tempStats);
+                $definedMatchListObject[$matchIndex]->matchParticipants[$participantIndex]->stats = $tempStats;
+            }
+        }
     }
 }

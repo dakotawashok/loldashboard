@@ -17,6 +17,7 @@ require('./bootstrap');
 
 Vue.component('dashboard', require('./components/Dashboard.vue'));
 Vue.component('matchcard', require('./components/MatchCard.vue'));
+Vue.component('matchmodal', require('./components/MatchModal.vue'));
 Vue.component('rankedmatchlistview', require('./components/RankedMatchListView.vue'));
 Vue.component('recentgamecard', require('./components/RecentGameCard.vue'));
 Vue.component('recentgamesview', require('./components/RecentGamesView.vue'));

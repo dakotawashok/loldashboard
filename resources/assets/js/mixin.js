@@ -7,11 +7,21 @@ export default {
 
     data () {
         return {
-            API_VERSION: '7.24.1'
+            API_VERSION: '7.24.2'
         }
     },
 
     methods: {
+        staticItem : function(id) {
+            var return_item = {};
+            _.forEach(store.state.staticInfo.items.data, (item, item_index) => {
+                if (item_index == id) {
+                    return_item = item;
+                }
+            });
+            return return_item;
+        },
+
         staticChampion : function(id) {
             for (var champion in store.state.staticInfo.champions) {
                 if (store.state.staticInfo.champions[champion].key == id) {
@@ -28,8 +38,35 @@ export default {
             }
         },
 
+        staticSeason : function(id) {
+            var return_season = {};
+            _.forEach(store.state.staticInfo.seasons, (season, season_index) => {
+                if (season.id == id) {
+                    return_season = season;
+                }
+            });
+            return return_season;
+        },
+
+        staticMatchmakingQueue : function(id) {
+            var return_queue = {};
+            _.forEach(store.state.staticInfo.matchmaking_queues, (queue, queue_index) => {
+                if (queue.id == id) {
+                    return_queue = queue;
+                }
+            });
+            return return_queue;
+        },
+
+        staticMapName : function(id) {
+            _.forEach(store.state.staticInfo.map_names, (map_name, map_name_index) => {
+                if (map_name.id == id) {
+                    return map_name;
+                }
+            });
+        },
+
         getAllSummonerData : function(summonerNumber, useAccountId = false) {
-            console.log('hello');
             if (summonerNumber == "1") {
                 store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : true});
                 this.$http.get('/summoner/' + (useAccountId ?  this.summoner1.accountId : this.summoner1.summonerName) + '/allData').then((resp) => {
@@ -82,16 +119,15 @@ export default {
          sends a request to the server to get new ranked data for the summoner
          */
         refreshSummonerRankedData(summonerNumber, accountId) {
-            if (summonerNumber == '1') { store.commit('assignSummoner1Loaded', false);}
-            if (summonerNumber == '2') { store.commit('assignSummoner2Loaded', false);}
+            store.commit('assignSummonerLoading', {'summonerNumber' : summonerNumber, 'loading' : true});
             this.$http.get('/summoner/'+accountId+'/refreshRankedStats').then((resp) => {
-                if (summonerNumber == '1') {
+                if (summonerNumber == 1) {
                     // get the summoner, put the new ranked data in that summoner, then reassign the summoner
                     // then we have to recall the assignRankedData to parse it all back out baby
                     var tempSummoner = _.cloneDeep(this.summoner1.summoner);
                     tempSummoner.league = JSON.parse(resp.body);
                     store.commit('assignSummoner1Summoner', tempSummoner);
-                } else if (summonerNumber == '2') {
+                } else if (summonerNumber == 2) {
                     // get the summoner, put the new ranked data in that summoner, then reassign the summoner
                     // then we have to recall the assignRankedData to parse it all back out baby
                     var tempSummoner = _.cloneDeep(this.summoner2.summoner);
@@ -99,8 +135,7 @@ export default {
                     store.commit('assignSummoner2Summoner', tempSummoner);
                 }
                 this.assignRankedData(summonerNumber);
-                if (summonerNumber == '1') { store.commit('assignSummoner1Loaded', true);}
-                if (summonerNumber == '2') { store.commit('assignSummoner2Loaded', true);}
+                store.commit('assignSummonerLoading', {'summonerNumber' : summonerNumber, 'loading' : false});
             })
         },
 
@@ -116,7 +151,6 @@ export default {
                 // make a temp object that we will use to replace the summoner
                 var tempSummoner = _.cloneDeep(this.summoner1.summoner);
                 tempSummoner.rankedData = {};
-                console.log(tempSummoner);
                 if (tempSummoner != undefined && tempSummoner.league != undefined) {
                     _.forEach(tempSummoner.league, (league) => {
                         if (league.queue == 'RANKED_SOLO_5x5') {
@@ -158,7 +192,6 @@ export default {
                 if (tempSummoner != undefined && tempSummoner.league != undefined) {
                     _.forEach(tempSummoner.league, (league) => {
                         if (league.queue == 'RANKED_SOLO_5x5') {
-                            console.log(league);
                             tempSummoner.rankedData.tier = league.tier;
                             tempSummoner.rankedData.name = league.name;
                             tempSummoner.rankedData.queue = league.queue;
@@ -167,7 +200,6 @@ export default {
                             var found = false;
                             _.forEach(league.entries, (league_summoner) => {
                                 if (league_summoner.playerOrTeamName === tempSummoner.name) {
-                                    console.log(league_summoner);
                                     found = true;
                                     tempSummoner.rankedData.freshBlood = league_summoner.freshBlood;
                                     tempSummoner.rankedData.hotStreak = league_summoner.hotStreak;
@@ -189,12 +221,7 @@ export default {
                             }
                         }
                     })
-                } else {
-                    console.log('super wtf');
-                    return '';
                 }
-            } else {
-                console.log('wtf');
             }
         },
 
@@ -225,10 +252,70 @@ export default {
                     }
                 })
             })
-        }
+        },
+
+        openMatchModal(matchId) {
+            store.commit('assignMatchModalLoading', true);
+            $('#match-modal').modal('show')
+
+            this.$http.get('/match/' + matchId).then((resp) => {
+                resp = JSON.parse(resp.body);
+
+                var parsedMatch = this.parseMatchDataFromResponse(resp);
+
+                store.commit('assignModalMatch', parsedMatch);
+                store.commit('assignMatchModalLoading', false);
+            });
+        },
+
+        // Go through all the data in the match and parse out all the json text in it
+        parseMatchDataFromResponse($match) {
+            var tempMatch = _.cloneDeep($match);
+            _.forEach(tempMatch.matchTeams, (match, matchIndex) => {
+                if (match.bans != undefined) {
+                    var parsedBans = JSON.parse(match.bans);
+                    tempMatch.matchTeams[matchIndex].bans = parsedBans;
+                }
+            })
+
+            // while we're going through each match participant in the match, lets put the respective match participant identies in the object
+            // so it's easier to manipulate later in the code
+            _.forEach(tempMatch.matchParticipants, (participant, participantIndex) => {
+                var parsedStats = JSON.parse(participant.stats);
+                tempMatch.matchParticipants[participantIndex].stats = parsedStats;
+
+                if (participant.runes != undefined && participant.runes != "") {
+                    var parsedRunes = JSON.parse(participant.runes);
+                    tempMatch.matchParticipants[participantIndex].runes = parsedRunes;
+                }
+
+                if (participant.timeline != undefined && participant.timeline != "") {
+                    var parsedTimeline = JSON.parse(participant.timeline);
+                    tempMatch.matchParticipants[participantIndex].timeline = parsedTimeline;
+                }
+
+                var tempParsedIdentity = {};
+                _.forEach(tempMatch.MatchParticipantIdentities, (identity, identityIndex) => {
+                    if (identity.participantId === participant.participantId) {
+                        tempParsedIdentity = identity;
+                    }
+                });
+                tempMatch.matchParticipants[participantIndex].participantIdentity = tempParsedIdentity;
+            })
+
+            delete tempMatch.participant_identities;
+            delete tempMatch.participants;
+            delete tempMatch.teams;
+
+
+            return tempMatch;
+        },
     },
 
     computed: {
+        modalMatch : function() { return store.state.modalMatch; },
+        matchModalLoading : function() { return store.state.matchModalLoading; },
+
         summoner1ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/"+this.API_VERSION+"/img/profileicon/" + this.summoner1.summoner.profileIconId + ".png"; },
         summoner2ProfileIconUrl : function() { return "http://ddragon.leagueoflegends.com/cdn/"+this.API_VERSION+"/img/profileicon/" + this.summoner2.summoner.profileIconId + ".png"; },
 
@@ -259,9 +346,6 @@ export default {
             return store.state.summoner2.normalMatchList;
         },
 
-        loading : function() { return store.state.loading; },
-
-
 
         summoner1CurrentRank : function() {
             return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData)
@@ -279,7 +363,7 @@ export default {
                 this.summoner1.summoner.rankedData.losses + ' losses';
         },
         summoner1RatioPercent : function() {
-            if (this.summoner1.summoner.rankedData = undefined || _.isEmpty(this.summoner1.summoner.rankedData) ) {
+            if (this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData) ) {
                 return 'Unranked';
             } else {
                 var wins = parseInt(this.summoner1.summoner.rankedData.wins);

@@ -37,6 +37,9 @@
                 </div>
             </div>
         </div>
+        <div class="match-modal-button">
+            <i class="external icon" @click="openMatchModal(match.gameId)"></i>
+        </div>
     </div>
 </template>
 
@@ -124,7 +127,7 @@
                 }
 
                 // get the summoner stats for this game
-                this.stats = this.summoner_participant_data.stats;
+                this.stats = JSON.parse(this.summoner_participant_data.stats);
                 this.match_loading = false;
             },
 
@@ -133,10 +136,7 @@
                     // TODO:: FIX THIS SHIT
                     // json parse out all the data! If they're not a string, then they're already parsed or something not sure why but fuck it I'll figure it out later
                     if (typeof participant.masteries === 'string') {
-                        participant.masteries = (participant.masteries != '' ? JSON.parse(participant.masteries) : []);
-                        participant.runes = (participant.runes != '' ? JSON.parse(participant.runes) : []);
                         participant.stats = (participant.stats != '' ? JSON.parse(participant.stats) : []);
-                        participant.timeline = (participant.timeline != '' ? JSON.parse(participant.timeline) : []);
                     }
                 });
             },
@@ -173,10 +173,6 @@
             }
         },
         computed :  {
-            styleObject : function() {
-                return "";
-            },
-
             champion_image_url : function() {
                 if (this.champion != undefined && this.champion.id != undefined) {
                     var parsedChampName = this.champion.id.split(' ').join('').split('\'').join('');
@@ -307,7 +303,7 @@
     .summoner-items > img, .summoner-spells > img {
         width: 25px!important;
         height: auto;
-        margin-right: 5px!important;
+        margin-right: 2px!important;
         margin-bottom: 0px!important;
     }
     .summoner-team-container, .enemy-team-container {
@@ -343,7 +339,7 @@
     .enemy-participant > span {
         position: absolute;
         right: 45px;
-        padding-right: 5px;
+        padding-right: 10px;
         padding-top: 2px;
     }
     .enemy-participant > .small-champion-icon {
@@ -351,9 +347,10 @@
         height: auto;
         position: absolute;
         right: 0;
-        margin-right: 20px;
+        margin-right: 28px;
     }
-
-
-
+    .small-champion-icon {
+        width: 22px!important;
+        cursor: pointer;
+    }
 </style>
