@@ -7,3 +7,5 @@
 Homestead.json
 Homestead.yaml
 .env
+.production_env
+.staging_env

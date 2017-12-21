@@ -4,7 +4,7 @@ module.exports = function (shipit) {
 
     shipit.initConfig({
         production: {
-            servers: 'root@45.55.63.24',
+            servers: 'root@67.207.92.41',
             workspace: '/tmp/loldashboard',
             deployTo: '/var/www/html/loldashboard',
             repositoryUrl: 'https://github.com/dakotawashok/loldashboard.git',
@@ -17,54 +17,34 @@ module.exports = function (shipit) {
         },
 
         staging: {
-            servers: 'root@45.55.63.24',
+            servers: 'root@67.207.92.41',
             workspace: '/tmp/loldashboard',
-            deployTo: '/var/www/html/loldashboard',
+            deployTo: '/var/www/html/staging_loldashboard',
             repositoryUrl: 'https://github.com/dakotawashok/loldashboard.git',
             branch: 'develop',
             ignores: ['.git', 'node_modules', 'vendor'],
             rsync: ['--del'],
             keepReleases: 2,
-            shallowClone: true
+            shallowClone: true,
+            key: homedir + '/loldashboard.pem'
         },
-        // production: {
-        //     servers: '',
-        //     workspace: '/tmp/encompass.app',
-        //     deployTo: '/var/www/app.encompass.nnja.co/public_html',
-        //     repositoryUrl: 'https://cubicle-ninjas.git.beanstalkapp.com/enco-encompass-app.git',
-        //     dirToCopy: 'staging-build',
-        //     ignores: ['.git', 'node_modules'],
-        //     rsync: ['--del'],
-        //     keepReleases: 2,
-        //     key: homedir + '/enco.pem',
-        //     shallowClone: true
-        // }
     })
 
-    // shipit.blTask('symlink-files', function () {
-    //     return shipit.remote('cd /var/www/dnrs-portal/current && ln -s /var/www/files wp-content');
-    // })
-    //
-    // shipit.on('deployed', function () {
-    //     shipit.start('symlink-files')
-    // })
-    shipit.blTask('install', function () {
+    shipit.blTask('composer_install', function () {
         shipit.log('Installing composer packages')
-        return shipit.remote("cd " + shipit.currentPath +  "/admin/api/ && composer install &> /dev/null");
+        return shipit.remote("cd " + shipit.currentPath + " && composer install");
     })
 
     shipit.blTask('setup', function () {
-        shipit.log('Symlink to blog')
-        shipit.remote("cd " + shipit.currentPath +  " && ln -sf /var/www/pkdw.blog/current blog");
         shipit.log('Copying env file')
-        return shipit.remoteCopy('admin/api/.env-sample',  shipit.currentPath + '/admin/api/.env')
+        if (shipit.environment == 'production') {
+            return shipit.remoteCopy('./.production_env',  shipit.currentPath + './.env')
+        } else {
+            return shipit.remoteCopy('./.staging_env',  shipit.currentPath + './.env')
+        }
     })
 
     shipit.on('deployed', function () {
-        if( shipit.environment == 'staging' ) {
-            shipit.start('install', 'setup')
-        } else {
-            // shipit.start('install', 'setup', 'configure-prod')
-        }
+        shipit.start('composer_install', 'setup')
     })
 }
