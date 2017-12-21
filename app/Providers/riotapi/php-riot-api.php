@@ -379,7 +379,7 @@ class riotapi {
 			return $result;
 		});
 
-        if (self::DECODE_ENABLED) {
+        if (self::DECODE_ENABLED && gettype($result) == 'string') {
             $result = json_decode($result, true);
         }
 

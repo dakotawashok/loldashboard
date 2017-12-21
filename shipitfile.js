@@ -38,10 +38,14 @@ module.exports = function (shipit) {
     shipit.blTask('setup', function () {
         shipit.log('Copying env file')
         if (shipit.environment == 'production') {
-            return shipit.remoteCopy('.production_env',  shipit.currentPath + '/.env')
+            shipit.remoteCopy('.production_env',  shipit.currentPath + '/.env')
         } else {
-            return shipit.remoteCopy('.staging_env',  shipit.currentPath + '/.env')
+            shipit.remoteCopy('.staging_env',  shipit.currentPath + '/.env')
         }
+        shipit.log('Making the laravel log file');
+        shipit.remote("cd " + shipit.currentPath + "/storage/logs && touch laravel.log");
+        shipit.log('Fixing folder permissions');
+        return shipit.remote("chown -R www-data:www-data " + shipit.releasePath);
     })
 
     shipit.on('deployed', function () {
