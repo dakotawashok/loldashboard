@@ -38,9 +38,9 @@ module.exports = function (shipit) {
     shipit.blTask('setup', function () {
         shipit.log('Copying env file')
         if (shipit.environment == 'production') {
-            return shipit.remoteCopy('./.production_env',  shipit.currentPath + './.env')
+            return shipit.remoteCopy('.production_env',  shipit.currentPath + '/.env')
         } else {
-            return shipit.remoteCopy('./.staging_env',  shipit.currentPath + './.env')
+            return shipit.remoteCopy('.staging_env',  shipit.currentPath + '/.env')
         }
     })
 
