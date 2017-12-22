@@ -75,8 +75,10 @@ export default {
                     resp.summoner = this.parseSummonerDataFromResponse(resp.summoner);
                     resp.normalMatchList.matches = JSON.parse(resp.normalMatchList.matches);
                     resp.rankedMatchList.matches = JSON.parse(resp.rankedMatchList.matches);
+                    resp.otherMatchList.matches = JSON.parse(resp.otherMatchList.matches);
                     this.parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
                     this.parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
+                    this.parseMatchListDataFromResponse(resp.otherMatchList.matches, resp.otherDefinedMatchList);
                     store.commit('assignSummoner1Summoner', resp.summoner);
                     store.state.summoner1.summonerName = resp.summoner.name;
                     store.commit('assignSummoner1Loaded', true);
@@ -99,8 +101,10 @@ export default {
                     resp.summoner = this.parseSummonerDataFromResponse(resp.summoner);
                     resp.normalMatchList.matches = JSON.parse(resp.normalMatchList.matches);
                     resp.rankedMatchList.matches = JSON.parse(resp.rankedMatchList.matches);
+                    resp.otherMatchList.matches = JSON.parse(resp.otherMatchList.matches);
                     this.parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
                     this.parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
+                    this.parseMatchListDataFromResponse(resp.otherMatchList.matches, resp.otherDefinedMatchList);
                     store.commit('assignSummoner2Summoner', resp.summoner);
                     store.state.summoner2.summonerName = resp.summoner.name;
                     store.commit('assignSummoner2Loaded', true);

@@ -6673,8 +6673,10 @@ module.exports = defaults;
                     resp.summoner = _this.parseSummonerDataFromResponse(resp.summoner);
                     resp.normalMatchList.matches = JSON.parse(resp.normalMatchList.matches);
                     resp.rankedMatchList.matches = JSON.parse(resp.rankedMatchList.matches);
+                    resp.otherMatchList.matches = JSON.parse(resp.otherMatchList.matches);
                     _this.parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
                     _this.parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
+                    _this.parseMatchListDataFromResponse(resp.otherMatchList.matches, resp.otherDefinedMatchList);
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1Summoner', resp.summoner);
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.summoner1.summonerName = resp.summoner.name;
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1Loaded', true);
@@ -6697,8 +6699,10 @@ module.exports = defaults;
                     resp.summoner = _this.parseSummonerDataFromResponse(resp.summoner);
                     resp.normalMatchList.matches = JSON.parse(resp.normalMatchList.matches);
                     resp.rankedMatchList.matches = JSON.parse(resp.rankedMatchList.matches);
+                    resp.otherMatchList.matches = JSON.parse(resp.otherMatchList.matches);
                     _this.parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
                     _this.parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
+                    _this.parseMatchListDataFromResponse(resp.otherMatchList.matches, resp.otherDefinedMatchList);
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2Summoner', resp.summoner);
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.summoner2.summonerName = resp.summoner.name;
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2Loaded', true);
@@ -31404,7 +31408,7 @@ var moment = __webpack_require__(0);
                         participant.identity = identitity;
                     }
                 });
-                if (participant.identity.accountId == summonerId) {
+                if (participant.identity != undefined && participant.identity.accountId == summonerId) {
                     _this.summoner_participant_data = participant;
                 }
             });
@@ -67379,7 +67383,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       attrs: {
         "src": _vm.getChampionImageUrl(participant.championId)
       }
-    }), _vm._v(" "), _c('span', [_vm._v(_vm._s(participant.identity.summonerName))])])
+    }), _vm._v(" "), _c('span', [_vm._v(_vm._s(participant.identity != undefined && participant.identity.summonerName != undefined ? participant.identity.summonerName : 'SummonerBot'))])])
   })), _vm._v(" "), _c('div', {
     staticClass: "enemy-team-container"
   }, _vm._l((_vm.enemy_team.participants), function(participant) {
@@ -67390,7 +67394,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
           _vm.loadSummonerFromMatchCard(participant.identity.accountId)
         }
       }
-    }, [_c('span', [_vm._v(_vm._s(participant.identity.summonerName))]), _vm._v(" "), _c('img', {
+    }, [_c('span', [_vm._v(_vm._s(participant.identity != undefined && participant.identity.summonerName != undefined ? participant.identity.summonerName : 'SummonerBot'))]), _vm._v(" "), _c('img', {
       staticClass: "ui middle aligned spaced rounded tiny image small-champion-icon",
       attrs: {
         "src": _vm.getChampionImageUrl(participant.championId)
@@ -67603,7 +67607,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.summoner1Ratio))]), _vm._v(" "), _c('p', [_vm._v("Win Ratio: " + _vm._s(_vm.summoner1RatioPercent))]), _vm._v(" "), _c('p', [_vm._v("League Name: " + _vm._s(_vm.summoner1RankName))])])])]) : _vm._e()])]), _vm._v(" "), (_vm.summoner1Loaded && !_vm.summoner1Loading) ? _c('div', {
     staticClass: "sixteen wide column"
   }, [_c('div', {
-    staticClass: "ui two item top attached menu"
+    staticClass: "ui three item top attached menu"
   }, [_c('a', {
     staticClass: "item",
     class: {
@@ -67716,7 +67720,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   })]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.summoner2Ratio))]), _vm._v(" "), _c('p', [_vm._v("Win Ratio: " + _vm._s(_vm.summoner2RatioPercent))]), _vm._v(" "), _c('p', [_vm._v("League Name: " + _vm._s(_vm.summoner2RankName))])])])]) : _vm._e()])]), _vm._v(" "), (_vm.summoner2Loaded && !_vm.summoner2Loading) ? _c('div', {
     staticClass: "sixteen wide column"
   }, [_c('div', {
-    staticClass: "ui two item top attached menu"
+    staticClass: "ui three item top attached menu"
   }, [_c('a', {
     staticClass: "item",
     class: {

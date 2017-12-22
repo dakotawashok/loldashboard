@@ -29,7 +29,7 @@
                         </div>
                     </div>
                     <div class="sixteen wide column" v-if="summoner1Loaded && !summoner1Loading">
-                        <div class="ui two item top attached menu">
+                        <div class="ui three item top attached menu">
                             <a class="item"
                                :class="{'active' : (currentlyViewedMatchList=='ranked')}"
                                @click="changeView('ranked')">Ranked Games</a>
@@ -80,7 +80,7 @@
                         </div>
                     </div>
                     <div class="sixteen wide column" v-if="summoner2Loaded && !summoner2Loading">
-                        <div class="ui two item top attached menu">
+                        <div class="ui three item top attached menu">
                             <a class="item"
                                :class="{'active' : (currentlyViewedMatchList=='ranked')}"
                                @click="changeView('ranked')">Ranked Games</a>

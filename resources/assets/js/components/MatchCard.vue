@@ -24,13 +24,13 @@
                         <div class="summoner-participant" v-for="participant in summoner_team.participants"
                              @click="loadSummonerFromMatchCard(participant.identity.accountId)">
                             <img class="ui middle aligned spaced rounded tiny image small-champion-icon" :src="getChampionImageUrl(participant.championId)">
-                            <span>{{participant.identity.summonerName}}</span>
+                            <span>{{participant.identity != undefined && participant.identity.summonerName != undefined ? participant.identity.summonerName : 'SummonerBot'}}</span>
                         </div>
                     </div>
                     <div class="enemy-team-container">
                         <div class="enemy-participant" v-for="participant in enemy_team.participants"
                              @click="loadSummonerFromMatchCard(participant.identity.accountId)">
-                            <span>{{participant.identity.summonerName}}</span>
+                            <span>{{participant.identity != undefined && participant.identity.summonerName != undefined ? participant.identity.summonerName : 'SummonerBot'}}</span>
                             <img class="ui middle aligned spaced rounded tiny image small-champion-icon" :src="getChampionImageUrl(participant.championId)">
                         </div>
                     </div>
@@ -85,7 +85,7 @@
                             participant.identity = identitity;
                         }
                     });
-                    if (participant.identity.accountId == summonerId) {
+                    if (participant.identity != undefined && participant.identity.accountId == summonerId) {
                         this.summoner_participant_data = participant;
                     }
                 });
