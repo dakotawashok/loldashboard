@@ -84,6 +84,8 @@ export default {
                     store.commit('assignSummoner1DefinedRankedMatchList', resp.rankedDefinedMatchList);
                     store.commit('assignSummoner1NormalMatchList', resp.normalMatchList.matches);
                     store.commit('assignSummoner1DefinedNormalMatchList', resp.normalDefinedMatchList);
+                    store.commit('assignSummonerMatchList', {'matchList' : resp.otherMatchList.matches, summonerNumber : 1, matchListType: 'other'});
+                    store.commit('assignSummonerDefinedMatchList', {'matchList' : resp.otherDefinedMatchList, summonerNumber : 1, matchListType: 'other'});
 
                     this.assignRankedData(summonerNumber);
 
@@ -106,6 +108,8 @@ export default {
                     store.commit('assignSummoner2DefinedRankedMatchList', resp.rankedDefinedMatchList);
                     store.commit('assignSummoner2NormalMatchList', resp.normalMatchList.matches);
                     store.commit('assignSummoner2DefinedNormalMatchList', resp.normalDefinedMatchList);
+                    store.commit('assignSummonerMatchList', {'matchList' : resp.otherMatchList.matches, summonerNumber : 2, matchListType: 'other'});
+                    store.commit('assignSummonerDefinedMatchList', {'matchList' : resp.otherDefinedMatchList, summonerNumber : 2, matchListType: 'other'});
 
                     this.assignRankedData(summonerNumber);
 
@@ -338,12 +342,18 @@ export default {
         summoner1NormalMatchList : function() {
             return store.state.summoner1.normalMatchList;
         },
+        summoner1OtherMatchList : function() {
+            return store.state.summoner1.otherMatchList;
+        },
 
         summoner2RankedMatchList : function() {
             return store.state.summoner2.rankedMatchList;
         },
         summoner2NormalMatchList : function() {
             return store.state.summoner2.normalMatchList;
+        },
+        summoner2OtherMatchList : function() {
+            return store.state.summoner2.otherMatchList;
         },
 
 

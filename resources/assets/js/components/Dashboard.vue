@@ -36,12 +36,18 @@
                             <a class="item"
                                :class="{'active' : (currentlyViewedMatchList=='normal')}"
                                @click="changeView('normal')">Normal Games</a>
+                            <a class="item"
+                               :class="{'active' : (currentlyViewedMatchList=='other')}"
+                               @click="changeView('other')">Other Games</a>
                         </div>
                         <template v-if="currentlyViewedMatchList=='ranked'">
                             <matchcard v-for="(match, key, index) in summoner1RankedMatchList" :summoner_number="'1'" :match_type="'ranked'" :match="match"></matchcard>
                         </template>
                         <template v-if="currentlyViewedMatchList=='normal'">
                             <matchcard v-for="(match, key, index) in summoner1NormalMatchList" :summoner_number="'1'" :match_type="'normal'" :match="match"></matchcard>
+                        </template>
+                        <template v-if="currentlyViewedMatchList=='other'">
+                            <matchcard v-for="(match, key, index) in summoner1OtherMatchList" :summoner_number="'1'" :match_type="'other'" :match="match"></matchcard>
                         </template>
                     </div>
                 </div>
@@ -81,12 +87,18 @@
                             <a class="item"
                                :class="{'active' : (currentlyViewedMatchList=='normal')}"
                                @click="changeView('normal')">Normal Games</a>
+                            <a class="item"
+                               :class="{'active' : (currentlyViewedMatchList=='other')}"
+                               @click="changeView('other')">Other Games</a>
                         </div>
                         <template v-if="currentlyViewedMatchList=='ranked'">
                             <matchcard v-for="(match, key, index) in summoner2RankedMatchList" :summoner_number="'2'" :match_type="'ranked'" :match="match"></matchcard>
                         </template>
                         <template v-if="currentlyViewedMatchList=='normal'">
                             <matchcard v-for="(match, key, index) in summoner2NormalMatchList" :summoner_number="'2'" :match_type="'normal'" :match="match"></matchcard>
+                        </template>
+                        <template v-if="currentlyViewedMatchList=='other'">
+                            <matchcard v-for="(match, key, index) in summoner2OtherMatchList" :summoner_number="'2'" :match_type="'other'" :match="match"></matchcard>
                         </template>
                     </div>
                 </div>

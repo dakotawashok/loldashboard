@@ -17,8 +17,10 @@ var store = new Vuex.Store({
             summonerName : '',
             normalMatchList :{},
             rankedMatchList : {},
+            otherMatchList : {},
             definedNormalMatchList: {},
             definedRankedMatchList: {},
+            definedOtherMatchList: {},
         },
         summoner2 : {
             loaded : false,
@@ -27,8 +29,10 @@ var store = new Vuex.Store({
             summonerName : '',
             normalMatchList :{},
             rankedMatchList : {},
+            otherMatchList : {},
             definedNormalMatchList: {},
             definedRankedMatchList: {},
+            definedOtherMatchList: {},
         },
         currentYear : "2017",
         modalMatch: {
@@ -103,6 +107,45 @@ var store = new Vuex.Store({
         },
         assignSummoner1Loaded (state, loaded) { state.summoner1.loaded = loaded; },
         assignSummoner2Loaded (state, loaded) { state.summoner2.loaded = loaded; },
+
+        assignSummonerMatchList(state, load) {
+            if (load.summonerNumber == 1) {
+                if (load.matchListType == 'normal') {
+                    state.summoner1.normalMatchList = load.matchList;
+                } else if (load.matchListType == 'ranked') {
+                    state.summoner1.rankedMatchList = load.matchList;
+                } else {
+                    state.summoner1.otherMatchList = load.matchList;
+                }
+            } else {
+                if (load.matchListType == 'normal') {
+                    state.summoner2.normalMatchList = load.matchList;
+                } else if (load.matchListType == 'ranked') {
+                    state.summoner2.rankedMatchList = load.matchList;
+                } else {
+                    state.summoner2.otherMatchList = load.matchList;
+                }
+            }
+        },
+        assignSummonerDefinedMatchList(state, load) {
+            if (load.summonerNumber == 1) {
+                if (load.matchListType == 'normal') {
+                    state.summoner1.definedNormalMatchList = load.matchList;
+                } else if (load.matchListType == 'ranked') {
+                    state.summoner1.definedRankedMatchList = load.matchList;
+                } else {
+                    state.summoner1.definedOtherMatchList = load.matchList;
+                }
+            } else {
+                if (load.matchListType == 'normal') {
+                    state.summoner2.definedNormalMatchList = load.matchList;
+                } else if (load.matchListType == 'ranked') {
+                    state.summoner2.definedRankedMatchList = load.matchList;
+                } else {
+                    state.summoner2.definedOtherMatchList = load.matchList;
+                }
+            }
+        },
 
         assignSummonerLoading (state, summonerObject) {
             var summonerNumber  = summonerObject.summonerNumber;

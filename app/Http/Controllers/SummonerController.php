@@ -198,6 +198,60 @@ class SummonerController extends Controller
         $returnObject['rankedMatchList'] = $matchListObject;
         $returnObject['rankedDefinedMatchList'] = $definedMatchListObject;
 
+        $otherParams = [
+            'queue'=> [70, 72, 73, 75, 76, 78, 83, 98, 100, 310, 313, 317, 325, 450, 460, 470, 600, 610, 900, 910, 920, 940, 950, 960, 980, 990, 1000, 1010],
+            'season'=> [9],
+            'endIndex'=> 20
+        ];
+        try {
+            $matchListAggregate = MatchList::where('summonerId',$accountId)->get();
+            if (count($matchListAggregate) == 0) {
+                throw new ModelNotFoundException();
+            } else {
+                $found = false;
+                // go through all the matchlists found, then for each matchlist, compare it to the params we were sent
+                // if one of the matchlists matches the params sent in, return that, else we have to throw an exception
+                foreach($matchListAggregate as $matchListEntry) {
+                    // if it's the same season, same list type, and less than a day old
+                    if ($matchListEntry->list_type == 'other') {
+                        $matchListObject = $matchListEntry;
+                        $found = true;
+                        if (strtotime($matchListObject->updated_at) < (strtotime('-1 day'))) {
+                            $matches = $this->api->getMatchList($accountId, $otherParams);
+                            $tempType = gettype($matches);
+                            if ($tempType == "object") {
+                                $matchListObject->matches = json_encode($matches->matches);
+                            } else {
+                                $matchListObject->matches = json_encode($matches['matches']);
+                            }
+                            $matchListObject->updated_at = $matchListObject->freshTimestampString();
+                            $matchListObject->save();
+                            $this->saveMatchListMatches($this->api, $matchListObject);
+                        }
+                    }
+                }
+                // throw the exception since we couldn't find a matchlist that matches!
+                if (!$found) {
+                    throw new ModelNotFoundException();
+                }
+            }
+        } catch (ModelNotFoundException $e) {
+            $matches = $this->api->getMatchList($accountId, $otherParams);
+            $matchListObject = new MatchList;
+            $matchListObject->summonerId = $accountId;
+            $matchListObject->season = '["9"]';
+            $matchListObject->list_type = 'other';
+            $matchListObject->matches = json_encode($matches['matches']);
+            $matchListObject->save();
+            $this->saveMatchListMatches($this->api, $matchListObject);
+        }
+
+        $definedMatchListObject = $this->getMatchListMatches($matchListObject);
+        $this->formatMatchListForDelivery($matchListObject);
+        $this->formatDefinedMatchListForDelivery($definedMatchListObject);
+        $returnObject['otherMatchList'] = $matchListObject;
+        $returnObject['otherDefinedMatchList'] = $definedMatchListObject;
+
         $this->formatRankedDataForDelivery($summoner);
 
         return response()->json(json_encode($returnObject));
@@ -334,21 +388,24 @@ class SummonerController extends Controller
                 $newMatch->gameId = (string)$match_entry['gameId'];
                 // make the participant identities
                 forEach($apiMatch['participantIdentities'] as $pId) {
-                    try {
-                        $findParticipantIdentity = MatchParticipantIdentities::where('matchId', (string)$match_entry['gameId'])->where('accountId', $pId['player']['currentAccountId'])->firstOrFail();
-                    } catch (ModelNotFoundException $pie) {
-                        $newPId = new MatchParticipantIdentities;
-                        $newPId->matchId = (string)$match_entry['gameId'];
-                        $newPId->currentPlatformId = (isset($pId['player']['currentPlatformId']) ? $pId['player']['currentPlatformId'] : '');
-                        $newPId->summonerName = $pId['player']['summonerName'];
-                        $newPId->matchHistoryUri = (isset($pId['player']['matchHistoryUri']) ? $pId['player']['matchHistoryUri'] : '');
-                        $newPId->platformId = (isset($pId['player']['platformId']) ? $pId['player']['platformId'] : '');
-                        $newPId->currentAccountId = $pId['player']['currentAccountId'];
-                        $newPId->profileIcon = (isset($pId['player']['profileIcon']));
-                        $newPId->summonerId = $pId['player']['summonerId'];
-                        $newPId->accountId = $pId['player']['accountId'];
-                        $newPId->participantId = (isset($pId['participantId']) ? $pId['participantId'] : '');
-                        $newPId->save();
+                    if ($pId['player']['accountId'] != 0) {
+                        try {
+                            $findParticipantIdentity = MatchParticipantIdentities::where('matchId', (string)$match_entry['gameId'])->where('accountId', $pId['player']['currentAccountId'])->firstOrFail();
+                        } catch (ModelNotFoundException $pie) {
+                            $this->log($pId);
+                            $newPId = new MatchParticipantIdentities;
+                            $newPId->matchId = (string)$match_entry['gameId'];
+                            $newPId->currentPlatformId = (isset($pId['player']['currentPlatformId']) ? $pId['player']['currentPlatformId'] : '');
+                            $newPId->summonerName = $pId['player']['summonerName'];
+                            $newPId->matchHistoryUri = (isset($pId['player']['matchHistoryUri']) ? $pId['player']['matchHistoryUri'] : '');
+                            $newPId->platformId = (isset($pId['player']['platformId']) ? $pId['player']['platformId'] : '');
+                            $newPId->currentAccountId = $pId['player']['currentAccountId'];
+                            $newPId->profileIcon = (isset($pId['player']['profileIcon']));
+                            $newPId->summonerId = $pId['player']['summonerId'];
+                            $newPId->accountId = $pId['player']['accountId'];
+                            $newPId->participantId = (isset($pId['participantId']) ? $pId['participantId'] : '');
+                            $newPId->save();
+                        }
                     }
                 }
 
