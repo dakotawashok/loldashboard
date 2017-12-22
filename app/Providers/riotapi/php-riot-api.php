@@ -349,7 +349,6 @@ class riotapi {
 	private function request($call, $otherQueries=false, $static = false) {
 				//format the full URL
 		$url = $this->format_url($call, $otherQueries);
-		$this->log($url);
 
 		$result = $this->cache->remember($url, self::CACHE_LIFETIME_MINUTES * 60, function () use ($url, $call, $otherQueries, $static)
 		{
@@ -360,7 +359,6 @@ class riotapi {
 			 * handler and let that class deal with it.
 			 */
 			if ($this->responseCode == self::HTTP_RATE_LIMIT) {
-			    $this->log('we were rate limited...');
 				$retryAfter = (int) $this->responseHeaders['Retry-After'];
 				$this->rateLimitHandler->handleLimit($retryAfter);
 
@@ -370,7 +368,6 @@ class riotapi {
 			}
 
 			if ($this->responseCode != self::HTTP_OK) {
-                $this->log('we got an error...');
 				throw new Exception(self::$errorCodes[$this->responseCode]);
 			}
 

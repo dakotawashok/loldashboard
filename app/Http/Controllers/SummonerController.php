@@ -392,7 +392,6 @@ class SummonerController extends Controller
                         try {
                             $findParticipantIdentity = MatchParticipantIdentities::where('matchId', (string)$match_entry['gameId'])->where('accountId', $pId['player']['currentAccountId'])->firstOrFail();
                         } catch (ModelNotFoundException $pie) {
-                            $this->log($pId);
                             $newPId = new MatchParticipantIdentities;
                             $newPId->matchId = (string)$match_entry['gameId'];
                             $newPId->currentPlatformId = (isset($pId['player']['currentPlatformId']) ? $pId['player']['currentPlatformId'] : '');
@@ -417,6 +416,7 @@ class SummonerController extends Controller
                 // make the teams
                 forEach($apiMatch['teams'] as $team) {
                     $newTeam = new MatchTeam;
+                    $this->log($team);
                     $newTeam->matchId = (string)$match_entry['gameId'];
                     $newTeam->firstDragon = (isset($team['firstDragon']) ? $team['firstDragon'] : '');
                     $newTeam->bans = json_encode($team['bans']);
