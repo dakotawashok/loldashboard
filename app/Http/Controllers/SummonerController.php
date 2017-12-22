@@ -419,8 +419,8 @@ class SummonerController extends Controller
                     $this->log($team);
                     $newTeam->matchId = (string)$match_entry['gameId'];
                     $newTeam->firstDragon = (isset($team['firstDragon']) ? $team['firstDragon'] : '');
-                    $newTeam->bans = json_encode($team['bans']);
-                    $newTeam->win = $team['win'];
+                    $newTeam->bans = (isset($team['bans']) ? json_encode($team['bans']) : '');
+                    $newTeam->win = (isset($team['win']) ? $team['win'] : '');
                     $newTeam->firstRiftHerald = (isset($team['firstRiftHerald']) ? $team['firstRiftHerald'] : '');
                     $newTeam->firstBaron = (isset($team['firstBaron']) ? $team['firstBaron'] : '');
                     $newTeam->baronKills = (isset($team['baronKills']) ? $team['baronKills'] : '');
