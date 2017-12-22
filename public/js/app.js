@@ -6607,18 +6607,16 @@ module.exports = defaults;
 
     methods: {
         staticItem: function staticItem(id) {
-            var return_item = {};
-            _.forEach(__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.items.data, function (item, item_index) {
-                if (item_index == id) {
-                    return_item = item;
+            for (var item in __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.items.data) {
+                if (item == id) {
+                    return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.items.data[item];
                 }
-            });
-            return return_item;
+            }
         },
 
         staticChampion: function staticChampion(id) {
             for (var champion in __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.champions) {
-                if (__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.champions[champion].key == id) {
+                if (parseInt(__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.champions[champion].key) == id) {
                     return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.champions[champion];
                 }
             }
@@ -6626,7 +6624,7 @@ module.exports = defaults;
 
         staticSpell: function staticSpell(id) {
             for (var spell in __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.spells) {
-                if (__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.spells[spell].key == id) {
+                if (parseInt(__WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.spells[spell].key) == id) {
                     return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo.spells[spell];
                 }
             }
@@ -31735,6 +31733,20 @@ var moment = __webpack_require__(0);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -31782,28 +31794,14 @@ var moment = __webpack_require__(0);
 
                 return minutes + 'm ' + seconds + 's';
             }
-        },
-
-        summoner_spells: function summoner_spells() {
-            var spell_array = [];
-            var spell1 = this.setSpellData(this.summoner_participant_data.spell1Id);
-            var spell2 = this.setSpellData(this.summoner_participant_data.spell2Id);
-            if (this.summoner_participant_data.spell1Id != undefined && this.summoner_participant_data.spell1Id != '') {
-                spell_array.push('http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/spell/' + spell1.id + '.png');
-            }
-            if (this.summoner_participant_data.spell2Id != undefined && this.summoner_participant_data.spell2Id != '') {
-                spell_array.push('http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/spell/' + spell2.id + '.png');
-            }
-            if (this.stats.item6 != undefined && this.stats.item6 != '') {
-                spell_array.push('http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/item/' + this.stats.item6 + '.png');
-            }
-            return spell_array;
         }
     },
     methods: {
         calculateStats: function calculateStats() {
             var _this = this;
 
+            this.blue_team_participants = [];
+            this.red_team_participants = [];
             this.red_team = this.match.matchTeams[1];
             this.blue_team = this.match.matchTeams[0];
 
@@ -31815,6 +31813,12 @@ var moment = __webpack_require__(0);
                 }
             });
         },
+        findParticipantKDA: function findParticipantKDA(participant) {
+            var kills = participant.stats.kills;
+            var deaths = participant.stats.deaths;
+            var assists = participant.stats.assists;
+            return kills + ' / ' + deaths + ' / ' + assists;
+        },
         getChampionImageUrl: function getChampionImageUrl(id) {
             var tempChamp = this.staticChampion(id);
             if (tempChamp != undefined && tempChamp.id != undefined) {
@@ -31825,13 +31829,13 @@ var moment = __webpack_require__(0);
         getSpellImageUrl: function getSpellImageUrl(id) {
             var tempSpell = this.staticSpell(id);
             if (tempSpell != undefined && tempSpell.id != undefined) {
-                'http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/spell/' + tempSpell.id + '.png';
+                return 'http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/spell/' + tempSpell.id + '.png';
             }
         },
         getItemImageUrl: function getItemImageUrl(id) {
             var tempItem = this.staticItem(id);
-            if (tempItem != undefined && tempItem.id != undefined) {
-                'http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/spell/' + tempItem.id + '.png';
+            if (tempItem != undefined && tempItem.image != undefined) {
+                return 'http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/item/' + tempItem.image.full;
             }
         }
     },
@@ -45845,7 +45849,7 @@ exports = module.exports = __webpack_require__(4)(undefined);
 
 
 // module
-exports.push([module.i, "\n.header[data-v-6c1b3c47] {\n    text-align: center;\n}\nh4[data-v-6c1b3c47] {\n    margin-top: 5px!important;\n}\n#red-team-container[data-v-6c1b3c47] {\n    background-color: rgb(255, 230, 231);\n    background-color: rgb(237, 232, 255);\n}\n.blue-team-header[data-v-6c1b3c47], .red-team-header[data-v-6c1b3c47] {\n    text-align: center;\n}\n.blue-team-header > *[data-v-6c1b3c47], .red-team-header > *[data-v-6c1b3c47] {\n    margin: 0px!important\n}\n.stats-container > .column[data-v-6c1b3c47] {\n    padding: 5px 10px!important;\n    font-size: 10px;\n}\n.stats-container > * > span > i[data-v-6c1b3c47] {\n    display: inline;\n}\n", ""]);
+exports.push([module.i, "\n.header[data-v-6c1b3c47] {\n    text-align: center;\n}\nh4[data-v-6c1b3c47] {\n    margin-top: 5px!important;\n    margin-bottom: 5px!important;\n}\n.stats-container > .column[data-v-6c1b3c47] {\n    padding: 5px 10px!important;\n    font-size: 10px;\n}\n.stats-container > * > span > i[data-v-6c1b3c47] {\n    display: inline;\n}\n.participant-summonerimage[data-v-6c1b3c47] {\n    width: 66px!important;\n    margin: 0px!important;\n}\n.participant-underimage[data-v-6c1b3c47] {\n    width: 22px!important;\n    margin: 0px!important;\n    float: left;\n}\n.summoner-info[data-v-6c1b3c47] {\n    font-size: 10px!important;\n    display: block!important;\n}\n.summoner-data > .segment[data-v-6c1b3c47], #team-stats > .segment[data-v-6c1b3c47], .blue-team-header[data-v-6c1b3c47], .red-team-header[data-v-6c1b3c47] {\n    width: 50%!important;\n}\n", ""]);
 
 // exports
 
@@ -67913,28 +67917,32 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_c('div', {
       staticClass: "ui eight wide column"
     }, [_c('img', {
-      staticClass: "ui middle aligned spaced rounded tiny image",
+      staticClass: "ui tiny image participant-summonerimage",
       attrs: {
         "src": _vm.getChampionImageUrl(_vm.blue_team_participants[i - 1].championId)
       }
     }), _vm._v(" "), _c('img', {
-      staticClass: "ui middle aligned spaced rounded tiny image",
+      staticClass: "ui tiny image participant-underimage",
       attrs: {
-        "src": _vm.getSpellImageUrl(_vm.blue_team_participants[i - 1].championId)
+        "src": _vm.getSpellImageUrl(_vm.blue_team_participants[i - 1].spell1Id)
       }
     }), _vm._v(" "), _c('img', {
-      staticClass: "ui middle aligned spaced rounded tiny image",
+      staticClass: "ui tiny image participant-underimage",
       attrs: {
-        "src": _vm.getSpellImageUrl(_vm.blue_team_participants[i - 1].championId)
+        "src": _vm.getSpellImageUrl(_vm.blue_team_participants[i - 1].spell2Id)
       }
     }), _vm._v(" "), _c('img', {
-      staticClass: "ui middle aligned spaced rounded tiny image",
+      staticClass: "ui tiny image participant-underimage",
       attrs: {
-        "src": _vm.getItemImageUrl(_vm.blue_team_participants[i - 1].championId)
+        "src": _vm.getItemImageUrl(_vm.blue_team_participants[i - 1].stats.item6)
       }
     })]), _vm._v(" "), _c('div', {
       staticClass: "ui eight wide column"
-    })])]), _vm._v(" "), _c('div', {
+    }, [_c('span', {
+      staticClass: "summoner-info"
+    }, [_vm._v(_vm._s(_vm.blue_team_participants[i - 1].participantIdentity.summonerName))]), _vm._v(" "), _c('span', {
+      staticClass: "summoner-info"
+    }, [_vm._v(_vm._s(_vm.findParticipantKDA(_vm.blue_team_participants[i - 1])))])])])]), _vm._v(" "), _c('div', {
       staticClass: "column"
     }), _vm._v(" "), _c('div', {
       staticClass: "column"
@@ -67943,15 +67951,40 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     })])]), _vm._v(" "), _c('div', {
       staticClass: "ui segment right-summoner"
     }, [_c('div', {
-      staticClass: "ui five column grid"
+      staticClass: "ui four column grid"
     }, [_c('div', {
       staticClass: "column picture-column"
+    }, [_c('div', {
+      staticClass: "ui grid"
+    }, [_c('div', {
+      staticClass: "ui eight wide column"
     }, [_c('img', {
-      staticClass: "ui middle aligned spaced rounded tiny image",
+      staticClass: "ui tiny image participant-summonerimage",
       attrs: {
         "src": _vm.getChampionImageUrl(_vm.red_team_participants[i - 1].championId)
       }
+    }), _vm._v(" "), _c('img', {
+      staticClass: "ui tiny image participant-underimage",
+      attrs: {
+        "src": _vm.getSpellImageUrl(_vm.red_team_participants[i - 1].spell1Id)
+      }
+    }), _vm._v(" "), _c('img', {
+      staticClass: "ui tiny image participant-underimage",
+      attrs: {
+        "src": _vm.getSpellImageUrl(_vm.red_team_participants[i - 1].spell2Id)
+      }
+    }), _vm._v(" "), _c('img', {
+      staticClass: "ui tiny image participant-underimage",
+      attrs: {
+        "src": _vm.getItemImageUrl(_vm.red_team_participants[i - 1].stats.item6)
+      }
     })]), _vm._v(" "), _c('div', {
+      staticClass: "ui eight wide column"
+    }, [_c('span', {
+      staticClass: "summoner-info"
+    }, [_vm._v(_vm._s(_vm.red_team_participants[i - 1].participantIdentity.summonerName))]), _vm._v(" "), _c('span', {
+      staticClass: "summoner-info"
+    }, [_vm._v(_vm._s(_vm.findParticipantKDA(_vm.red_team_participants[i - 1])))])])])]), _vm._v(" "), _c('div', {
       staticClass: "column"
     }), _vm._v(" "), _c('div', {
       staticClass: "column"

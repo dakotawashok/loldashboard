@@ -81,12 +81,15 @@
                                 <div class="column picture-column">
                                     <div class="ui grid">
                                         <div class="ui eight wide column">
-                                            <img class="ui middle aligned spaced rounded tiny image" :src="getChampionImageUrl(blue_team_participants[i-1].championId)">
-                                            <img class="ui middle aligned spaced rounded tiny image" :src="getSpellImageUrl(blue_team_participants[i-1].championId)">
-                                            <img class="ui middle aligned spaced rounded tiny image" :src="getSpellImageUrl(blue_team_participants[i-1].championId)">
-                                            <img class="ui middle aligned spaced rounded tiny image" :src="getItemImageUrl(blue_team_participants[i-1].championId)">
+                                            <img class="ui tiny image participant-summonerimage" :src="getChampionImageUrl(blue_team_participants[i-1].championId)">
+                                            <img class="ui tiny image participant-underimage" :src="getSpellImageUrl(blue_team_participants[i-1].spell1Id)">
+                                            <img class="ui tiny image participant-underimage" :src="getSpellImageUrl(blue_team_participants[i-1].spell2Id)">
+                                            <img class="ui tiny image participant-underimage" :src="getItemImageUrl(blue_team_participants[i-1].stats.item6)">
                                         </div>
-                                        <div class="ui eight wide column"></div>
+                                        <div class="ui eight wide column">
+                                            <span class="summoner-info">{{blue_team_participants[i-1].participantIdentity.summonerName}}</span>
+                                            <span class="summoner-info">{{findParticipantKDA(blue_team_participants[i-1])}}</span>
+                                        </div>
                                     </div>
                                 </div>
                                 <div class="column"></div>
@@ -95,9 +98,20 @@
                             </div>
                         </div>
                         <div class="ui segment right-summoner">
-                            <div class="ui five column grid">
+                            <div class="ui four column grid">
                                 <div class="column picture-column">
-                                    <img class="ui middle aligned spaced rounded tiny image" :src="getChampionImageUrl(red_team_participants[i-1].championId)">
+                                    <div class="ui grid">
+                                        <div class="ui eight wide column">
+                                            <img class="ui tiny image participant-summonerimage" :src="getChampionImageUrl(red_team_participants[i-1].championId)">
+                                            <img class="ui tiny image participant-underimage" :src="getSpellImageUrl(red_team_participants[i-1].spell1Id)">
+                                            <img class="ui tiny image participant-underimage" :src="getSpellImageUrl(red_team_participants[i-1].spell2Id)">
+                                            <img class="ui tiny image participant-underimage" :src="getItemImageUrl(red_team_participants[i-1].stats.item6)">
+                                        </div>
+                                        <div class="ui eight wide column">
+                                            <span class="summoner-info">{{red_team_participants[i-1].participantIdentity.summonerName}}</span>
+                                            <span class="summoner-info">{{findParticipantKDA(red_team_participants[i-1])}}</span>
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="column"></div>
                                 <div class="column"></div>
@@ -172,25 +186,11 @@
                     return minutes + 'm ' + seconds + 's';
                 }
             },
-
-            summoner_spells : function() {
-                var spell_array = [];
-                var spell1 = this.setSpellData(this.summoner_participant_data.spell1Id);
-                var spell2 = this.setSpellData(this.summoner_participant_data.spell2Id);
-                if (this.summoner_participant_data.spell1Id != undefined && this.summoner_participant_data.spell1Id != '') {
-                    spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+spell1.id+'.png');
-                }
-                if (this.summoner_participant_data.spell2Id != undefined && this.summoner_participant_data.spell2Id != '') {
-                    spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+spell2.id+'.png');
-                }
-                if (this.stats.item6 != undefined && this.stats.item6 != '') {
-                    spell_array.push('http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/item/'+this.stats.item6 +'.png');
-                }
-                return spell_array;
-            },
         },
         methods : {
             calculateStats() {
+                this.blue_team_participants = [];
+                this.red_team_participants = [];
                 this.red_team = this.match.matchTeams[1];
                 this.blue_team = this.match.matchTeams[0];
 
@@ -201,6 +201,13 @@
                         this.red_team_participants.push(participant);
                     }
                 });
+            },
+
+            findParticipantKDA(participant) {
+                var kills = participant.stats.kills;
+                var deaths = participant.stats.deaths;
+                var assists = participant.stats.assists;
+                return kills + ' / ' + deaths + ' / ' + assists;
             },
 
             getChampionImageUrl(id) {
@@ -214,14 +221,14 @@
             getSpellImageUrl(id) {
                 var tempSpell = this.staticSpell(id);
                 if (tempSpell != undefined && tempSpell.id != undefined) {
-                    'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+tempSpell.id+'.png'
+                    return 'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+tempSpell.id+'.png'
                 }
             },
 
             getItemImageUrl(id) {
                 var tempItem = this.staticItem(id);
-                if (tempItem != undefined && tempItem.id != undefined) {
-                    'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/spell/'+tempItem.id+'.png'
+                if (tempItem != undefined && tempItem.image != undefined) {
+                    return 'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/item/'+tempItem.image.full
                 }
             },
         },
@@ -239,23 +246,32 @@
     }
     h4 {
         margin-top: 5px!important;
+        margin-bottom: 5px!important;
     }
 
-    #red-team-container {
-        background-color: rgb(255, 230, 231);
-        background-color: rgb(237, 232, 255);
-    }
-    .blue-team-header, .red-team-header {
-        text-align: center;
-    }
-    .blue-team-header > *, .red-team-header > * {
-        margin: 0px!important
-    }
     .stats-container > .column {
         padding: 5px 10px!important;
         font-size: 10px;
     }
     .stats-container > * > span > i {
         display: inline;
+    }
+
+    .participant-summonerimage {
+        width: 66px!important;
+        margin: 0px!important;
+    }
+
+    .participant-underimage {
+        width: 22px!important;
+        margin: 0px!important;
+        float: left;
+    }
+    .summoner-info {
+        font-size: 10px!important;
+        display: block!important;
+    }
+    .summoner-data > .segment, #team-stats > .segment, .blue-team-header, .red-team-header {
+        width: 50%!important;
     }
 </style>

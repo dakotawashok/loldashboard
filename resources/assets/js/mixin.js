@@ -13,18 +13,16 @@ export default {
 
     methods: {
         staticItem : function(id) {
-            var return_item = {};
-            _.forEach(store.state.staticInfo.items.data, (item, item_index) => {
-                if (item_index == id) {
-                    return_item = item;
+            for (var item in store.state.staticInfo.items.data) {
+                if (item == id) {
+                    return store.state.staticInfo.items.data[item];
                 }
-            });
-            return return_item;
+            }
         },
 
         staticChampion : function(id) {
             for (var champion in store.state.staticInfo.champions) {
-                if (store.state.staticInfo.champions[champion].key == id) {
+                if (parseInt(store.state.staticInfo.champions[champion].key) == id) {
                     return store.state.staticInfo.champions[champion];
                 }
             }
@@ -32,7 +30,7 @@ export default {
 
         staticSpell : function(id) {
             for (var spell in store.state.staticInfo.spells) {
-                if (store.state.staticInfo.spells[spell].key == id) {
+                if (parseInt(store.state.staticInfo.spells[spell].key) == id) {
                     return store.state.staticInfo.spells[spell];
                 }
             }
