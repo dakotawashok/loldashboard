@@ -90,6 +90,9 @@ export default {
                     this.assignRankedData(summonerNumber);
 
                     store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : false});
+                }).catch((resp) => {
+                    store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : false});
+                    this.$notify.error('Summoner not found');
                 });
             } else {
                 store.commit('assignSummonerLoading', {'summonerNumber' : 2, 'loading' : true});
@@ -116,7 +119,10 @@ export default {
                     this.assignRankedData(summonerNumber);
 
                     store.commit('assignSummonerLoading', {'summonerNumber' : 2, 'loading' : false});
-                })
+                }).catch((resp) => {
+                    store.commit('assignSummonerLoading', {'summonerNumber' : 2, 'loading' : false});
+                    this.$notify.error('Summoner not found');
+                });
             }
         },
 

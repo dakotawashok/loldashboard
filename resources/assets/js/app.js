@@ -30,10 +30,12 @@ Vue.component('championstatsview', require('./components/ChampionStatsView.vue')
 //Vue.component('rankedmatchlistgraph', require('./components/RankedMatchListGraph.vue'));
 
 var VueResource = require('vue-resource');
-Vue.use(VueResource);
 
 import VueCharts from 'vue-chartjs';
+import VueNotify from './vue-notify'
 
+Vue.use(VueResource);
+Vue.use(VueNotify);
 
 var store = require('./store.js');
 
