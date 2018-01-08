@@ -423,6 +423,7 @@ class SummonerController extends Controller
                     $newTeam->win = (isset($team['win']) ? $team['win'] : '');
                     $newTeam->firstRiftHerald = (isset($team['firstRiftHerald']) ? $team['firstRiftHerald'] : '');
                     $newTeam->firstBaron = (isset($team['firstBaron']) ? $team['firstBaron'] : '');
+                    $newTeam->firstInhibitor = (isset($team['firstInhibitor']) ? $team['firstInhibitor'] : '');
                     $newTeam->baronKills = (isset($team['baronKills']) ? $team['baronKills'] : '');
                     $newTeam->riftHeraldKills = (isset($team['riftHeraldKills']) ? $team['riftHeraldKills'] : '');
                     $newTeam->firstBlood = $team['firstBlood'];
