@@ -32009,6 +32009,18 @@ var moment = __webpack_require__(0);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -32025,8 +32037,6 @@ var moment = __webpack_require__(0);
             onHidden: function onHidden() {}
         });
 
-        this.calculateStats();
-
         // initialize the tabs for the modal
         $('.menu .item').tab();
     },
@@ -32035,13 +32045,155 @@ var moment = __webpack_require__(0);
     data: function data() {
         return {
             red_team: {
-                win: false
+                win: false,
+                total_data: {
+                    assists: 0,
+                    damageDealtToObjectives: 0,
+                    damageDealtToTurrets: 0,
+                    damageSelfMitigated: 0,
+                    deaths: 0,
+                    goldEarned: 0,
+                    goldSpent: 0,
+                    inhibitorKills: 0,
+                    kills: 0,
+                    largestCriticalStrike: 0,
+                    largetsKillingSpree: 0,
+                    largestMultiKill: 0,
+                    longestTimeSpentLiving: 0,
+                    magicDamageDealt: 0,
+                    magicDamageDealtToChampions: 0,
+                    magicalDamageTaken: 0,
+                    neutralMinionsKilled: 0,
+                    neutralMinionsKilledEnemyJungle: 0,
+                    neutralMinionsKilledTeamJungle: 0,
+                    pentaKills: 0,
+                    physicalDamageDealt: 0,
+                    physicalDamageDealtToChampions: 0,
+                    physicalDamageTaken: 0,
+                    quadraKills: 0,
+                    sightWardsBoughtInGame: 0,
+                    timeCCingOthers: 0,
+                    totalDamageDealt: 0,
+                    totalDamageDealtToChampions: 0,
+                    totalDamageTaken: 0,
+                    totalHeal: 0,
+                    totalMinionsKilled: 0,
+                    totalPlayerScore: 0,
+                    totalScoreRank: 0,
+                    totalTimeCrowdControlDealt: 0,
+                    totalUnitsHealed: 0,
+                    tripleKills: 0,
+                    trueDamageDealt: 0,
+                    trueDamageDealtToChampions: 0,
+                    trueDamageTaken: 0,
+                    turretKills: 0,
+                    unrealKills: 0,
+                    visionScore: 0,
+                    visionWardsBoughtInGame: 0,
+                    wardsKilled: 0,
+                    wardsPlaced: 0
+                }
             },
             blue_team: {
-                win: false
+                win: false,
+                total_data: {
+                    assists: 0,
+                    damageDealtToObjectives: 0,
+                    damageDealtToTurrets: 0,
+                    damageSelfMitigated: 0,
+                    deaths: 0,
+                    goldEarned: 0,
+                    goldSpent: 0,
+                    inhibitorKills: 0,
+                    kills: 0,
+                    largestCriticalStrike: 0,
+                    largetsKillingSpree: 0,
+                    largestMultiKill: 0,
+                    longestTimeSpentLiving: 0,
+                    magicDamageDealt: 0,
+                    magicDamageDealtToChampions: 0,
+                    magicalDamageTaken: 0,
+                    neutralMinionsKilled: 0,
+                    neutralMinionsKilledEnemyJungle: 0,
+                    neutralMinionsKilledTeamJungle: 0,
+                    pentaKills: 0,
+                    physicalDamageDealt: 0,
+                    physicalDamageDealtToChampions: 0,
+                    physicalDamageTaken: 0,
+                    quadraKills: 0,
+                    sightWardsBoughtInGame: 0,
+                    timeCCingOthers: 0,
+                    totalDamageDealt: 0,
+                    totalDamageDealtToChampions: 0,
+                    totalDamageTaken: 0,
+                    totalHeal: 0,
+                    totalMinionsKilled: 0,
+                    totalPlayerScore: 0,
+                    totalScoreRank: 0,
+                    totalTimeCrowdControlDealt: 0,
+                    totalUnitsHealed: 0,
+                    tripleKills: 0,
+                    trueDamageDealt: 0,
+                    trueDamageDealtToChampions: 0,
+                    trueDamageTaken: 0,
+                    turretKills: 0,
+                    unrealKills: 0,
+                    visionScore: 0,
+                    visionWardsBoughtInGame: 0,
+                    wardsKilled: 0,
+                    wardsPlaced: 0
+                }
             },
             blue_team_participants: [],
-            red_team_participants: []
+            red_team_participants: [],
+
+            total_data: {
+                assists: 0,
+                damageDealtToObjectives: 0,
+                damageDealtToTurrets: 0,
+                damageSelfMitigated: 0,
+                deaths: 0,
+                goldEarned: 0,
+                goldSpent: 0,
+                inhibitorKills: 0,
+                kills: 0,
+                largestCriticalStrike: 0,
+                largetsKillingSpree: 0,
+                largestMultiKill: 0,
+                longestTimeSpentLiving: 0,
+                magicDamageDealt: 0,
+                magicDamageDealtToChampions: 0,
+                magicalDamageTaken: 0,
+                neutralMinionsKilled: 0,
+                neutralMinionsKilledEnemyJungle: 0,
+                neutralMinionsKilledTeamJungle: 0,
+                pentaKills: 0,
+                physicalDamageDealt: 0,
+                physicalDamageDealtToChampions: 0,
+                physicalDamageTaken: 0,
+                quadraKills: 0,
+                sightWardsBoughtInGame: 0,
+                timeCCingOthers: 0,
+                totalDamageDealt: 0,
+                totalDamageDealtToChampions: 0,
+                totalDamageTaken: 0,
+                totalHeal: 0,
+                totalMinionsKilled: 0,
+                totalPlayerScore: 0,
+                totalScoreRank: 0,
+                totalTimeCrowdControlDealt: 0,
+                totalUnitsHealed: 0,
+                tripleKills: 0,
+                trueDamageDealt: 0,
+                trueDamageDealtToChampions: 0,
+                trueDamageTaken: 0,
+                turretKills: 0,
+                unrealKills: 0,
+                visionScore: 0,
+                visionWardsBoughtInGame: 0,
+                wardsKilled: 0,
+                wardsPlaced: 0
+            }
         };
     },
     computed: {
@@ -32059,13 +32211,66 @@ var moment = __webpack_require__(0);
         }
     },
     methods: {
-        calculateStats: function calculateStats() {
-            var _this = this;
-
+        resetData: function resetData() {
+            this.total_data = {
+                assists: 0,
+                damageDealtToObjectives: 0,
+                damageDealtToTurrets: 0,
+                damageSelfMitigated: 0,
+                deaths: 0,
+                goldEarned: 0,
+                goldSpent: 0,
+                inhibitorKills: 0,
+                kills: 0,
+                largestCriticalStrike: 0,
+                largestMultiKill: 0,
+                longestTimeSpentLiving: 0,
+                magicDamageDealt: 0,
+                magicDamageDealtToChampions: 0,
+                magicalDamageTaken: 0,
+                neutralMinionsKilled: 0,
+                neutralMinionsKilledEnemyJungle: 0,
+                neutralMinionsKilledTeamJungle: 0,
+                pentaKills: 0,
+                physicalDamageDealt: 0,
+                physicalDamageDealtToChampions: 0,
+                physicalDamageTaken: 0,
+                quadraKills: 0,
+                sightWardsBoughtInGame: 0,
+                timeCCingOthers: 0,
+                totalDamageDealt: 0,
+                totalDamageDealtToChampions: 0,
+                totalDamageTaken: 0,
+                totalHeal: 0,
+                totalMinionsKilled: 0,
+                totalPlayerScore: 0,
+                totalScoreRank: 0,
+                totalTimeCrowdControlDealt: 0,
+                totalUnitsHealed: 0,
+                tripleKills: 0,
+                trueDamageDealt: 0,
+                trueDamageDealtToChampions: 0,
+                trueDamageTaken: 0,
+                turretKills: 0,
+                unrealKills: 0,
+                visionScore: 0,
+                visionWardsBoughtInGame: 0,
+                wardsKilled: 0,
+                wardsPlaced: 0
+            };
             this.blue_team_participants = [];
             this.red_team_participants = [];
-            this.red_team = this.match.matchTeams[1];
-            this.blue_team = this.match.matchTeams[0];
+            this.red_team = {};
+            this.blue_team = {};
+        },
+        assignData: function assignData() {
+            this.red_team = _.cloneDeep(this.match.matchTeams[1]);
+            this.blue_team = _.cloneDeep(this.match.matchTeams[0]);
+            this.red_team.total_data = _.cloneDeep(this.total_data);
+            this.blue_team.total_data = _.cloneDeep(this.total_data);
+        },
+        calculateStats: function calculateStats() {
+            var _this = this;
 
             _.forEach(this.match.matchParticipants, function (participant, participant_index) {
                 if (participant.teamId == "100") {
@@ -32074,12 +32279,24 @@ var moment = __webpack_require__(0);
                     _this.red_team_participants.push(participant);
                 }
             });
+
+            this.calculateTotals();
         },
         findParticipantKDA: function findParticipantKDA(participant) {
             var kills = participant.stats.kills;
             var deaths = participant.stats.deaths;
             var assists = participant.stats.assists;
-            return kills + ' / ' + deaths + ' / ' + assists;
+            return kills + ' / ' + deaths + ' / ' + assists + "<div class='detail' style='margin-right: 5px;'>" + ((kills + assists) / deaths).toFixed(2) + ":1</div>";
+        },
+        findParticipantCS: function findParticipantCS(participant) {
+            var cs = participant.stats.neutralMinionsKilled + participant.stats.totalMinionsKilled;
+            var csPM = (cs / (parseInt(this.match.gameDuration) / 60)).toFixed(2);
+            return "CS <div class='detail' style='margin-right: 5px;'>" + cs + "</div>" + csPM;
+        },
+        findParticipantGold: function findParticipantGold(participant) {
+            var gold = participant.stats.goldEarned;
+            var goldPM = (gold / (parseInt(this.match.gameDuration) / 60)).toFixed(2);
+            return "Gold <div class='detail' style='margin-right: 5px;'>" + gold + "</div>" + goldPM;
         },
         getChampionImageUrl: function getChampionImageUrl(id) {
             var tempChamp = this.staticChampion(id);
@@ -32099,10 +32316,35 @@ var moment = __webpack_require__(0);
             if (tempItem != undefined && tempItem.image != undefined) {
                 return 'http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/item/' + tempItem.image.full;
             }
+        },
+
+
+        // go through every participant in blue_team_participants and red_team_participants
+        //  and calculate an aggregate of every stat
+        calculateTotals: function calculateTotals() {
+            var _this2 = this;
+
+            _.forEach(this.blue_team_participants, function (participant, participant_index) {
+                _.forEach(_this2.blue_team.total_data, function (variable_name, variable_index) {
+                    _this2.blue_team.total_data[variable_index] += participant.stats[variable_index];
+                });
+            });
+
+            _.forEach(this.red_team_participants, function (participant, participant_index) {
+                _.forEach(_this2.red_team.total_data, function (variable_name, variable_index) {
+                    _this2.red_team.total_data[variable_index] += participant.stats[variable_index];
+                });
+            });
+
+            _.forEach(this.total_data, function (variable_name, variable_index) {
+                _this2.total_data[variable_index] = _this2.red_team.total_data[variable_index] + _this2.blue_team.total_data[variable_index];
+            });
         }
     },
     watch: {
         match: function match(val) {
+            this.resetData();
+            this.assignData();
             this.calculateStats();
         }
     }
@@ -46190,7 +46432,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n.header[data-v-6c1b3c47] {\n    text-align: center;\n}\nh4[data-v-6c1b3c47] {\n    margin-top: 5px!important;\n    margin-bottom: 5px!important;\n}\n.stats-container > .column[data-v-6c1b3c47] {\n    padding: 5px 10px!important;\n    font-size: 10px;\n}\n.stats-container > * > span > i[data-v-6c1b3c47] {\n    display: inline;\n}\n.participant-summonerimage[data-v-6c1b3c47] {\n    width: 66px!important;\n    margin: 0px!important;\n}\n.participant-underimage[data-v-6c1b3c47] {\n    width: 22px!important;\n    margin: 0px!important;\n    float: left;\n}\n.summoner-info[data-v-6c1b3c47] {\n    font-size: 10px!important;\n    display: block!important;\n}\n.summoner-data > .segment[data-v-6c1b3c47], #team-stats > .segment[data-v-6c1b3c47], .blue-team-header[data-v-6c1b3c47], .red-team-header[data-v-6c1b3c47] {\n    width: 50%!important;\n}\n", ""]);
+exports.push([module.i, "\n.header[data-v-6c1b3c47] {\n    text-align: center;\n}\nh4[data-v-6c1b3c47] {\n    margin-top: 5px!important;\n    margin-bottom: 5px!important;\n}\n.stats-container > .column[data-v-6c1b3c47] {\n    padding: 5px 10px!important;\n    font-size: 10px;\n}\n.stats-container > * > span > i[data-v-6c1b3c47] {\n    display: inline;\n}\n.picture-column > .ui.grid > .column[data-v-6c1b3c47] {\n    padding: 9px!important;\n}\n.participant-summonerimage[data-v-6c1b3c47] {\n    width: 66px!important;\n    margin: 0px!important;\n}\n.participant-underimage[data-v-6c1b3c47] {\n    width: 22px!important;\n    margin: 0px!important;\n    float: left;\n}\n.summoner-level-label > .label[data-v-6c1b3c47] {\n    position: absolute;\n    z-index: 100;\n    bottom: 24px;\n    right: 21px;\n}\n.summoner-info[data-v-6c1b3c47] {\n    font-size: 10px!important;\n    text-align: center;\n    display: block!important;\n}\n.summoner-info.summoner-name[data-v-6c1b3c47] {\n    font-size: 12px!important;\n}\n.summoner-data > .segment[data-v-6c1b3c47], #team-stats > .segment[data-v-6c1b3c47], .blue-team-header[data-v-6c1b3c47], .red-team-header[data-v-6c1b3c47] {\n    width: 50%!important;\n}\n", ""]);
 
 // exports
 
@@ -68035,12 +68277,16 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     }, [_c('div', {
       staticClass: "ui four column grid"
     }, [_c('div', {
-      staticClass: "column picture-column"
+      staticClass: "five wide column picture-column"
     }, [_c('div', {
       staticClass: "ui grid"
     }, [_c('div', {
-      staticClass: "ui eight wide column"
-    }, [_c('img', {
+      staticClass: "ui seven wide column"
+    }, [_c('div', {
+      staticClass: "summoner-level-label"
+    }, [_c('a', {
+      staticClass: "ui mini red circular label"
+    }, [_vm._v(_vm._s(_vm.blue_team_participants[i - 1].stats.champLevel))])]), _vm._v(" "), _c('img', {
       staticClass: "ui tiny image participant-summonerimage",
       attrs: {
         "src": _vm.getChampionImageUrl(_vm.blue_team_participants[i - 1].championId)
@@ -68061,28 +68307,45 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "src": _vm.getItemImageUrl(_vm.blue_team_participants[i - 1].stats.item6)
       }
     })]), _vm._v(" "), _c('div', {
-      staticClass: "ui eight wide column"
+      staticClass: "ui nine wide column"
     }, [_c('span', {
-      staticClass: "summoner-info"
-    }, [_vm._v(_vm._s(_vm.blue_team_participants[i - 1].participantIdentity.summonerName))]), _vm._v(" "), _c('span', {
-      staticClass: "summoner-info"
-    }, [_vm._v(_vm._s(_vm.findParticipantKDA(_vm.blue_team_participants[i - 1])))])])])]), _vm._v(" "), _c('div', {
-      staticClass: "column"
+      staticClass: "summoner-info summoner-name"
+    }, [_vm._v(_vm._s(_vm.blue_team_participants[i - 1].participantIdentity.summonerName))]), _vm._v(" "), _c('a', {
+      staticClass: "ui yellow label summoner-info",
+      domProps: {
+        "innerHTML": _vm._s(_vm.findParticipantKDA(_vm.blue_team_participants[i - 1]))
+      }
+    }), _vm._v(" "), _c('a', {
+      staticClass: "ui olive label summoner-info",
+      domProps: {
+        "innerHTML": _vm._s(_vm.findParticipantCS(_vm.blue_team_participants[i - 1]))
+      }
+    }), _vm._v(" "), _c('a', {
+      staticClass: "ui blue label summoner-info",
+      domProps: {
+        "innerHTML": _vm._s(_vm.findParticipantGold(_vm.blue_team_participants[i - 1]))
+      }
+    })])])]), _vm._v(" "), _c('div', {
+      staticClass: "two wide column item-column"
     }), _vm._v(" "), _c('div', {
-      staticClass: "column"
+      staticClass: "six wide column"
     }), _vm._v(" "), _c('div', {
-      staticClass: "column"
+      staticClass: "three wide column"
     })])]), _vm._v(" "), _c('div', {
       staticClass: "ui segment right-summoner"
     }, [_c('div', {
       staticClass: "ui four column grid"
     }, [_c('div', {
-      staticClass: "column picture-column"
+      staticClass: "five wide column picture-column"
     }, [_c('div', {
       staticClass: "ui grid"
     }, [_c('div', {
-      staticClass: "ui eight wide column"
-    }, [_c('img', {
+      staticClass: "ui seven wide column"
+    }, [_c('div', {
+      staticClass: "summoner-level-label"
+    }, [_c('a', {
+      staticClass: "ui mini red circular label"
+    }, [_vm._v(_vm._s(_vm.blue_team_participants[i - 1].stats.champLevel))])]), _vm._v(" "), _c('img', {
       staticClass: "ui tiny image participant-summonerimage",
       attrs: {
         "src": _vm.getChampionImageUrl(_vm.red_team_participants[i - 1].championId)
@@ -68103,17 +68366,33 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "src": _vm.getItemImageUrl(_vm.red_team_participants[i - 1].stats.item6)
       }
     })]), _vm._v(" "), _c('div', {
-      staticClass: "ui eight wide column"
+      staticClass: "ui nine wide column"
     }, [_c('span', {
-      staticClass: "summoner-info"
-    }, [_vm._v(_vm._s(_vm.red_team_participants[i - 1].participantIdentity.summonerName))]), _vm._v(" "), _c('span', {
-      staticClass: "summoner-info"
-    }, [_vm._v(_vm._s(_vm.findParticipantKDA(_vm.red_team_participants[i - 1])))])])])]), _vm._v(" "), _c('div', {
-      staticClass: "column"
+      staticClass: "summoner-info summoner-name"
+    }, [_vm._v(_vm._s(_vm.red_team_participants[i - 1].participantIdentity.summonerName))]), _vm._v(" "), _c('a', {
+      staticClass: "ui yellow label summoner-info",
+      domProps: {
+        "innerHTML": _vm._s(_vm.findParticipantKDA(_vm.red_team_participants[i - 1]))
+      }
+    }), _vm._v(" "), _c('a', {
+      staticClass: "ui olive label summoner-info",
+      domProps: {
+        "innerHTML": _vm._s(_vm.findParticipantCS(_vm.red_team_participants[i - 1]))
+      }
+    }), _vm._v(" "), _c('a', {
+      staticClass: "ui blue label summoner-info",
+      domProps: {
+        "innerHTML": _vm._s(_vm.findParticipantGold(_vm.red_team_participants[i - 1]))
+      }
+    })])])]), _vm._v(" "), _c('div', {
+      staticClass: "two wide column",
+      attrs: {
+        "item-column": ""
+      }
     }), _vm._v(" "), _c('div', {
-      staticClass: "column"
+      staticClass: "sixe wide column"
     }), _vm._v(" "), _c('div', {
-      staticClass: "column"
+      staticClass: "three wide column"
     })])])])
   })], 2) : _vm._e()]), _vm._v(" "), _vm._m(1, false, false), _vm._v(" "), _vm._m(2, false, false)])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;

@@ -78,44 +78,56 @@
                     <div class="ui horizontal segments summoner-data" v-for="i in 5">
                         <div class="ui segment left-summoner">
                             <div class="ui four column grid">
-                                <div class="column picture-column">
+                                <div class="five wide column picture-column">
                                     <div class="ui grid">
-                                        <div class="ui eight wide column">
+                                        <div class="ui seven wide column">
+                                            <div class="summoner-level-label">
+                                                <a class="ui mini red circular label">{{blue_team_participants[i-1].stats.champLevel}}</a>
+                                            </div>
                                             <img class="ui tiny image participant-summonerimage" :src="getChampionImageUrl(blue_team_participants[i-1].championId)">
                                             <img class="ui tiny image participant-underimage" :src="getSpellImageUrl(blue_team_participants[i-1].spell1Id)">
                                             <img class="ui tiny image participant-underimage" :src="getSpellImageUrl(blue_team_participants[i-1].spell2Id)">
                                             <img class="ui tiny image participant-underimage" :src="getItemImageUrl(blue_team_participants[i-1].stats.item6)">
                                         </div>
-                                        <div class="ui eight wide column">
-                                            <span class="summoner-info">{{blue_team_participants[i-1].participantIdentity.summonerName}}</span>
-                                            <span class="summoner-info">{{findParticipantKDA(blue_team_participants[i-1])}}</span>
+                                        <div class="ui nine wide column">
+                                            <span class="summoner-info summoner-name">{{blue_team_participants[i-1].participantIdentity.summonerName}}</span>
+                                            <a class="ui yellow label summoner-info" v-html="findParticipantKDA(blue_team_participants[i-1])"></a>
+                                            <a class="ui olive label summoner-info" v-html="findParticipantCS(blue_team_participants[i-1])"></a>
+                                            <a class="ui blue label summoner-info" v-html="findParticipantGold(blue_team_participants[i-1])"></a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="column"></div>
-                                <div class="column"></div>
-                                <div class="column"></div>
+                                <div class="two wide column item-column">
+
+                                </div>
+                                <div class="six wide column"></div>
+                                <div class="three wide column"></div>
                             </div>
                         </div>
                         <div class="ui segment right-summoner">
                             <div class="ui four column grid">
-                                <div class="column picture-column">
+                                <div class="five wide column picture-column">
                                     <div class="ui grid">
-                                        <div class="ui eight wide column">
+                                        <div class="ui seven wide column">
+                                            <div class="summoner-level-label">
+                                                <a class="ui mini red circular label">{{blue_team_participants[i-1].stats.champLevel}}</a>
+                                            </div>
                                             <img class="ui tiny image participant-summonerimage" :src="getChampionImageUrl(red_team_participants[i-1].championId)">
                                             <img class="ui tiny image participant-underimage" :src="getSpellImageUrl(red_team_participants[i-1].spell1Id)">
                                             <img class="ui tiny image participant-underimage" :src="getSpellImageUrl(red_team_participants[i-1].spell2Id)">
                                             <img class="ui tiny image participant-underimage" :src="getItemImageUrl(red_team_participants[i-1].stats.item6)">
                                         </div>
-                                        <div class="ui eight wide column">
-                                            <span class="summoner-info">{{red_team_participants[i-1].participantIdentity.summonerName}}</span>
-                                            <span class="summoner-info">{{findParticipantKDA(red_team_participants[i-1])}}</span>
+                                        <div class="ui nine wide column">
+                                            <span class="summoner-info summoner-name">{{red_team_participants[i-1].participantIdentity.summonerName}}</span>
+                                            <a class="ui yellow label summoner-info" v-html="findParticipantKDA(red_team_participants[i-1])"></a>
+                                            <a class="ui olive label summoner-info" v-html="findParticipantCS(red_team_participants[i-1])"></a>
+                                            <a class="ui blue label summoner-info" v-html="findParticipantGold(red_team_participants[i-1])"></a>
                                         </div>
                                     </div>
                                 </div>
-                                <div class="column"></div>
-                                <div class="column"></div>
-                                <div class="column"></div>
+                                <div class="two wide column" item-column></div>
+                                <div class="sixe wide column"></div>
+                                <div class="three wide column"></div>
                             </div>
                         </div>
                     </div>
@@ -153,8 +165,6 @@
                 }
             })
 
-            this.calculateStats();
-
             // initialize the tabs for the modal
             $('.menu .item').tab();
         },
@@ -165,12 +175,154 @@
             return {
                 red_team: {
                     win: false,
+                    total_data: {
+                        assists: 0,
+                        damageDealtToObjectives: 0,
+                        damageDealtToTurrets: 0,
+                        damageSelfMitigated: 0,
+                        deaths: 0,
+                        goldEarned: 0,
+                        goldSpent: 0,
+                        inhibitorKills: 0,
+                        kills: 0,
+                        largestCriticalStrike: 0,
+                        largetsKillingSpree: 0,
+                        largestMultiKill: 0,
+                        longestTimeSpentLiving: 0,
+                        magicDamageDealt: 0,
+                        magicDamageDealtToChampions: 0,
+                        magicalDamageTaken: 0,
+                        neutralMinionsKilled: 0,
+                        neutralMinionsKilledEnemyJungle: 0,
+                        neutralMinionsKilledTeamJungle: 0,
+                        pentaKills: 0,
+                        physicalDamageDealt: 0,
+                        physicalDamageDealtToChampions: 0,
+                        physicalDamageTaken: 0,
+                        quadraKills: 0,
+                        sightWardsBoughtInGame: 0,
+                        timeCCingOthers: 0,
+                        totalDamageDealt: 0,
+                        totalDamageDealtToChampions: 0,
+                        totalDamageTaken: 0,
+                        totalHeal: 0,
+                        totalMinionsKilled: 0,
+                        totalPlayerScore: 0,
+                        totalScoreRank: 0,
+                        totalTimeCrowdControlDealt: 0,
+                        totalUnitsHealed: 0,
+                        tripleKills: 0,
+                        trueDamageDealt: 0,
+                        trueDamageDealtToChampions: 0,
+                        trueDamageTaken: 0,
+                        turretKills: 0,
+                        unrealKills: 0,
+                        visionScore: 0,
+                        visionWardsBoughtInGame: 0,
+                        wardsKilled: 0,
+                        wardsPlaced: 0,
+                    },
                 },
                 blue_team: {
                     win: false,
+                    total_data: {
+                        assists: 0,
+                        damageDealtToObjectives: 0,
+                        damageDealtToTurrets: 0,
+                        damageSelfMitigated: 0,
+                        deaths: 0,
+                        goldEarned: 0,
+                        goldSpent: 0,
+                        inhibitorKills: 0,
+                        kills: 0,
+                        largestCriticalStrike: 0,
+                        largetsKillingSpree: 0,
+                        largestMultiKill: 0,
+                        longestTimeSpentLiving: 0,
+                        magicDamageDealt: 0,
+                        magicDamageDealtToChampions: 0,
+                        magicalDamageTaken: 0,
+                        neutralMinionsKilled: 0,
+                        neutralMinionsKilledEnemyJungle: 0,
+                        neutralMinionsKilledTeamJungle: 0,
+                        pentaKills: 0,
+                        physicalDamageDealt: 0,
+                        physicalDamageDealtToChampions: 0,
+                        physicalDamageTaken: 0,
+                        quadraKills: 0,
+                        sightWardsBoughtInGame: 0,
+                        timeCCingOthers: 0,
+                        totalDamageDealt: 0,
+                        totalDamageDealtToChampions: 0,
+                        totalDamageTaken: 0,
+                        totalHeal: 0,
+                        totalMinionsKilled: 0,
+                        totalPlayerScore: 0,
+                        totalScoreRank: 0,
+                        totalTimeCrowdControlDealt: 0,
+                        totalUnitsHealed: 0,
+                        tripleKills: 0,
+                        trueDamageDealt: 0,
+                        trueDamageDealtToChampions: 0,
+                        trueDamageTaken: 0,
+                        turretKills: 0,
+                        unrealKills: 0,
+                        visionScore: 0,
+                        visionWardsBoughtInGame: 0,
+                        wardsKilled: 0,
+                        wardsPlaced: 0,
+                    },
                 },
                 blue_team_participants : [],
                 red_team_participants : [],
+
+                total_data: {
+                    assists: 0,
+                    damageDealtToObjectives: 0,
+                    damageDealtToTurrets: 0,
+                    damageSelfMitigated: 0,
+                    deaths: 0,
+                    goldEarned: 0,
+                    goldSpent: 0,
+                    inhibitorKills: 0,
+                    kills: 0,
+                    largestCriticalStrike: 0,
+                    largetsKillingSpree: 0,
+                    largestMultiKill: 0,
+                    longestTimeSpentLiving: 0,
+                    magicDamageDealt: 0,
+                    magicDamageDealtToChampions: 0,
+                    magicalDamageTaken: 0,
+                    neutralMinionsKilled: 0,
+                    neutralMinionsKilledEnemyJungle: 0,
+                    neutralMinionsKilledTeamJungle: 0,
+                    pentaKills: 0,
+                    physicalDamageDealt: 0,
+                    physicalDamageDealtToChampions: 0,
+                    physicalDamageTaken: 0,
+                    quadraKills: 0,
+                    sightWardsBoughtInGame: 0,
+                    timeCCingOthers: 0,
+                    totalDamageDealt: 0,
+                    totalDamageDealtToChampions: 0,
+                    totalDamageTaken: 0,
+                    totalHeal: 0,
+                    totalMinionsKilled: 0,
+                    totalPlayerScore: 0,
+                    totalScoreRank: 0,
+                    totalTimeCrowdControlDealt: 0,
+                    totalUnitsHealed: 0,
+                    tripleKills: 0,
+                    trueDamageDealt: 0,
+                    trueDamageDealtToChampions: 0,
+                    trueDamageTaken: 0,
+                    turretKills: 0,
+                    unrealKills: 0,
+                    visionScore: 0,
+                    visionWardsBoughtInGame: 0,
+                    wardsKilled: 0,
+                    wardsPlaced: 0,
+                },
             }
         },
         computed : {
@@ -188,12 +340,67 @@
             },
         },
         methods : {
-            calculateStats() {
+            resetData() {
+                this.total_data = {
+                    assists: 0,
+                    damageDealtToObjectives: 0,
+                    damageDealtToTurrets: 0,
+                    damageSelfMitigated: 0,
+                    deaths: 0,
+                    goldEarned: 0,
+                    goldSpent: 0,
+                    inhibitorKills: 0,
+                    kills: 0,
+                    largestCriticalStrike: 0,
+                    largestMultiKill: 0,
+                    longestTimeSpentLiving: 0,
+                    magicDamageDealt: 0,
+                    magicDamageDealtToChampions: 0,
+                    magicalDamageTaken: 0,
+                    neutralMinionsKilled: 0,
+                    neutralMinionsKilledEnemyJungle: 0,
+                    neutralMinionsKilledTeamJungle: 0,
+                    pentaKills: 0,
+                    physicalDamageDealt: 0,
+                    physicalDamageDealtToChampions: 0,
+                    physicalDamageTaken: 0,
+                    quadraKills: 0,
+                    sightWardsBoughtInGame: 0,
+                    timeCCingOthers: 0,
+                    totalDamageDealt: 0,
+                    totalDamageDealtToChampions: 0,
+                    totalDamageTaken: 0,
+                    totalHeal: 0,
+                    totalMinionsKilled: 0,
+                    totalPlayerScore: 0,
+                    totalScoreRank: 0,
+                    totalTimeCrowdControlDealt: 0,
+                    totalUnitsHealed: 0,
+                    tripleKills: 0,
+                    trueDamageDealt: 0,
+                    trueDamageDealtToChampions: 0,
+                    trueDamageTaken: 0,
+                    turretKills: 0,
+                    unrealKills: 0,
+                    visionScore: 0,
+                    visionWardsBoughtInGame: 0,
+                    wardsKilled: 0,
+                    wardsPlaced: 0,
+                }
                 this.blue_team_participants = [];
                 this.red_team_participants = [];
-                this.red_team = this.match.matchTeams[1];
-                this.blue_team = this.match.matchTeams[0];
+                this.red_team = {};
+                this.blue_team = {};
+            },
 
+            assignData() {
+                this.red_team = _.cloneDeep(this.match.matchTeams[1]);
+                this.blue_team = _.cloneDeep(this.match.matchTeams[0]);
+                this.red_team.total_data = _.cloneDeep(this.total_data)
+                this.blue_team.total_data = _.cloneDeep(this.total_data)
+            },
+
+            calculateStats() {
                 _.forEach(this.match.matchParticipants, (participant, participant_index) => {
                     if (participant.teamId == "100") {
                         this.blue_team_participants.push(participant);
@@ -201,13 +408,28 @@
                         this.red_team_participants.push(participant);
                     }
                 });
+
+                this.calculateTotals();
             },
 
             findParticipantKDA(participant) {
                 var kills = participant.stats.kills;
                 var deaths = participant.stats.deaths;
                 var assists = participant.stats.assists;
-                return kills + ' / ' + deaths + ' / ' + assists;
+                return kills + ' / ' + deaths + ' / ' + assists + "<div class='detail' style='margin-right: 5px;'>"
+                    + ((kills + assists) / deaths).toFixed(2) + ":1</div>";
+            },
+
+            findParticipantCS(participant) {
+                var cs = participant.stats.neutralMinionsKilled + participant.stats.totalMinionsKilled;
+                var csPM = (cs / (parseInt(this.match.gameDuration) / 60)).toFixed(2);
+                return "CS <div class='detail' style='margin-right: 5px;'>" + cs + "</div>" + csPM;
+            },
+
+            findParticipantGold(participant) {
+                var gold = participant.stats.goldEarned;
+                var goldPM = (gold / (parseInt(this.match.gameDuration) / 60)).toFixed(2);
+                return "Gold <div class='detail' style='margin-right: 5px;'>" + gold + "</div>" + goldPM;
             },
 
             getChampionImageUrl(id) {
@@ -231,9 +453,31 @@
                     return 'http://ddragon.leagueoflegends.com/cdn/'+this.API_VERSION+'/img/item/'+tempItem.image.full
                 }
             },
+
+            // go through every participant in blue_team_participants and red_team_participants
+            //  and calculate an aggregate of every stat
+            calculateTotals() {
+                _.forEach(this.blue_team_participants, (participant, participant_index) => {
+                    _.forEach(this.blue_team.total_data, (variable_name, variable_index) => {
+                        this.blue_team.total_data[variable_index] += participant.stats[variable_index]
+                    });
+                });
+
+                _.forEach(this.red_team_participants, (participant, participant_index) => {
+                    _.forEach(this.red_team.total_data, (variable_name, variable_index) => {
+                        this.red_team.total_data[variable_index] += participant.stats[variable_index]
+                    });
+                });
+
+                _.forEach(this.total_data, (variable_name, variable_index) => {
+                    this.total_data[variable_index] = this.red_team.total_data[variable_index] + this.blue_team.total_data[variable_index]
+                });
+            },
         },
         watch : {
             match : function(val) {
+                this.resetData();
+                this.assignData();
                 this.calculateStats();
             }
         }
@@ -257,6 +501,10 @@
         display: inline;
     }
 
+    .picture-column > .ui.grid > .column {
+        padding: 9px!important;
+    }
+
     .participant-summonerimage {
         width: 66px!important;
         margin: 0px!important;
@@ -267,9 +515,19 @@
         margin: 0px!important;
         float: left;
     }
+    .summoner-level-label > .label {
+        position: absolute;
+        z-index: 100;
+        bottom: 24px;
+        right: 21px;
+    }
     .summoner-info {
         font-size: 10px!important;
+        text-align: center;
         display: block!important;
+    }
+    .summoner-info.summoner-name {
+        font-size: 12px!important;
     }
     .summoner-data > .segment, #team-stats > .segment, .blue-team-header, .red-team-header {
         width: 50%!important;
