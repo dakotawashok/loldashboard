@@ -229,8 +229,6 @@ class SummonerController extends Controller
         $returnObject['otherMatchList'] = $matchListObject;
         $returnObject['otherDefinedMatchList'] = $definedMatchListObject;
 
-        $this->formatRankedDataForDelivery($summoner);
-
         return response()->json(json_encode($returnObject));
     }
 
@@ -291,7 +289,6 @@ class SummonerController extends Controller
             $summoner = Summoner::where('accountId', $accountId)->firstOrFail();
             $this->assignLeagues($this->api, $summoner);
 
-            $this->formatRankedDataForDelivery($summoner);
             return response()->json($summoner->league);
         } catch (ModelNotFoundException $e) {
             $returnObject = ['error' => 'That account wasn\'t found in our database...', 'error_e' => $e];
@@ -524,28 +521,6 @@ class SummonerController extends Controller
         $summoner->save();
     }
 
-    private function formatRankedDataForDelivery(&$summoner) {
-        $leagues = json_decode($summoner->league);
-        foreach($leagues as $leagueIndex => $league) {
-            $entries = $league->entries;
-            $tempSummoner = null;
-            $found = false;
-
-            foreach($entries as $entry) {
-                if ($entry->playerOrTeamName == $summoner->name) {
-                    $tempSummoner = $entry;
-                    $found = true;
-                    break;
-                }
-            }
-
-            if ($found) {
-                $leagues[$leagueIndex]->entries = [$tempSummoner];
-            }
-        }
-
-        $summoner->league = json_encode($leagues);
-    }
     private function formatMatchListForDelivery(&$matchListObject) {
 
     }
