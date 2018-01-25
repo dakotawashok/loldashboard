@@ -165,33 +165,23 @@ export default {
                 tempSummoner.rankedData = {};
                 if (tempSummoner != undefined && tempSummoner.league != undefined) {
                     _.forEach(tempSummoner.league, (league) => {
-                        if (league.queue == 'RANKED_SOLO_5x5') {
+                        console.log(league);
+                        if (league.queueType == 'RANKED_SOLO_5x5') {
+                            tempSummoner.rankedData.freshBlood = league.freshBlood;
+                            tempSummoner.rankedData.hotStreak = league.hotStreak;
+                            tempSummoner.rankedData.inactive = league.inactive;
+                            tempSummoner.rankedData.leagueId = league.leagueId;
+                            tempSummoner.rankedData.losses = league.losses;
+                            tempSummoner.rankedData.playerOrTeamId = league.playerOrTeamId;
+                            tempSummoner.rankedData.playerOrTeamName = league.playerOrTeamName;
+                            tempSummoner.rankedData.queueType = league.queueType;
+                            tempSummoner.rankedData.rank = league.rank;
                             tempSummoner.rankedData.tier = league.tier;
-                            tempSummoner.rankedData.name = league.name;
-                            tempSummoner.rankedData.queue = league.queue;
-                            // now we have to go into every goddamn summoner in this league and find the one that
-                            // matches the current summoner so we can find it's tier_league
-                            var found = false;
-                            _.forEach(league.entries, (league_summoner) => {
-                                if (league_summoner.playerOrTeamName === tempSummoner.name) {
-                                    found = true;
-                                    tempSummoner.rankedData.freshBlood = league_summoner.freshBlood;
-                                    tempSummoner.rankedData.hotStreak = league_summoner.hotStreak;
-                                    tempSummoner.rankedData.losses = league_summoner.losses;
-                                    tempSummoner.rankedData.playerOrTeamId = league_summoner.playerOrTeamId;
-                                    tempSummoner.rankedData.playerOrTeamName = league_summoner.playerOrTeamName;
-                                    tempSummoner.rankedData.rank = league_summoner.rank;
-                                    tempSummoner.rankedData.veteran = league_summoner.veteran;
-                                    tempSummoner.rankedData.wins = league_summoner.wins;
-                                    tempSummoner.rankedData.leaguePoints = league_summoner.leaguePoints;
-                                }
-                            });
-                            // if we found the summoner in all that data, lets get rid of all that data since we
-                            // don't need it anymore
-                            if (found) {
-                                delete tempSummoner.league;
-                                store.commit('assignSummoner1Summoner', tempSummoner);
-                            }
+                            tempSummoner.rankedData.veteran = league.veteran;
+                            tempSummoner.rankedData.wins = league.wins;
+                            tempSummoner.rankedData.leaguePoints = league.leaguePoints;
+                            tempSummoner.rankedData.leagueName = league.leagueName;
+                            store.commit('assignSummoner1Summoner', tempSummoner);
                         }
                     })
                 } else {
@@ -203,34 +193,23 @@ export default {
                 tempSummoner.rankedData = {};
                 if (tempSummoner != undefined && tempSummoner.league != undefined) {
                     _.forEach(tempSummoner.league, (league) => {
-                        if (league.queue == 'RANKED_SOLO_5x5') {
+                        console.log(league);
+                        if (league.queueType == 'RANKED_SOLO_5x5') {
+                            tempSummoner.rankedData.freshBlood = league.freshBlood;
+                            tempSummoner.rankedData.hotStreak = league.hotStreak;
+                            tempSummoner.rankedData.inactive = league.inactive;
+                            tempSummoner.rankedData.leagueId = league.leagueId;
+                            tempSummoner.rankedData.losses = league.losses;
+                            tempSummoner.rankedData.playerOrTeamId = league.playerOrTeamId;
+                            tempSummoner.rankedData.playerOrTeamName = league.playerOrTeamName;
+                            tempSummoner.rankedData.queueType = league.queueType;
+                            tempSummoner.rankedData.rank = league.rank;
                             tempSummoner.rankedData.tier = league.tier;
-                            tempSummoner.rankedData.name = league.name;
-                            tempSummoner.rankedData.queue = league.queue;
-                            // now we have to go into every goddamn summoner in this league and find the one that
-                            // matches the current summoner so we can find it's tier_league
-                            var found = false;
-                            _.forEach(league.entries, (league_summoner) => {
-                                if (league_summoner.playerOrTeamName === tempSummoner.name) {
-                                    found = true;
-                                    tempSummoner.rankedData.freshBlood = league_summoner.freshBlood;
-                                    tempSummoner.rankedData.hotStreak = league_summoner.hotStreak;
-                                    tempSummoner.rankedData.losses = league_summoner.losses;
-                                    tempSummoner.rankedData.playerOrTeamId = league_summoner.playerOrTeamId;
-                                    tempSummoner.rankedData.playerOrTeamName = league_summoner.playerOrTeamName;
-                                    tempSummoner.rankedData.rank = league_summoner.rank;
-                                    tempSummoner.rankedData.veteran = league_summoner.veteran;
-                                    tempSummoner.rankedData.wins = league_summoner.wins;
-                                    tempSummoner.rankedData.leaguePoints = league_summoner.leaguePoints;
-                                }
-                            });
-                            // if we found the summoner in all that data, lets get rid of all that data since we
-                            // don't need it anymore
-                            if (found) {
-                                delete tempSummoner.league;
-                                store.commit('assignSummoner2Summoner', tempSummoner);
-                            } else {
-                            }
+                            tempSummoner.rankedData.veteran = league.veteran;
+                            tempSummoner.rankedData.wins = league.wins;
+                            tempSummoner.rankedData.leaguePoints = league.leaguePoints;
+                            tempSummoner.rankedData.leagueName = league.leagueName;
+                            store.commit('assignSummoner2Summoner', tempSummoner);
                         }
                     })
                 }
@@ -371,7 +350,7 @@ export default {
         },
         summoner1RankName : function() {
             return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData)
-                ? 'Unranked' : this.summoner1.summoner.rankedData.name
+                ? 'Unranked' : this.summoner1.summoner.rankedData.leagueName
         },
         summoner1Ratio : function() {
             return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData)
@@ -395,7 +374,7 @@ export default {
         },
         summoner2RankName : function() {
             return this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData)
-                ? 'Unranked' : this.summoner2.summoner.rankedData.name
+                ? 'Unranked' : this.summoner2.summoner.rankedData.leagueName
         },
         summoner2Ratio : function() {
             return this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData)

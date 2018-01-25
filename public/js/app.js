@@ -17026,33 +17026,23 @@ module.exports = defaults;
                 tempSummoner.rankedData = {};
                 if (tempSummoner != undefined && tempSummoner.league != undefined) {
                     _.forEach(tempSummoner.league, function (league) {
-                        if (league.queue == 'RANKED_SOLO_5x5') {
+                        console.log(league);
+                        if (league.queueType == 'RANKED_SOLO_5x5') {
+                            tempSummoner.rankedData.freshBlood = league.freshBlood;
+                            tempSummoner.rankedData.hotStreak = league.hotStreak;
+                            tempSummoner.rankedData.inactive = league.inactive;
+                            tempSummoner.rankedData.leagueId = league.leagueId;
+                            tempSummoner.rankedData.losses = league.losses;
+                            tempSummoner.rankedData.playerOrTeamId = league.playerOrTeamId;
+                            tempSummoner.rankedData.playerOrTeamName = league.playerOrTeamName;
+                            tempSummoner.rankedData.queueType = league.queueType;
+                            tempSummoner.rankedData.rank = league.rank;
                             tempSummoner.rankedData.tier = league.tier;
-                            tempSummoner.rankedData.name = league.name;
-                            tempSummoner.rankedData.queue = league.queue;
-                            // now we have to go into every goddamn summoner in this league and find the one that
-                            // matches the current summoner so we can find it's tier_league
-                            var found = false;
-                            _.forEach(league.entries, function (league_summoner) {
-                                if (league_summoner.playerOrTeamName === tempSummoner.name) {
-                                    found = true;
-                                    tempSummoner.rankedData.freshBlood = league_summoner.freshBlood;
-                                    tempSummoner.rankedData.hotStreak = league_summoner.hotStreak;
-                                    tempSummoner.rankedData.losses = league_summoner.losses;
-                                    tempSummoner.rankedData.playerOrTeamId = league_summoner.playerOrTeamId;
-                                    tempSummoner.rankedData.playerOrTeamName = league_summoner.playerOrTeamName;
-                                    tempSummoner.rankedData.rank = league_summoner.rank;
-                                    tempSummoner.rankedData.veteran = league_summoner.veteran;
-                                    tempSummoner.rankedData.wins = league_summoner.wins;
-                                    tempSummoner.rankedData.leaguePoints = league_summoner.leaguePoints;
-                                }
-                            });
-                            // if we found the summoner in all that data, lets get rid of all that data since we
-                            // don't need it anymore
-                            if (found) {
-                                delete tempSummoner.league;
-                                __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1Summoner', tempSummoner);
-                            }
+                            tempSummoner.rankedData.veteran = league.veteran;
+                            tempSummoner.rankedData.wins = league.wins;
+                            tempSummoner.rankedData.leaguePoints = league.leaguePoints;
+                            tempSummoner.rankedData.leagueName = league.leagueName;
+                            __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1Summoner', tempSummoner);
                         }
                     });
                 } else {
@@ -17064,33 +17054,23 @@ module.exports = defaults;
                 tempSummoner.rankedData = {};
                 if (tempSummoner != undefined && tempSummoner.league != undefined) {
                     _.forEach(tempSummoner.league, function (league) {
-                        if (league.queue == 'RANKED_SOLO_5x5') {
+                        console.log(league);
+                        if (league.queueType == 'RANKED_SOLO_5x5') {
+                            tempSummoner.rankedData.freshBlood = league.freshBlood;
+                            tempSummoner.rankedData.hotStreak = league.hotStreak;
+                            tempSummoner.rankedData.inactive = league.inactive;
+                            tempSummoner.rankedData.leagueId = league.leagueId;
+                            tempSummoner.rankedData.losses = league.losses;
+                            tempSummoner.rankedData.playerOrTeamId = league.playerOrTeamId;
+                            tempSummoner.rankedData.playerOrTeamName = league.playerOrTeamName;
+                            tempSummoner.rankedData.queueType = league.queueType;
+                            tempSummoner.rankedData.rank = league.rank;
                             tempSummoner.rankedData.tier = league.tier;
-                            tempSummoner.rankedData.name = league.name;
-                            tempSummoner.rankedData.queue = league.queue;
-                            // now we have to go into every goddamn summoner in this league and find the one that
-                            // matches the current summoner so we can find it's tier_league
-                            var found = false;
-                            _.forEach(league.entries, function (league_summoner) {
-                                if (league_summoner.playerOrTeamName === tempSummoner.name) {
-                                    found = true;
-                                    tempSummoner.rankedData.freshBlood = league_summoner.freshBlood;
-                                    tempSummoner.rankedData.hotStreak = league_summoner.hotStreak;
-                                    tempSummoner.rankedData.losses = league_summoner.losses;
-                                    tempSummoner.rankedData.playerOrTeamId = league_summoner.playerOrTeamId;
-                                    tempSummoner.rankedData.playerOrTeamName = league_summoner.playerOrTeamName;
-                                    tempSummoner.rankedData.rank = league_summoner.rank;
-                                    tempSummoner.rankedData.veteran = league_summoner.veteran;
-                                    tempSummoner.rankedData.wins = league_summoner.wins;
-                                    tempSummoner.rankedData.leaguePoints = league_summoner.leaguePoints;
-                                }
-                            });
-                            // if we found the summoner in all that data, lets get rid of all that data since we
-                            // don't need it anymore
-                            if (found) {
-                                delete tempSummoner.league;
-                                __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2Summoner', tempSummoner);
-                            } else {}
+                            tempSummoner.rankedData.veteran = league.veteran;
+                            tempSummoner.rankedData.wins = league.wins;
+                            tempSummoner.rankedData.leaguePoints = league.leaguePoints;
+                            tempSummoner.rankedData.leagueName = league.leagueName;
+                            __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2Summoner', tempSummoner);
                         }
                     });
                 }
@@ -17256,7 +17236,7 @@ module.exports = defaults;
             return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData) ? 'Unranked' : this.summoner1.summoner.rankedData.tier + ' ' + this.summoner1.summoner.rankedData.rank;
         },
         summoner1RankName: function summoner1RankName() {
-            return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData) ? 'Unranked' : this.summoner1.summoner.rankedData.name;
+            return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData) ? 'Unranked' : this.summoner1.summoner.rankedData.leagueName;
         },
         summoner1Ratio: function summoner1Ratio() {
             return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData) ? 'Unranked' : this.summoner1.summoner.rankedData.leaguePoints + ' LP / ' + this.summoner1.summoner.rankedData.wins + ' wins / ' + this.summoner1.summoner.rankedData.losses + ' losses';
@@ -17274,7 +17254,7 @@ module.exports = defaults;
             return this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData) ? 'Unranked' : this.summoner2.summoner.rankedData.tier + ' ' + this.summoner2.summoner.rankedData.rank;
         },
         summoner2RankName: function summoner2RankName() {
-            return this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData) ? 'Unranked' : this.summoner2.summoner.rankedData.name;
+            return this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData) ? 'Unranked' : this.summoner2.summoner.rankedData.leagueName;
         },
         summoner2Ratio: function summoner2Ratio() {
             return this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData) ? 'Unranked' : this.summoner2.summoner.rankedData.leaguePoints + ' LP / ' + this.summoner2.summoner.rankedData.wins + ' wins / ' + this.summoner2.summoner.rankedData.losses + ' losses';
@@ -32021,6 +32001,22 @@ var moment = __webpack_require__(0);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -32316,6 +32312,9 @@ var moment = __webpack_require__(0);
             if (tempItem != undefined && tempItem.image != undefined) {
                 return 'http://ddragon.leagueoflegends.com/cdn/' + this.API_VERSION + '/img/item/' + tempItem.image.full;
             }
+        },
+        getParticipantImageUrlFromIndex: function getParticipantImageUrlFromIndex(participant, index) {
+            return this.getItemImageUrl(participant.stats['item' + (index - 1)]);
         },
 
 
@@ -46432,7 +46431,7 @@ exports = module.exports = __webpack_require__(3)(undefined);
 
 
 // module
-exports.push([module.i, "\n.header[data-v-6c1b3c47] {\n    text-align: center;\n}\nh4[data-v-6c1b3c47] {\n    margin-top: 5px!important;\n    margin-bottom: 5px!important;\n}\n.stats-container > .column[data-v-6c1b3c47] {\n    padding: 5px 10px!important;\n    font-size: 10px;\n}\n.stats-container > * > span > i[data-v-6c1b3c47] {\n    display: inline;\n}\n.picture-column > .ui.grid > .column[data-v-6c1b3c47] {\n    padding: 9px!important;\n}\n.participant-summonerimage[data-v-6c1b3c47] {\n    width: 66px!important;\n    margin: 0px!important;\n}\n.participant-underimage[data-v-6c1b3c47] {\n    width: 22px!important;\n    margin: 0px!important;\n    float: left;\n}\n.summoner-level-label > .label[data-v-6c1b3c47] {\n    position: absolute;\n    z-index: 100;\n    bottom: 24px;\n    right: 21px;\n}\n.summoner-info[data-v-6c1b3c47] {\n    font-size: 10px!important;\n    text-align: center;\n    display: block!important;\n}\n.summoner-info.summoner-name[data-v-6c1b3c47] {\n    font-size: 12px!important;\n}\n.summoner-data > .segment[data-v-6c1b3c47], #team-stats > .segment[data-v-6c1b3c47], .blue-team-header[data-v-6c1b3c47], .red-team-header[data-v-6c1b3c47] {\n    width: 50%!important;\n}\n", ""]);
+exports.push([module.i, "\n.header[data-v-6c1b3c47] {\n    text-align: center;\n}\nh4[data-v-6c1b3c47] {\n    margin-top: 5px!important;\n    margin-bottom: 5px!important;\n}\n.stats-container > .column[data-v-6c1b3c47] {\n    padding: 5px 10px!important;\n    font-size: 10px;\n}\n.stats-container > * > span > i[data-v-6c1b3c47] {\n    display: inline;\n}\n.picture-column > .ui.grid > .column[data-v-6c1b3c47] {\n    padding: 9px!important;\n}\n.participant-summonerimage[data-v-6c1b3c47] {\n    width: 66px!important;\n    margin: 0px!important;\n}\n.participant-underimage[data-v-6c1b3c47] {\n    width: 22px!important;\n    margin: 0px!important;\n    float: left;\n}\n.summoner-level-label > .label[data-v-6c1b3c47] {\n    position: absolute;\n    z-index: 100;\n    bottom: 24px;\n    right: 21px;\n}\n.summoner-info[data-v-6c1b3c47] {\n    font-size: 10px!important;\n    text-align: center;\n    display: block!important;\n    margin-bottom: 5px!important;\n}\n.summoner-info.summoner-name[data-v-6c1b3c47] {\n    font-size: 12px!important;\n}\n.summoner-data > .segment[data-v-6c1b3c47], #team-stats > .segment[data-v-6c1b3c47], .blue-team-header[data-v-6c1b3c47], .red-team-header[data-v-6c1b3c47] {\n    width: 50%!important;\n}\n.item-column[data-v-6c1b3c47] {\n    padding: 2px;\n}\n.item-column > .ui.grid > .column[data-v-6c1b3c47] {\n    padding: 1rem 0px 1rem 10px;\n}\n.participant-item-image[data-v-6c1b3c47] {\n    padding: 2px;\n}\n", ""]);
 
 // exports
 
@@ -68327,7 +68326,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }
     })])])]), _vm._v(" "), _c('div', {
       staticClass: "two wide column item-column"
-    }), _vm._v(" "), _c('div', {
+    }, [_c('div', {
+      staticClass: "ui grid"
+    }, [_c('div', {
+      staticClass: "ui eight wide column"
+    }, _vm._l((6), function(n) {
+      return (n % 2 != 0) ? _c('img', {
+        staticClass: "ui small rounded image participant-item-image",
+        attrs: {
+          "src": _vm.getParticipantImageUrlFromIndex(_vm.blue_team_participants[i - 1], n)
+        }
+      }) : _vm._e()
+    })), _vm._v(" "), _c('div', {
+      staticClass: "ui eight wide column"
+    }, _vm._l((6), function(n) {
+      return (n % 2 == 0) ? _c('img', {
+        staticClass: "ui small rounded image participant-item-image",
+        attrs: {
+          "src": _vm.getParticipantImageUrlFromIndex(_vm.blue_team_participants[i - 1], n)
+        }
+      }) : _vm._e()
+    }))])]), _vm._v(" "), _c('div', {
       staticClass: "six wide column"
     }), _vm._v(" "), _c('div', {
       staticClass: "three wide column"
@@ -68385,11 +68404,31 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         "innerHTML": _vm._s(_vm.findParticipantGold(_vm.red_team_participants[i - 1]))
       }
     })])])]), _vm._v(" "), _c('div', {
-      staticClass: "two wide column",
+      staticClass: "two wide column item-column",
       attrs: {
         "item-column": ""
       }
-    }), _vm._v(" "), _c('div', {
+    }, [_c('div', {
+      staticClass: "ui grid"
+    }, [_c('div', {
+      staticClass: "ui eight wide column"
+    }, _vm._l((6), function(n) {
+      return (n % 2 != 0) ? _c('img', {
+        staticClass: "ui small rounded image participant-item-image",
+        attrs: {
+          "src": _vm.getParticipantImageUrlFromIndex(_vm.red_team_participants[i - 1], n)
+        }
+      }) : _vm._e()
+    })), _vm._v(" "), _c('div', {
+      staticClass: "ui eight wide column"
+    }, _vm._l((6), function(n) {
+      return (n % 2 == 0) ? _c('img', {
+        staticClass: "ui small rounded image participant-item-image",
+        attrs: {
+          "src": _vm.getParticipantImageUrlFromIndex(_vm.red_team_participants[i - 1], n)
+        }
+      }) : _vm._e()
+    }))])]), _vm._v(" "), _c('div', {
       staticClass: "sixe wide column"
     }), _vm._v(" "), _c('div', {
       staticClass: "three wide column"

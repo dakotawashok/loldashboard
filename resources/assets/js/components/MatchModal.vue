@@ -98,7 +98,14 @@
                                     </div>
                                 </div>
                                 <div class="two wide column item-column">
-
+                                    <div class="ui grid">
+                                        <div class="ui eight wide column">
+                                            <img class="ui small rounded image participant-item-image" :src="getParticipantImageUrlFromIndex(blue_team_participants[i-1], n)" v-for="n in 6" v-if="n % 2 != 0">
+                                        </div>
+                                        <div class="ui eight wide column">
+                                            <img class="ui small rounded image participant-item-image" :src="getParticipantImageUrlFromIndex(blue_team_participants[i-1], n)" v-for="n in 6" v-if="n % 2 == 0">
+                                        </div>
+                                    </div>
                                 </div>
                                 <div class="six wide column"></div>
                                 <div class="three wide column"></div>
@@ -125,7 +132,16 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="two wide column" item-column></div>
+                                <div class="two wide column item-column" item-column>
+                                    <div class="ui grid">
+                                        <div class="ui eight wide column">
+                                            <img class="ui small rounded image participant-item-image" :src="getParticipantImageUrlFromIndex(red_team_participants[i-1], n)" v-for="n in 6" v-if="n % 2 != 0">
+                                        </div>
+                                        <div class="ui eight wide column">
+                                            <img class="ui small rounded image participant-item-image" :src="getParticipantImageUrlFromIndex(red_team_participants[i-1], n)" v-for="n in 6" v-if="n % 2 == 0">
+                                        </div>
+                                    </div>
+                                </div>
                                 <div class="sixe wide column"></div>
                                 <div class="three wide column"></div>
                             </div>
@@ -454,6 +470,10 @@
                 }
             },
 
+            getParticipantImageUrlFromIndex(participant, index) {
+                return this.getItemImageUrl(participant.stats['item'+(index-1)]);
+            },
+
             // go through every participant in blue_team_participants and red_team_participants
             //  and calculate an aggregate of every stat
             calculateTotals() {
@@ -525,11 +545,21 @@
         font-size: 10px!important;
         text-align: center;
         display: block!important;
+        margin-bottom: 5px!important;
     }
     .summoner-info.summoner-name {
         font-size: 12px!important;
     }
     .summoner-data > .segment, #team-stats > .segment, .blue-team-header, .red-team-header {
         width: 50%!important;
+    }
+    .item-column {
+        padding: 2px;
+    }
+    .item-column > .ui.grid > .column {
+        padding: 1rem 0px 1rem 10px;
+    }
+    .participant-item-image {
+        padding: 2px;
     }
 </style>
