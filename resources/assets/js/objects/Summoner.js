@@ -1,69 +1,72 @@
 import store from "../store";
+import $ from 'jquery';
 
-class Summoner {
-    summonerName = '';
-    summonerNumber = '';
-    accountNumber = '';
-
-    championMastery = [];
-    profileIconId = '';
-    summonerLevel = '';
-    rankedData = [];
-
-    rankedMatchList = [];
-    normalMatchList = [];
-    otherMatchList = [];
-
-    definedRankedMatchList = [];
-    definedNormalMatchList = [];
-    definedOtherMatchList = [];
-
-    loading = false;
-    loaded = false;
-
+export default class Summoner {
     constructor(identity, isSummonerName) {
+        this.summonerName = '';
+        this.summonerNumber = '';
+        this.accountNumber = '';
+
+        this.championMastery = [];
+        this.profileIconId = '';
+        this.summonerLevel = '';
+        this.rankedData = [];
+
+        this.rankedMatchList = [];
+        this.normalMatchList = [];
+        this.otherMatchList = [];
+
+        this.definedRankedMatchList = [];
+        this.definedNormalMatchList = [];
+        this.definedOtherMatchList = [];
+
+        this.loading = false;
+        this.loaded = false;
+
         if (isSummonerName) {
             this.summonerName = identity;
         } else {
             this.summonerNumber = identity;
         }
 
-        this.$http.get('/summoner/' + (this.summonerName != '' ? this.summonerName : this.accountNumber) + '/allData').then((resp) => {
-            resp = JSON.parse(resp.body);
-            // get the summoner information from the response
-            resp.summoner = this._parseSummonerDataFromResponse(resp.summoner);
-            resp.normalMatchList.matches = JSON.parse(resp.normalMatchList.matches);
-            resp.rankedMatchList.matches = JSON.parse(resp.rankedMatchList.matches);
-            resp.otherMatchList.matches = JSON.parse(resp.otherMatchList.matches);
-            this._parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
-            this._parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
-            this._parseMatchListDataFromResponse(resp.otherMatchList.matches, resp.otherDefinedMatchList);
-            store.commit('assignSummoner1Summoner', resp.summoner);
-            store.state.summoner1.summonerName = resp.summoner.name;
-            store.commit('assignSummoner1Loaded', true);
-            store.commit('assignSummoner1RankedMatchList', resp.rankedMatchList.matches);
-            store.commit('assignSummoner1DefinedRankedMatchList', resp.rankedDefinedMatchList);
-            store.commit('assignSummoner1NormalMatchList', resp.normalMatchList.matches);
-            store.commit('assignSummoner1DefinedNormalMatchList', resp.normalDefinedMatchList);
-            store.commit('assignSummonerMatchList', {'matchList' : resp.otherMatchList.matches, summonerNumber : 1, matchListType: 'other'});
-            store.commit('assignSummonerDefinedMatchList', {'matchList' : resp.otherDefinedMatchList, summonerNumber : 1, matchListType: 'other'});
-
-            this.assignRankedData(summonerNumber);
-
-            store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : false});
+        $.get('/summoner/' + (this.summonerName != '' ? this.summonerName : this.summonerNumber)).then((resp) => {
+            this._parseSummonerDataFromSummonerResponse(resp)
         }).catch((resp) => {
-            store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : false});
-            this.$notify.error('Summoner not found');
+            console.log('error: ' + resp);
         });
+    }
 
+    getMatchList(matchListType, $params) {
+        $.get('/summoner/' + (this.summonerName != '' ? this.summonerName : this.summonerNumber)).then((resp) => {
+            console.log(resp);
+        }).catch((resp) => {
+            console.log('error: ' + resp);
+        });
+    }
+
+    getDefinedMatchList(matchListType, $params) {
 
     }
 
-    _parseSummonerDataFromResponse(summoner) {
-
+    _parseSummonerDataFromSummonerResponse(response) {
+        var parsedResponse = JSON.parse(response);
+        this.summonerName = parsedResponse.name;
+        this.summonerNumber = parsedResponse.id;
+        this.accountNumber = parsedResponse.accountId;
+        this.championMastery = JSON.parse(parsedResponse.championMastery);
+        this.profileIconId = parsedResponse.profileIconId;
+        this.summonerLevel = parsedResponse.summonerLevel;
+        this.league = JSON.parse(parsedResponse.league);
+        this.revisionDate = parsedResponse.revisionDate;
+        this.created_at = parsedResponse.created_at;
+        this.updated_at = parsedResponse.updated_at;
     }
 
     _parseMatchListDataFromResponse(matchList, definedMatchList) {
+
+    }
+
+    _assignRankedData() {
 
     }
 }

@@ -240,39 +240,13 @@ class SummonerController extends Controller
      */
     public function getSummoner($id)
     {
-        try {
-            if (is_numeric($id)) {
-                $summoner = Summoner::findOrFail($id);
-            } else {
-                $summoner = Summoner::where('name', $id)->firstOrFail();
-            }
+        // First, find the summoner data
+        $summoner = new Summoner;
+        $summoner->assignData($id);
 
-            return response()->json(json_encode($summoner));
-        } catch (ModelNotFoundException $e) {
-            if (is_numeric($id)) {
-                $returnSummoner = $this->api->getSummoner($id);
-            } else {
-                $returnSummoner = $this->api->getSummonerByName($id);
-            }
+        $response = response()->json(json_encode($summoner));
 
-            $summoner = new Summoner;
-            $summoner->id = $returnSummoner['id'];
-            $summoner->accountId = $returnSummoner['accountId'];
-            $summoner->name = $returnSummoner['name'];
-            $summoner->profileIconId = $returnSummoner['profileIconId'];
-            $summoner->summonerLevel = $returnSummoner['summonerLevel'];
-            $summoner->revisionDate = $returnSummoner['revisionDate'];
-
-            $summoner->save();
-
-            $this->assignChampionMasteries($this->api, $summoner);
-            $this->assignLeagues($this->api, $summoner);
-
-            $response = response()->json(json_encode($summoner));
-
-            return $response;
-        }
-
+        return $response;
     }
 
 
@@ -285,15 +259,11 @@ class SummonerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function refreshRankedStats($accountId) {
-        try {
-            $summoner = Summoner::where('accountId', $accountId)->firstOrFail();
-            $this->assignLeagues($this->api, $summoner);
+        $summoner = new Summoner;
+        $summoner->assignData($accountId);
+        $summoner->assignLeagues();
 
-            return response()->json($summoner->league);
-        } catch (ModelNotFoundException $e) {
-            $returnObject = ['error' => 'That account wasn\'t found in our database...', 'error_e' => $e];
-            return response()->json(json_encode($returnObject));
-        }
+        return response()->json($summoner->league);
     }
 
 
@@ -510,11 +480,6 @@ class SummonerController extends Controller
         $this->saveMatchListMatches($this->api, $matches);
     }
 
-    private function assignChampionMasteries(&$api, &$summoner) {
-        $championMastery = $api->getChampionMastery($summoner->id);
-        $summoner->championMastery = json_encode($championMastery);
-        $summoner->save();
-    }
     private function assignLeagues(&$api, &$summoner) {
         $league = $api->getLeague($summoner->id);
         $summoner->league = json_encode($league);

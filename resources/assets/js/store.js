@@ -34,6 +34,8 @@ var store = new Vuex.Store({
             definedRankedMatchList: {},
             definedOtherMatchList: {},
         },
+        testSummoner1 : {},
+        testSummoner2 : {},
         currentYear : "2017",
         modalMatch: {
             gameId: 0,
@@ -56,24 +58,12 @@ var store = new Vuex.Store({
         matchModalLoading: false,
     },
     mutations : {
-        assignItems (state, itemList) {
-            state.staticInfo.items = itemList;
-        },
-        assignChampions (state, championsList) {
-            state.staticInfo.champions = championsList;
-        },
-        assignSpells (state, spellList) {
-            state.staticInfo.spells = spellList;
-        },
-        assignSeasons (state, seasonList) {
-            state.staticInfo.seasons = seasonList;
-        },
-        assignMatchmakingQueues (state, matchmakingQueuesList) {
-            state.staticInfo.matchmaking_queues = matchmakingQueuesList;
-        },
-        assignMapNames (state, mapNameList) {
-            state.staticInfo.map_names = mapNameList;
-        },
+        assignItems (state, itemList) {                             state.staticInfo.items = itemList; },
+        assignChampions (state, championsList) {                    state.staticInfo.champions = championsList; },
+        assignSpells (state, spellList) {                           state.staticInfo.spells = spellList; },
+        assignSeasons (state, seasonList) {                         state.staticInfo.seasons = seasonList; },
+        assignMatchmakingQueues (state, matchmakingQueuesList) {    state.staticInfo.matchmaking_queues = matchmakingQueuesList; },
+        assignMapNames (state, mapNameList) {                       state.staticInfo.map_names = mapNameList; },
         assignSummoner1Summoner (state, summoner) {
             state.summoner1.summoner = summoner;
         },
@@ -182,10 +172,17 @@ var store = new Vuex.Store({
         },
         assignMatchModalLoading (state, loading) {
             state.matchModalLoading = loading;
+        },
+
+        assignTestSummoner(state, summonerObject) {
+            var summonerNumber = summonerObject.summonerNumber;
+            var summoner = summonerObject.summoner;
+            if (summonerNumber === 1) {
+                state.testSummoner1 = summoner;
+            } else {
+                state.testSummoner2 = summoner;
+            }
         }
-
-
-        // Other methods that we need like the loading summoners from the match Card
     }
 });
 

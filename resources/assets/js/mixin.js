@@ -1,4 +1,5 @@
 import store from '../js/store.js';
+import Summoner from '../js/objects/Summoner.js'
 
 export default {
     created: function() {
@@ -7,7 +8,7 @@ export default {
 
     data () {
         return {
-            API_VERSION: '7.24.2'
+            API_VERSION: '8.2.1'
         }
     },
 
@@ -66,6 +67,10 @@ export default {
 
         getAllSummonerData : function(summonerNumber, useAccountId = false) {
             if (summonerNumber == "1") {
+                var tempSummoner = new Summoner((useAccountId ?  this.summoner1.accountId : this.summoner1.summonerName), true);
+
+                store.commit('assignTestSummoner', {'summonerNumber' : summonerNumber, 'summoner' : tempSummoner });
+
                 store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : true});
                 this.$http.get('/summoner/' + (useAccountId ?  this.summoner1.accountId : this.summoner1.summonerName) + '/allData').then((resp) => {
                     resp = JSON.parse(resp.body);
@@ -304,6 +309,9 @@ export default {
     },
 
     computed: {
+        testSummoner1 : function() { return store.state.testSummoner1; },
+        testSummoner2 : function() { return store.state.testSummoner2; },
+
         modalMatch : function() { return store.state.modalMatch; },
         matchModalLoading : function() { return store.state.matchModalLoading; },
 

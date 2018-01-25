@@ -72,12 +72,12 @@ class Summoner extends Model
         return $this;
     }
 
-    private function assignChampionMasteries() {
+    public function assignChampionMasteries() {
         $championMastery = $this->api->getChampionMastery($this->id);
         $this->championMastery = json_encode($championMastery);
         $this->save();
     }
-    private function assignLeagues() {
+    public function assignLeagues() {
         $league = $this->api->getLeague($this->id);
         $this->league = json_encode($league);
         $this->save();

@@ -5050,6 +5050,8 @@ var store = new Vuex.Store({
             definedRankedMatchList: {},
             definedOtherMatchList: {}
         },
+        testSummoner1: {},
+        testSummoner2: {},
         currentYear: "2017",
         modalMatch: {
             gameId: 0,
@@ -5196,10 +5198,16 @@ var store = new Vuex.Store({
         },
         assignMatchModalLoading: function assignMatchModalLoading(state, loading) {
             state.matchModalLoading = loading;
+        },
+        assignTestSummoner: function assignTestSummoner(state, summonerObject) {
+            var summonerNumber = summonerObject.summonerNumber;
+            var summoner = summonerObject.summoner;
+            if (summonerNumber === 1) {
+                state.testSummoner1 = summoner;
+            } else {
+                state.testSummoner2 = summoner;
+            }
         }
-
-        // Other methods that we need like the loading summoners from the match Card
-
     }
 });
 
@@ -16853,6 +16861,8 @@ module.exports = defaults;
 
 "use strict";
 /* WEBPACK VAR INJECTION */(function($) {/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__js_store_js__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__js_objects_Summoner_js__ = __webpack_require__(306);
+
 
 
 /* harmony default export */ __webpack_exports__["a"] = {
@@ -16860,7 +16870,7 @@ module.exports = defaults;
 
     data: function data() {
         return {
-            API_VERSION: '7.24.2'
+            API_VERSION: '8.2.1'
         };
     },
 
@@ -16924,6 +16934,10 @@ module.exports = defaults;
             var useAccountId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
             if (summonerNumber == "1") {
+                var tempSummoner = new __WEBPACK_IMPORTED_MODULE_1__js_objects_Summoner_js__["a" /* default */](useAccountId ? this.summoner1.accountId : this.summoner1.summonerName, true);
+
+                __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignTestSummoner', { 'summonerNumber': summonerNumber, 'summoner': tempSummoner });
+
                 __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 1, 'loading': true });
                 this.$http.get('/summoner/' + (useAccountId ? this.summoner1.accountId : this.summoner1.summonerName) + '/allData').then(function (resp) {
                     resp = JSON.parse(resp.body);
@@ -17167,6 +17181,13 @@ module.exports = defaults;
     },
 
     computed: {
+        testSummoner1: function testSummoner1() {
+            return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.testSummoner1;
+        },
+        testSummoner2: function testSummoner2() {
+            return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.testSummoner2;
+        },
+
         modalMatch: function modalMatch() {
             return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.modalMatch;
         },
@@ -82223,6 +82244,101 @@ module.exports = function() {
 __webpack_require__(150);
 module.exports = __webpack_require__(151);
 
+
+/***/ }),
+/* 305 */,
+/* 306 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0__store__ = __webpack_require__(5);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery__ = __webpack_require__(15);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1_jquery___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_1_jquery__);
+var _createClass = function () { function defineProperties(target, props) { for (var i = 0; i < props.length; i++) { var descriptor = props[i]; descriptor.enumerable = descriptor.enumerable || false; descriptor.configurable = true; if ("value" in descriptor) descriptor.writable = true; Object.defineProperty(target, descriptor.key, descriptor); } } return function (Constructor, protoProps, staticProps) { if (protoProps) defineProperties(Constructor.prototype, protoProps); if (staticProps) defineProperties(Constructor, staticProps); return Constructor; }; }();
+
+function _classCallCheck(instance, Constructor) { if (!(instance instanceof Constructor)) { throw new TypeError("Cannot call a class as a function"); } }
+
+
+
+
+var Summoner = function () {
+    function Summoner(identity, isSummonerName) {
+        var _this = this;
+
+        _classCallCheck(this, Summoner);
+
+        this.summonerName = '';
+        this.summonerNumber = '';
+        this.accountNumber = '';
+
+        this.championMastery = [];
+        this.profileIconId = '';
+        this.summonerLevel = '';
+        this.rankedData = [];
+
+        this.rankedMatchList = [];
+        this.normalMatchList = [];
+        this.otherMatchList = [];
+
+        this.definedRankedMatchList = [];
+        this.definedNormalMatchList = [];
+        this.definedOtherMatchList = [];
+
+        this.loading = false;
+        this.loaded = false;
+
+        if (isSummonerName) {
+            this.summonerName = identity;
+        } else {
+            this.summonerNumber = identity;
+        }
+
+        __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.get('/summoner/' + (this.summonerName != '' ? this.summonerName : this.summonerNumber)).then(function (resp) {
+            _this._parseSummonerDataFromSummonerResponse(resp);
+        }).catch(function (resp) {
+            console.log('error: ' + resp);
+        });
+    }
+
+    _createClass(Summoner, [{
+        key: 'getMatchList',
+        value: function getMatchList(matchListType, $params) {
+            __WEBPACK_IMPORTED_MODULE_1_jquery___default.a.get('/summoner/' + (this.summonerName != '' ? this.summonerName : this.summonerNumber)).then(function (resp) {
+                console.log(resp);
+            }).catch(function (resp) {
+                console.log('error: ' + resp);
+            });
+        }
+    }, {
+        key: 'getDefinedMatchList',
+        value: function getDefinedMatchList(matchListType, $params) {}
+    }, {
+        key: '_parseSummonerDataFromSummonerResponse',
+        value: function _parseSummonerDataFromSummonerResponse(response) {
+            var parsedResponse = JSON.parse(response);
+            this.summonerName = parsedResponse.name;
+            this.summonerNumber = parsedResponse.id;
+            this.accountNumber = parsedResponse.accountId;
+            this.championMastery = JSON.parse(parsedResponse.championMastery);
+            this.profileIconId = parsedResponse.profileIconId;
+            this.summonerLevel = parsedResponse.summonerLevel;
+            this.league = JSON.parse(parsedResponse.league);
+            this.revisionDate = parsedResponse.revisionDate;
+            this.created_at = parsedResponse.created_at;
+            this.updated_at = parsedResponse.updated_at;
+        }
+    }, {
+        key: '_parseMatchListDataFromResponse',
+        value: function _parseMatchListDataFromResponse(matchList, definedMatchList) {}
+    }, {
+        key: '_assignRankedData',
+        value: function _assignRankedData() {}
+    }]);
+
+    return Summoner;
+}();
+
+/* harmony default export */ __webpack_exports__["a"] = Summoner;
 
 /***/ })
 /******/ ]);
