@@ -39,7 +39,15 @@
     "9" : {
       "id" : 9,
       "name" : "Season 2017"
-    }
+    },
+    "10" : {
+      "id" : 10,
+      "name" : "Preseason 2018"
+    },
+    "11" : {
+      "id" : 11,
+      "name" : "Season 2018"
+    },
   },
   "matchmaking_queues" : {
     "0" : {
