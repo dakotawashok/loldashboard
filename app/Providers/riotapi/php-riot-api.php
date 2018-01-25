@@ -247,7 +247,7 @@ class riotapi {
 
     //Returns the league of a given summoner.
     public function getLeague($id){
-        $call = 'leagues/by-summoner/' . $id;
+        $call = 'positions/by-summoner/' . $id;
 
         //add API URL to the call
         $call = self::API_URL_LEAGUE_3 . $call;

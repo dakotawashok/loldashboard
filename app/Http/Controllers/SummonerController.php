@@ -20,8 +20,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 
-require '../app/Providers/riotapi/php-riot-api.php';
-require '../app/Providers/riotapi/FileSystemCache.php';
+require_once '../app/Providers/riotapi/php-riot-api.php';
+require_once '../app/Providers/riotapi/FileSystemCache.php';
 use riotapi;
 use FileSystemCache;
 
@@ -56,32 +56,9 @@ class SummonerController extends Controller
         $summonerId = $id;
 
         // First, find the summoner data
-        try {
-            if (is_numeric($id)) {
-                $summoner = Summoner::where('accountId', $id)->firstOrFail();
-            } else {
-                $summoner = Summoner::where('name', $id)->firstOrFail();
-            }
-        } catch (ModelNotFoundException $e) {
-            if (is_numeric($id)) {
-                $returnSummoner = $this->api->getSummoner($id, true);
-            } else {
-                $returnSummoner = $this->api->getSummonerByName($id);
-            }
+        $summoner = new Summoner;
+        $summoner->assignData($id);
 
-            $summoner = new Summoner;
-            $summoner->id = $returnSummoner['id'];
-            $summoner->accountId = $returnSummoner['accountId'];
-            $summoner->name = $returnSummoner['name'];
-            $summoner->profileIconId = $returnSummoner['profileIconId'];
-            $summoner->summonerLevel = $returnSummoner['summonerLevel'];
-            $summoner->revisionDate = (string)$returnSummoner['revisionDate'];
-
-            $summoner->save();
-
-            $this->assignChampionMasteries($this->api, $summoner);
-            $this->assignLeagues($this->api, $summoner);
-        }
         $returnObject['summoner'] = $summoner;
 
         $summonerId = $summoner->id;
@@ -91,7 +68,7 @@ class SummonerController extends Controller
         // Normal matchlist first
         $normalParams = [
             'queue'=> [2,14,400,430],
-            'season'=> [9],
+            //'season'=> [9],
             'endIndex'=> 20
         ];
         try {
