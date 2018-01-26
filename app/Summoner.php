@@ -27,47 +27,30 @@ class Summoner extends Model
         parent::__construct($attributes);
     }
 
-
     /**
      * This will assign the object
      *
      * @param  string|int  $id
      * @return \Illuminate\Http\Response
      */
-    public function assignData($id) {
-        try {
-            if (is_numeric($id)) {
-                $tempSummoner = $this->where('accountId', $id)->firstOrFail();
-            } else {
-                $tempSummoner =  $this->where('name', $id)->firstOrFail();
-            }
-            $this->id = $tempSummoner['id'];
-            $this->accountId = $tempSummoner['accountId'];
-            $this->name = $tempSummoner['name'];
-            $this->profileIconId = $tempSummoner['profileIconId'];
-            $this->revisionDate = $tempSummoner['revisionDate'];
-            $this->summonerLevel = $tempSummoner['summonerLevel'];
-            $this->championMastery = (string)$tempSummoner['championMastery'];
-            $this->league = (string)$tempSummoner['league'];
-        } catch (ModelNotFoundException $e) {
-            if (is_numeric($id)) {
-                $tempSummoner = $this->api->getSummoner($id, true);
-            } else {
-                $tempSummoner = $this->api->getSummonerByName($id);
-            }
-
-            $this->id = $tempSummoner['id'];
-            $this->accountId = $tempSummoner['accountId'];
-            $this->name = $tempSummoner['name'];
-            $this->profileIconId = $tempSummoner['profileIconId'];
-            $this->summonerLevel = $tempSummoner['summonerLevel'];
-            $this->revisionDate = (string)$tempSummoner['revisionDate'];
-
-            $this->assignChampionMasteries(false);
-            $this->assignLeagues(false);
-
-            $this->save();
+    public function assignDataFromAPI($id) {
+        if (is_numeric($id)) {
+            $tempSummoner = $this->api->getSummoner($id, true);
+        } else {
+            $tempSummoner = $this->api->getSummonerByName($id);
         }
+
+        $this->id = $tempSummoner['id'];
+        $this->accountId = $tempSummoner['accountId'];
+        $this->name = $tempSummoner['name'];
+        $this->profileIconId = $tempSummoner['profileIconId'];
+        $this->summonerLevel = $tempSummoner['summonerLevel'];
+        $this->revisionDate = (string)$tempSummoner['revisionDate'];
+
+        $this->assignChampionMasteries(false);
+        $this->assignLeagues(false);
+
+        $this->save();
 
         return $this;
     }

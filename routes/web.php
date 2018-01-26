@@ -31,10 +31,10 @@ Route::get('summoner/{accountId}/refreshRankedStats', 'SummonerController@refres
 
 Route::get('summoner/{accountId}/{type}/data/{season}', 'SummonerController@getSummonerData');
 
-Route::post('summoner/{identifier}/matchlist', 'SummonerController@getMatchList');
-
 Route::get('summoner/{identifier}/match/{matchId}', 'SummonerController@getMatchData');
 
 Route::get('summoner/{identifier}/recentgames', 'SummonerController@getRecentGames');
 
 Route::get('match/{matchId}', 'MatchController@getMatchById');
+
+Route::post('summoner/{identifier}/matchlist', 'MatchController@getMatchList');

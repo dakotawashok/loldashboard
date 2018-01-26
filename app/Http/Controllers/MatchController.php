@@ -20,8 +20,8 @@ use Illuminate\Database\Eloquent\ModelNotFoundException;
 use Illuminate\Validation\ValidationException;
 use Symfony\Component\Console\Exception\InvalidArgumentException;
 
-require '../app/Providers/riotapi/php-riot-api.php';
-require '../app/Providers/riotapi/FileSystemCache.php';
+require_once '../app/Providers/riotapi/php-riot-api.php';
+require_once '../app/Providers/riotapi/FileSystemCache.php';
 use riotapi;
 use FileSystemCache;
 
@@ -46,6 +46,19 @@ class MatchController extends Controller
         }
 
         return response()->json(json_encode($matchFromDatabase));
+    }
+
+    public function getMatchList(Request $request, $identifier) {
+        $matchListType = $request->input('matchListType', 'ranked');
+        $params = $request->input('params', 'null');
+        if ($params != 'null') {
+            $params = json_decode($params);
+        } else {
+            $params = null;
+        }
+
+
+
     }
 
     public function log($message) {

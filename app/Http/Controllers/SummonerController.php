@@ -56,8 +56,13 @@ class SummonerController extends Controller
         $summonerId = $id;
 
         // First, find the summoner data
-        $summoner = new Summoner;
-        $summoner->assignData($id);
+        try {
+            $summoner = (is_numeric($id) ? Summoner::where('accountId', $id)->firstOrFail() : Summoner::where('name', $id)->firstOrFail());
+        } catch (ModelNotFoundException $e) {
+            $summoner = new Summoner;
+            $summoner->assignDataFromAPI($id);
+        }
+
 
         $returnObject['summoner'] = $summoner;
 
@@ -240,9 +245,13 @@ class SummonerController extends Controller
      */
     public function getSummoner($id)
     {
-        // First, find the summoner data
-        $summoner = new Summoner;
-        $summoner->assignData($id);
+        try {
+            $summoner = (is_numeric($id) ? Summoner::where('accountId', $id)->firstOrFail() : Summoner::where('name', $id)->firstOrFail());
+        } catch (ModelNotFoundException $e) {
+            $summoner = new Summoner;
+            $summoner->assignDataFromAPI($id);
+            $summoner->assignLeague(true);
+        }
 
         $response = response()->json(json_encode($summoner));
 
