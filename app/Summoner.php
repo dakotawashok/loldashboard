@@ -63,23 +63,23 @@ class Summoner extends Model
             $this->summonerLevel = $tempSummoner['summonerLevel'];
             $this->revisionDate = (string)$tempSummoner['revisionDate'];
 
-            $this->save();
+            $this->assignChampionMasteries(false);
+            $this->assignLeagues(false);
 
-            $this->assignChampionMasteries();
-            $this->assignLeagues();
+            $this->save();
         }
 
         return $this;
     }
 
-    public function assignChampionMasteries() {
+    public function assignChampionMasteries($save) {
         $championMastery = $this->api->getChampionMastery($this->id);
         $this->championMastery = json_encode($championMastery);
-        $this->save();
+        if ($save) { $this->save(); }
     }
-    public function assignLeagues() {
+    public function assignLeagues($save) {
         $league = $this->api->getLeague($this->id);
         $this->league = json_encode($league);
-        $this->save();
+        if ($save) { $this->save(); }
     }
 }

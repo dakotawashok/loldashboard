@@ -259,9 +259,8 @@ class SummonerController extends Controller
      * @return \Illuminate\Http\Response
      */
     public function refreshRankedStats($accountId) {
-        $summoner = new Summoner;
-        $summoner->assignData($accountId);
-        $summoner->assignLeagues();
+        $summoner = Summoner::where('accountId', $accountId)->firstOrFail();
+        $summoner->assignLeagues(true);
 
         return response()->json($summoner->league);
     }
@@ -360,7 +359,6 @@ class SummonerController extends Controller
                 // make the teams
                 forEach($apiMatch['teams'] as $team) {
                     $newTeam = new MatchTeam;
-                    $this->log($team);
                     $newTeam->matchId = (string)$match_entry['gameId'];
                     $newTeam->firstDragon = (isset($team['firstDragon']) ? $team['firstDragon'] : '');
                     $newTeam->bans = (isset($team['bans']) ? json_encode($team['bans']) : '');
@@ -478,12 +476,6 @@ class SummonerController extends Controller
         $matchesObject->save();
 
         $this->saveMatchListMatches($this->api, $matches);
-    }
-
-    private function assignLeagues(&$api, &$summoner) {
-        $league = $api->getLeague($summoner->id);
-        $summoner->league = json_encode($league);
-        $summoner->save();
     }
 
     private function formatMatchListForDelivery(&$matchListObject) {

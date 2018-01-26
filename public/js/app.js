@@ -17040,7 +17040,6 @@ module.exports = defaults;
                 tempSummoner.rankedData = {};
                 if (tempSummoner != undefined && tempSummoner.league != undefined) {
                     _.forEach(tempSummoner.league, function (league) {
-                        console.log(league);
                         if (league.queueType == 'RANKED_SOLO_5x5') {
                             tempSummoner.rankedData.freshBlood = league.freshBlood;
                             tempSummoner.rankedData.hotStreak = league.hotStreak;
@@ -17068,7 +17067,6 @@ module.exports = defaults;
                 tempSummoner.rankedData = {};
                 if (tempSummoner != undefined && tempSummoner.league != undefined) {
                     _.forEach(tempSummoner.league, function (league) {
-                        console.log(league);
                         if (league.queueType == 'RANKED_SOLO_5x5') {
                             tempSummoner.rankedData.freshBlood = league.freshBlood;
                             tempSummoner.rankedData.hotStreak = league.hotStreak;
