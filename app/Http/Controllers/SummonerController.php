@@ -73,7 +73,7 @@ class SummonerController extends Controller
         // Normal matchlist first
         $normalParams = [
             'queue'=> [2,14,400,430],
-            //'season'=> [9],
+            'season'=> [9],
             'endIndex'=> 20
         ];
         try {

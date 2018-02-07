@@ -27,43 +27,59 @@ class MatchList extends Model
         parent::__construct($attributes);
     }
 
-    public function assignData($id, $list_type, $params) {
-        try {
-            $matchList = $this->where('summonerId',$id, 'list_type', $list_type)->firstOrFail();
+    public function assignDataFromAPI($id, $list_type, $params) {
+        $matches = $this->api->getMatchList($id, $params);
 
-            // If it's older than a day, retrieve the newest match list from the api and resave it in the database
-            if (strtotime($matchList->updated_at) < (strtotime('-1 day'))) {
-                $matches = $this->api->getMatchList($id, $params);
-                if (gettype($matches) == "object") {
-                    $matchList->matches = json_encode($matches->matches);
-                } else {
-                    $matchList->matches = json_encode($matches['matches']);
-                }
-                $matchList->updated_at = $matchList->freshTimestampString();
-                $matchList->save();
-                $this->saveMatchListMatches($this->api, $matchList);
-            }
+        $this->summonerId = $id;
+        $this->season = $params['season'];
+        $this->list_type = $list_type;
+        $this->matches = json_encode($matches['matches']);
+        $this->save();
+        $this->saveMatchListMatches();
 
-            $this->id = $matchList['id'];
-            $this->summonerId = $matchList['summonerId'];
-            $this->season = $matchList['season'];
-            $this->list_type = $matchList['list_type'];
-            $this->matches = $matchList['matches'];
-        } catch (ModelNotFoundException $e) {
+        return $this;
+    }
+
+    public function determineNeedForUpdating() {
+        // If it's older than a day, retrieve the newest match list from the api and resave it in the database
+        if (strtotime($this->updated_at) < (strtotime('-1 day'))) {
             $matches = $this->api->getMatchList($id, $params);
-            $matchList = new MatchList;
-            $matchList->summonerId = $id;
-            $matchList->season = '["9"]';
-            $matchList->list_type = $list_type;
-            $matchList->matches = json_encode($matches['matches']);
-            $matchList->save();
-            $this->saveMatchListMatches($matchList);
+            if (gettype($matches) == "object") {
+                $this->matches = json_encode($matches->matches);
+            } else {
+                $this->matches = json_encode($matches['matches']);
+            }
+            $this->updated_at = $this->freshTimestampString();
+            $this->save();
+            $this->saveMatchListMatches();
+            return true;
+        } else {
+            return false;
         }
     }
 
-    private function saveMatchListMatches($matches) {
+    public  function getMatchListMatches() {
+    $matchArray = [];
+    $matches = json_decode($this->matches);
+    forEach($matches as $match_entry) {
+        try {
+            $matchFromDatabase = Match::where('gameId', (string)$match_entry->gameId)->firstOrFail();
+            $matchFromDatabase->matchTeams = $matchFromDatabase->teams;
+            $matchFromDatabase->matchParticipants = $matchFromDatabase->participants;
+            $matchFromDatabase->MatchParticipantIdentities = $matchFromDatabase->participantIdentities;
+            array_push($matchArray, $matchFromDatabase);
+        } catch (ModelNotFoundException $e) {
+
+        }
+    }
+    $this->formatDefinedMatchListForDelivery($matchArray);
+
+    return $matchArray;
+}
+
+    private function saveMatchListMatches() {
         // Now we have to go through each part of the matchlist and see if the match is in our database, if it isn't go find it...
-        $matches = json_decode($matches['matches'], true);
+        $matches = json_decode($this->matches);
         forEach($matches as $match_entry) {
             try {
                 $matchFromDatabase = Match::where('gameId', (string)$match_entry['gameId'])->firstOrFail();
@@ -142,6 +158,36 @@ class MatchList extends Model
                 $newMatch->gameDuration = $apiMatch['gameDuration'];
                 $newMatch->gameCreation = (string)$apiMatch['gameCreation'];
                 $newMatch->save();
+            }
+        }
+    }
+
+    private function formatDefinedMatchListForDelivery(&$definedMatchListObject) {
+
+        // go through each of the match lists participants and remove unnecessary entries in stats and completely remove the timeline
+        foreach($definedMatchListObject as $matchIndex => $match) {
+            foreach($match->matchParticipants as $participantIndex => $participant) {
+                // unset the timeline, runes, and masteries for each match participant
+                unset($definedMatchListObject[$matchIndex]->matchParticipants[$participantIndex]->timeline);
+                unset($definedMatchListObject[$matchIndex]->matchParticipants[$participantIndex]->runes);
+                unset($definedMatchListObject[$matchIndex]->matchParticipants[$participantIndex]->masteries);
+
+                // make a new stats thing so that we can set it and remove the unecessary stuff
+                $tempStats = [];
+                $parsedStats = json_decode($participant->stats);
+                $tempStats['win'] = $parsedStats->win;
+                $tempStats['item0'] = $parsedStats->item0;
+                $tempStats['item1'] = $parsedStats->item1;
+                $tempStats['item2'] = $parsedStats->item2;
+                $tempStats['item3'] = $parsedStats->item3;
+                $tempStats['item4'] = $parsedStats->item4;
+                $tempStats['item5'] = $parsedStats->item5;
+                $tempStats['item6'] = $parsedStats->item6;
+                $tempStats['kills'] = $parsedStats->kills;
+                $tempStats['deaths'] = $parsedStats->deaths;
+                $tempStats['assists'] = $parsedStats->assists;
+                $tempStats = json_encode($tempStats);
+                $definedMatchListObject[$matchIndex]->matchParticipants[$participantIndex]->stats = $tempStats;
             }
         }
     }

@@ -1,5 +1,4 @@
 import store from '../js/store.js';
-import Summoner from '../js/objects/Summoner.js'
 
 export default {
     created: function() {
@@ -67,9 +66,11 @@ export default {
 
         getAllSummonerData : function(summonerNumber, useAccountId = false) {
             if (summonerNumber == "1") {
-                var tempSummoner = new Summoner((useAccountId ?  this.summoner1.accountId : this.summoner1.summonerName), true);
-
-                store.commit('assignTestSummoner', {'summonerNumber' : summonerNumber, 'summoner' : tempSummoner });
+                var tempSummoner = this.$summoner_service.make_new_summoner();
+                console.log('doing stuff...');
+                this.$summoner_service.load_new_summoner(tempSummoner, this.summoner1.summonerName, !useAccountId).then((resp) => {
+                    store.commit('assignTestSummoner', {'summonerNumber' : summonerNumber, 'summoner' : resp });
+                });
 
                 store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : true});
                 this.$http.get('/summoner/' + (useAccountId ?  this.summoner1.accountId : this.summoner1.summonerName) + '/allData').then((resp) => {

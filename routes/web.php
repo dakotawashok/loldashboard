@@ -37,4 +37,6 @@ Route::get('summoner/{identifier}/recentgames', 'SummonerController@getRecentGam
 
 Route::get('match/{matchId}', 'MatchController@getMatchById');
 
-Route::post('summoner/{identifier}/matchlist', 'MatchController@getMatchList');
+Route::get('summoner/{identifier}/getMatchList', 'MatchController@getMatchList');
+
+Route::get('summoner/{identifier}/getDefinedMatchList', 'MatchController@getDefinedMatchList');

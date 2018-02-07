@@ -1,2 +1,0 @@
-
-{"id":35112708,"accountId":"49564064","name":"PotionMaster","profileIconId":"1627","revisionDate":"1516557826000","summonerLevel":"43","masteries":null,"runes":null,"championMastery":null,"league":null,"created_at":"2018-01-25 22:37:23","updated_at":"2018-01-25 22:37:23"}

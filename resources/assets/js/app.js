@@ -33,9 +33,12 @@ var VueResource = require('vue-resource');
 
 import VueCharts from 'vue-chartjs';
 import VueNotify from './vue-notify'
+import VueSummonerService from './vue-summoner-service'
 
 Vue.use(VueResource);
 Vue.use(VueNotify);
+Vue.use(VueSummonerService);
+
 
 var store = require('./store.js');
 
