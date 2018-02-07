@@ -153,10 +153,10 @@
             loadSummonerFromMatchCard : function(accountId) {
                 if (this.summoner_number == '1') {
                     store.commit('assignSummonerAccountId', {summonerNumber: 2, accountId: accountId});
-                    this.getAllSummonerData('2', true);
+                    this.getAllSummonerData('2', true, this.match_type);
                 } else if (this.summoner_number == '2') {
                     store.commit('assignSummonerAccountId', {summonerNumber: 1, accountId: accountId});
-                    this.getAllSummonerData('1', true);
+                    this.getAllSummonerData('1', true, this.match_type);
                 }
 
             },

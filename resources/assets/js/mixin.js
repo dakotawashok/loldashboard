@@ -64,12 +64,12 @@ export default {
             });
         },
 
-        getAllSummonerData : function(summonerNumber, useAccountId = false) {
-            console.log("Doing getAllSummonerData")
+        getAllSummonerData : function(summonerNumber, useAccountId = false, currentlyViewedMatchList) {
+            console.log('getting all summoner data');
             if (summonerNumber == "1") {
                 var tempSummoner = this.$summoner_service.make_new_summoner();
                 store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : true});
-                this.$summoner_service.load_new_summoner(tempSummoner, (useAccountId ? this.summoner1.accountId : this.summoner1.summonerName), !useAccountId).then((resp) => {
+                this.$summoner_service.load_new_summoner(tempSummoner, (useAccountId ? this.summoner1.accountId : this.summoner1.summonerName), !useAccountId, currentlyViewedMatchList).then((resp) => {
                     store.commit('assignSummoner', {'summonerNumber' : summonerNumber, 'summoner' : resp });
                     store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : false});
                     store.commit('assignSummoner1Loaded', true);
@@ -82,8 +82,7 @@ export default {
             } else {
                 var tempSummoner = this.$summoner_service.make_new_summoner();
                 store.commit('assignSummonerLoading', {'summonerNumber' : 2, 'loading' : true});
-                console.log((useAccountId ? this.summoner2.accountId : this.summoner2.summonerName))
-                this.$summoner_service.load_new_summoner(tempSummoner, (useAccountId ? this.summoner2.accountId : this.summoner2.summonerName), !useAccountId).then((resp) => {
+                this.$summoner_service.load_new_summoner(tempSummoner, (useAccountId ? this.summoner2.accountId : this.summoner2.summonerName), !useAccountId, currentlyViewedMatchList).then((resp) => {
                     store.commit('assignSummoner', {'summonerNumber' : summonerNumber, 'summoner' : resp });
                     store.commit('assignSummonerLoading', {'summonerNumber' : 2, 'loading' : false});
                     store.commit('assignSummoner2Loaded', true);

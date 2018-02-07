@@ -16949,12 +16949,13 @@ module.exports = defaults;
             var _this = this;
 
             var useAccountId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
+            var currentlyViewedMatchList = arguments[2];
 
-            console.log("Doing getAllSummonerData");
+            console.log('getting all summoner data');
             if (summonerNumber == "1") {
                 var tempSummoner = this.$summoner_service.make_new_summoner();
                 __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 1, 'loading': true });
-                this.$summoner_service.load_new_summoner(tempSummoner, useAccountId ? this.summoner1.accountId : this.summoner1.summonerName, !useAccountId).then(function (resp) {
+                this.$summoner_service.load_new_summoner(tempSummoner, useAccountId ? this.summoner1.accountId : this.summoner1.summonerName, !useAccountId, currentlyViewedMatchList).then(function (resp) {
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner', { 'summonerNumber': summonerNumber, 'summoner': resp });
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 1, 'loading': false });
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1Loaded', true);
@@ -16967,8 +16968,7 @@ module.exports = defaults;
             } else {
                 var tempSummoner = this.$summoner_service.make_new_summoner();
                 __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 2, 'loading': true });
-                console.log(useAccountId ? this.summoner2.accountId : this.summoner2.summonerName);
-                this.$summoner_service.load_new_summoner(tempSummoner, useAccountId ? this.summoner2.accountId : this.summoner2.summonerName, !useAccountId).then(function (resp) {
+                this.$summoner_service.load_new_summoner(tempSummoner, useAccountId ? this.summoner2.accountId : this.summoner2.summonerName, !useAccountId, currentlyViewedMatchList).then(function (resp) {
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner', { 'summonerNumber': summonerNumber, 'summoner': resp });
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 2, 'loading': false });
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2Loaded', true);
@@ -31548,38 +31548,96 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             var _this2 = this;
 
             this.currentlyViewedMatchList = view;
+            console.log('changing view');
 
             if (this.summoner1.loaded) {
                 var match_list = [];
                 var defined_match_list = [];
-                this.$summoner_service.load_matchlist(view, null, __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1).then(function (resp) {
-                    match_list = resp;
-                    return _this2.$summoner_service.load_defined_matchlist(view, null, __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1);
-                }).then(function (resp) {
-                    defined_match_list = resp;
-                    _this2.$summoner_service.parse_match_list_data(match_list, defined_match_list);
-                    switch (view) {
-                        case 'ranked':
-                            __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.rankedMatchList = match_list;
-                            __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.definedRankedMatchList = defined_match_list;
-                            break;
-                        case 'normal':
-                            __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.normalMatchList = match_list;
-                            __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.definedNormalMatchList = defined_match_list;
-                            break;
-                        case 'other':
-                            __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.otherMatchList = match_list;
-                            __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.definedOtherMatchList = defined_match_list;
-                            break;
-                    }
-                });
+                var need_to_load_lists1 = false;
+                switch (view) {
+                    case 'ranked':
+                        console.log('in ranked1');
+                        need_to_load_lists1 = __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.rankedMatchList.length === 0;
+                        break;
+                    case 'normal':
+                        console.log('in normal1');
+                        need_to_load_lists1 = __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.normalMatchList.length === 0;
+                        break;
+                    case 'other':
+                        console.log('in other1');
+                        need_to_load_lists1 = __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.otherMatchList.length === 0;
+                        break;
+                }
+                console.log('1: ' + need_to_load_lists1);
+                if (need_to_load_lists1) {
+                    console.log('loading list');
+                    this.$summoner_service.load_matchlist(view, null, __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1).then(function (resp) {
+                        match_list = resp;
+                        return _this2.$summoner_service.load_defined_matchlist(view, null, __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1);
+                    }).then(function (resp) {
+                        defined_match_list = resp;
+                        _this2.$summoner_service.parse_match_list_data(match_list, defined_match_list);
+                        switch (view) {
+                            case 'ranked':
+                                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.rankedMatchList = match_list;
+                                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.definedRankedMatchList = defined_match_list;
+                                break;
+                            case 'normal':
+                                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.normalMatchList = match_list;
+                                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.definedNormalMatchList = defined_match_list;
+                                break;
+                            case 'other':
+                                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.otherMatchList = match_list;
+                                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.definedOtherMatchList = defined_match_list;
+                                break;
+                        }
+                    });
+                }
             }
 
             if (this.summoner2.loaded) {
-                this.$summoner_service.load_matchlist(view, null, __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2).then(function (resp) {
-                    __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner', { 'summonerNumber': "2", 'summoner': resp });
-                    return _this2.$summoner_service.load_defined_matchlist(view, null, __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2);
-                });
+                var match_list = [];
+                var defined_match_list = [];
+                var need_to_load_lists2 = false;
+                switch (view) {
+                    case 'ranked':
+                        console.log('in ranked2');
+                        need_to_load_lists2 = __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2.rankedMatchList.length === 0;
+                        break;
+                    case 'normal':
+                        console.log('in normal2');
+                        need_to_load_lists2 = __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2.normalMatchList.length === 0;
+                        break;
+                    case 'other':
+                        console.log('in other2');
+                        need_to_load_lists2 = __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2.otherMatchList.length === 0;
+                        break;
+                }
+                console.log('2: ' + need_to_load_lists2);
+                if (need_to_load_lists2) {
+                    console.log('loading list');
+                    this.$summoner_service.load_matchlist(view, null, __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2).then(function (resp) {
+                        match_list = resp;
+                        return _this2.$summoner_service.load_defined_matchlist(view, null, __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2);
+                    }).then(function (resp) {
+                        defined_match_list = resp;
+                        _this2.$summoner_service.parse_match_list_data(match_list, defined_match_list);
+                        switch (view) {
+                            case 'ranked':
+                                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2.rankedMatchList = match_list;
+                                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2.definedRankedMatchList = defined_match_list;
+                                break;
+                            case 'normal':
+                                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2.normalMatchList = match_list;
+                                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2.definedNormalMatchList = defined_match_list;
+                                break;
+                            case 'other':
+                                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2.otherMatchList = match_list;
+                                __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2.definedOtherMatchList = defined_match_list;
+                                break;
+                        }
+                    });
+                }
             }
         }
     },
@@ -31748,10 +31806,10 @@ var moment = __webpack_require__(0);
         loadSummonerFromMatchCard: function loadSummonerFromMatchCard(accountId) {
             if (this.summoner_number == '1') {
                 __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummonerAccountId', { summonerNumber: 2, accountId: accountId });
-                this.getAllSummonerData('2', true);
+                this.getAllSummonerData('2', true, this.match_type);
             } else if (this.summoner_number == '2') {
                 __WEBPACK_IMPORTED_MODULE_0__store_js__["default"].commit('assignSummonerAccountId', { summonerNumber: 1, accountId: accountId });
-                this.getAllSummonerData('1', true);
+                this.getAllSummonerData('1', true, this.match_type);
             }
         }
     },
@@ -67980,7 +68038,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "keyup": function($event) {
         if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13, $event.key)) { return null; }
-        _vm.getAllSummonerData('1')
+        _vm.getAllSummonerData('1', false, _vm.currentlyViewedMatchList)
       },
       "input": function($event) {
         if ($event.target.composing) { return; }
@@ -68093,7 +68151,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     on: {
       "keyup": function($event) {
         if (!('button' in $event) && _vm._k($event.keyCode, "enter", 13, $event.key)) { return null; }
-        _vm.getAllSummonerData('2')
+        _vm.getAllSummonerData('2', false, _vm.currentlyViewedMatchList)
       },
       "input": function($event) {
         if ($event.target.composing) { return; }
@@ -82301,7 +82359,7 @@ module.exports = __webpack_require__(151);
             return empty_summoner_object;
         };
 
-        Vue.prototype.$summoner_service.load_new_summoner = function (summoner, identity, isSummonerName) {
+        Vue.prototype.$summoner_service.load_new_summoner = function (summoner, identity, isSummonerName, currentlyViewedMatchList) {
             var temp_summoner = _.cloneDeep(summoner);
 
             if (isSummonerName) {
@@ -82310,18 +82368,39 @@ module.exports = __webpack_require__(151);
                 temp_summoner.summonerNumber = identity;
             }
 
+            var match_list = [];
+            var defined_match_list = [];
+
             return __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.get('/summoner/' + (temp_summoner.summonerName != '' ? temp_summoner.summonerName : temp_summoner.summonerNumber)).then(function (resp) {
                 _parseSummonerDataFromSummonerResponse(resp, temp_summoner);
-                return _getMatchList('ranked', null, temp_summoner);
+                return _getMatchList(currentlyViewedMatchList, null, temp_summoner);
             }).then(function (resp) {
-                var matchList = JSON.parse(JSON.parse(resp).matches);
-                temp_summoner.rankedMatchList = matchList;
-                return _getDefinedMatchList('ranked', null, temp_summoner);
+                match_list = JSON.parse(JSON.parse(resp).matches);
+                return _getDefinedMatchList(currentlyViewedMatchList, null, temp_summoner);
             }).then(function (resp) {
-                var definedMatchList = JSON.parse(resp);
-                temp_summoner.definedRankedMatchList = definedMatchList;
-                _parseMatchListDataFromResponse(temp_summoner.rankedMatchList, temp_summoner.definedRankedMatchList);
+                defined_match_list = JSON.parse(resp);
+                _parseMatchListDataFromResponse(match_list, defined_match_list);
                 _assignRankedData(temp_summoner);
+                console.log('service stuff: ');
+                console.log(currentlyViewedMatchList);
+                switch (currentlyViewedMatchList) {
+                    case 'ranked':
+                        console.log('in ranked');
+                        temp_summoner.rankedMatchList = match_list;
+                        temp_summoner.definedRankedMatchList = defined_match_list;
+                        break;
+                    case 'normal':
+                        console.log('in normal');
+                        temp_summoner.normalMatchList = match_list;
+                        temp_summoner.definedNormalMatchList = defined_match_list;
+                        break;
+                    case 'other':
+                        console.log('in other');
+                        temp_summoner.otherMatchList = match_list;
+                        temp_summoner.definedOtherMatchList = defined_match_list;
+                        break;
+                }
+                console.log(temp_summoner);
                 return temp_summoner;
             }).catch(function (resp) {
                 console.log(resp);

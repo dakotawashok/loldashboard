@@ -31,7 +31,7 @@ export default {
             return empty_summoner_object;
         }
 
-        Vue.prototype.$summoner_service.load_new_summoner = function(summoner, identity, isSummonerName) {
+        Vue.prototype.$summoner_service.load_new_summoner = function(summoner, identity, isSummonerName, currentlyViewedMatchList) {
             var temp_summoner = _.cloneDeep(summoner);
 
             if (isSummonerName) {
@@ -40,18 +40,39 @@ export default {
                 temp_summoner.summonerNumber = identity;
             }
 
+            var match_list = [];
+            var defined_match_list = [];
+
             return $.get('/summoner/' + (temp_summoner.summonerName != '' ? temp_summoner.summonerName : temp_summoner.summonerNumber)).then((resp) => {
                 _parseSummonerDataFromSummonerResponse(resp, temp_summoner);
-                return _getMatchList('ranked', null, temp_summoner);
+                return _getMatchList(currentlyViewedMatchList, null, temp_summoner);
             }).then((resp) => {
-                var matchList = JSON.parse(JSON.parse(resp).matches);
-                temp_summoner.rankedMatchList = matchList;
-                return _getDefinedMatchList('ranked', null, temp_summoner);
+                match_list = JSON.parse(JSON.parse(resp).matches);
+                return _getDefinedMatchList(currentlyViewedMatchList, null, temp_summoner);
             }).then((resp) => {
-                var definedMatchList = JSON.parse(resp);
-                temp_summoner.definedRankedMatchList = definedMatchList;
-                _parseMatchListDataFromResponse(temp_summoner.rankedMatchList, temp_summoner.definedRankedMatchList);
+                defined_match_list = JSON.parse(resp);
+                _parseMatchListDataFromResponse(match_list, defined_match_list);
                 _assignRankedData(temp_summoner);
+                console.log('service stuff: ');
+                console.log(currentlyViewedMatchList)
+                switch (currentlyViewedMatchList) {
+                    case 'ranked' :
+                        console.log('in ranked');
+                        temp_summoner.rankedMatchList = match_list;
+                        temp_summoner.definedRankedMatchList = defined_match_list;
+                        break;
+                    case 'normal' :
+                        console.log('in normal');
+                        temp_summoner.normalMatchList = match_list;
+                        temp_summoner.definedNormalMatchList = defined_match_list;
+                        break;
+                    case 'other' :
+                        console.log('in other');
+                        temp_summoner.otherMatchList = match_list;
+                        temp_summoner.definedOtherMatchList = defined_match_list;
+                        break;
+                }
+                console.log(temp_summoner);
                 return temp_summoner;
             }).catch((resp) => {
                 console.log(resp);

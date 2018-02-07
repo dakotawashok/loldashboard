@@ -6,7 +6,7 @@
                     <div class="sixteen wide column">
                         <div class="ui raised segment" :class="{'loading': summoner1Loading}">
                             <h2>SUMMONER NAME1: </h2>
-                            <input id="summoner1-input" v-model="summoner1Name" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('1')"/>
+                            <input id="summoner1-input" v-model="summoner1Name" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('1', false, currentlyViewedMatchList)"/>
                             <!--<div v-if="summoner1Loaded" class="season-container">-->
                                 <!--<span>Season 6: </span>-->
                                 <!--<span>Season 5:  </span>-->
@@ -57,7 +57,7 @@
                     <div class="sixteen wide column">
                         <div class="ui raised segment" :class="{'loading': summoner2Loading}">
                             <h2>SUMMONER NAME2: </h2>
-                            <input id="summoner2-input" v-model="summoner2Name" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('2')"/>
+                            <input id="summoner2-input" v-model="summoner2Name" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('2', false, currentlyViewedMatchList)"/>
                             <!--<div v-if="summoner2Loaded" class="season-container">-->
                                 <!--<span>Season 6: </span>-->
                                 <!--<span>Season 5:  </span>-->
@@ -238,38 +238,96 @@
 
             changeView : function(view) {
                 this.currentlyViewedMatchList = view;
+                console.log('changing view');
 
                 if (this.summoner1.loaded) {
                     var match_list = [];
                     var defined_match_list = [];
-                    this.$summoner_service.load_matchlist(view, null, store.state.summoner1).then((resp) => {
-                        match_list = resp;
-                        return this.$summoner_service.load_defined_matchlist(view, null, store.state.summoner1);
-                    }).then((resp) => {
-                        defined_match_list = resp;
-                        this.$summoner_service.parse_match_list_data(match_list, defined_match_list);
-                        switch (view) {
-                            case 'ranked' :
-                                store.state.summoner1.rankedMatchList = match_list;
-                                store.state.summoner1.definedRankedMatchList = defined_match_list;
-                                break;
-                            case 'normal' :
-                                store.state.summoner1.normalMatchList = match_list;
-                                store.state.summoner1.definedNormalMatchList = defined_match_list;
-                                break;
-                            case 'other' :
-                                store.state.summoner1.otherMatchList = match_list;
-                                store.state.summoner1.definedOtherMatchList = defined_match_list;
-                                break;
-                        }
-                    })
+                    var need_to_load_lists1 = false;
+                    switch (view) {
+                        case 'ranked':
+                            console.log('in ranked1');
+                            need_to_load_lists1 = (store.state.summoner1.rankedMatchList.length === 0);
+                            break;
+                        case 'normal':
+                            console.log('in normal1');
+                            need_to_load_lists1 = (store.state.summoner1.normalMatchList.length === 0);
+                            break;
+                        case 'other':
+                            console.log('in other1');
+                            need_to_load_lists1 = (store.state.summoner1.otherMatchList.length === 0);
+                            break;
+                    }
+                    console.log('1: ' + need_to_load_lists1);
+                    if (need_to_load_lists1) {
+                        console.log('loading list');
+                        this.$summoner_service.load_matchlist(view, null, store.state.summoner1).then((resp) => {
+                            match_list = resp;
+                            return this.$summoner_service.load_defined_matchlist(view, null, store.state.summoner1);
+                        }).then((resp) => {
+                            defined_match_list = resp;
+                            this.$summoner_service.parse_match_list_data(match_list, defined_match_list);
+                            switch (view) {
+                                case 'ranked' :
+                                    store.state.summoner1.rankedMatchList = match_list;
+                                    store.state.summoner1.definedRankedMatchList = defined_match_list;
+                                    break;
+                                case 'normal' :
+                                    store.state.summoner1.normalMatchList = match_list;
+                                    store.state.summoner1.definedNormalMatchList = defined_match_list;
+                                    break;
+                                case 'other' :
+                                    store.state.summoner1.otherMatchList = match_list;
+                                    store.state.summoner1.definedOtherMatchList = defined_match_list;
+                                    break;
+                            }
+                        })
+                    }
                 }
 
                 if (this.summoner2.loaded) {
-                    this.$summoner_service.load_matchlist(view, null, store.state.summoner2).then((resp) => {
-                        store.commit('assignSummoner', {'summonerNumber' : "2", 'summoner' : resp });
-                        return this.$summoner_service.load_defined_matchlist(view, null, store.state.summoner2);
-                    })
+                    var match_list = [];
+                    var defined_match_list = [];
+                    var need_to_load_lists2 = false;
+                    switch (view) {
+                        case 'ranked':
+                            console.log('in ranked2');
+                            need_to_load_lists2 = (store.state.summoner2.rankedMatchList.length === 0);
+                            break;
+                        case 'normal':
+                            console.log('in normal2');
+                            need_to_load_lists2 = (store.state.summoner2.normalMatchList.length === 0);
+                            break;
+                        case 'other':
+                            console.log('in other2');
+                            need_to_load_lists2 = (store.state.summoner2.otherMatchList.length === 0);
+                            break;
+                    }
+                    console.log('2: ' + need_to_load_lists2);
+                    if (need_to_load_lists2) {
+                        console.log('loading list');
+                        this.$summoner_service.load_matchlist(view, null, store.state.summoner2).then((resp) => {
+                            match_list = resp;
+                            return this.$summoner_service.load_defined_matchlist(view, null, store.state.summoner2);
+                        }).then((resp) => {
+                            defined_match_list = resp;
+                            this.$summoner_service.parse_match_list_data(match_list, defined_match_list);
+                            switch (view) {
+                                case 'ranked' :
+                                    store.state.summoner2.rankedMatchList = match_list;
+                                    store.state.summoner2.definedRankedMatchList = defined_match_list;
+                                    break;
+                                case 'normal' :
+                                    store.state.summoner2.normalMatchList = match_list;
+                                    store.state.summoner2.definedNormalMatchList = defined_match_list;
+                                    break;
+                                case 'other' :
+                                    store.state.summoner2.otherMatchList = match_list;
+                                    store.state.summoner2.definedOtherMatchList = defined_match_list;
+                                    break;
+                            }
+                        })
+                    }
                 }
             },
         },
