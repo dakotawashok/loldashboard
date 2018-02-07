@@ -73,7 +73,7 @@
             },
 
             loadIntroductoryData : function() {
-                var summonerId = (this.summoner_number == '1' ? this.summoner1.summoner.accountId : this.summoner2.summoner.accountId);
+                var summonerId = (this.summoner_number == '1' ? this.summoner1.accountId : this.summoner2.accountId);
                 var summonerTeamId = 0;
                 var enemyTeamId = 0;
                 this.match_loading = true;

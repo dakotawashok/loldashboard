@@ -250,7 +250,7 @@ class SummonerController extends Controller
         } catch (ModelNotFoundException $e) {
             $summoner = new Summoner;
             $summoner->assignDataFromAPI($id);
-            $summoner->assignLeague(true);
+            $summoner->assignLeagues(true);
         }
 
         $response = response()->json(json_encode($summoner));

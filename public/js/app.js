@@ -5029,8 +5029,16 @@ var store = new Vuex.Store({
         summoner1: {
             loaded: false,
             loading: false,
-            summoner: {},
+
+            accountId: "",
+            championMastery: [],
+            league: {},
+            profileIconId: "",
+            revisionDate: "",
+            summonerLevel: "",
             summonerName: '',
+            summonerNumber: 0,
+
             normalMatchList: {},
             rankedMatchList: {},
             otherMatchList: {},
@@ -5041,8 +5049,16 @@ var store = new Vuex.Store({
         summoner2: {
             loaded: false,
             loading: false,
-            summoner: {},
+
+            accountId: "",
+            championMastery: [],
+            league: {},
+            profileIconId: "",
+            revisionDate: "",
+            summonerLevel: "",
             summonerName: '',
+            summonerNumber: 0,
+
             normalMatchList: {},
             rankedMatchList: {},
             otherMatchList: {},
@@ -5091,12 +5107,6 @@ var store = new Vuex.Store({
         },
         assignMapNames: function assignMapNames(state, mapNameList) {
             state.staticInfo.map_names = mapNameList;
-        },
-        assignSummoner1Summoner: function assignSummoner1Summoner(state, summoner) {
-            state.summoner1.summoner = summoner;
-        },
-        assignSummoner2Summoner: function assignSummoner2Summoner(state, summoner) {
-            state.summoner2.summoner = summoner;
         },
         assignSummoner1RankedMatchList: function assignSummoner1RankedMatchList(state, rankedMatchList) {
             state.summoner1.rankedMatchList = rankedMatchList;
@@ -5202,10 +5212,19 @@ var store = new Vuex.Store({
         assignTestSummoner: function assignTestSummoner(state, summonerObject) {
             var summonerNumber = summonerObject.summonerNumber;
             var summoner = summonerObject.summoner;
-            if (summonerNumber === 1) {
+            if (summonerNumber === "1") {
                 state.testSummoner1 = summoner;
             } else {
                 state.testSummoner2 = summoner;
+            }
+        },
+        assignSummoner: function assignSummoner(state, summonerObject) {
+            var summonerNumber = summonerObject.summonerNumber;
+            var summoner = summonerObject.summoner;
+            if (summonerNumber === "1") {
+                state.summoner1 = summoner;
+            } else {
+                state.summoner2 = summoner;
             }
         }
     }
@@ -16931,69 +16950,33 @@ module.exports = defaults;
 
             var useAccountId = arguments.length > 1 && arguments[1] !== undefined ? arguments[1] : false;
 
+            console.log("Doing getAllSummonerData");
             if (summonerNumber == "1") {
                 var tempSummoner = this.$summoner_service.make_new_summoner();
-                console.log('doing stuff...');
-                this.$summoner_service.load_new_summoner(tempSummoner, this.summoner1.summonerName, !useAccountId).then(function (resp) {
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignTestSummoner', { 'summonerNumber': summonerNumber, 'summoner': resp });
-                });
-
                 __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 1, 'loading': true });
-                this.$http.get('/summoner/' + (useAccountId ? this.summoner1.accountId : this.summoner1.summonerName) + '/allData').then(function (resp) {
-                    resp = JSON.parse(resp.body);
-                    // get the summoner information from the response
-                    resp.summoner = _this.parseSummonerDataFromResponse(resp.summoner);
-                    resp.normalMatchList.matches = JSON.parse(resp.normalMatchList.matches);
-                    resp.rankedMatchList.matches = JSON.parse(resp.rankedMatchList.matches);
-                    resp.otherMatchList.matches = JSON.parse(resp.otherMatchList.matches);
-                    _this.parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
-                    _this.parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
-                    _this.parseMatchListDataFromResponse(resp.otherMatchList.matches, resp.otherDefinedMatchList);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1Summoner', resp.summoner);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.summoner1.summonerName = resp.summoner.name;
+                this.$summoner_service.load_new_summoner(tempSummoner, useAccountId ? this.summoner1.accountId : this.summoner1.summonerName, !useAccountId).then(function (resp) {
+                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner', { 'summonerNumber': summonerNumber, 'summoner': resp });
+                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 1, 'loading': false });
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1Loaded', true);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1RankedMatchList', resp.rankedMatchList.matches);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1DefinedRankedMatchList', resp.rankedDefinedMatchList);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1NormalMatchList', resp.normalMatchList.matches);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1DefinedNormalMatchList', resp.normalDefinedMatchList);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerMatchList', { 'matchList': resp.otherMatchList.matches, summonerNumber: 1, matchListType: 'other' });
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerDefinedMatchList', { 'matchList': resp.otherDefinedMatchList, summonerNumber: 1, matchListType: 'other' });
-
-                    _this.assignRankedData(summonerNumber);
-
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 1, 'loading': false });
                 }).catch(function (resp) {
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 1, 'loading': false });
                     _this.$notify.error('Summoner not found');
+                    console.log(resp);
+                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 1, 'loading': false });
+                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner1Loaded', true);
                 });
             } else {
+                var tempSummoner = this.$summoner_service.make_new_summoner();
                 __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 2, 'loading': true });
-                this.$http.get('/summoner/' + (useAccountId ? this.summoner2.accountId : this.summoner2.summonerName) + '/allData').then(function (resp) {
-                    resp = JSON.parse(resp.body);
-                    // get the summoner information from the response
-                    resp.summoner = _this.parseSummonerDataFromResponse(resp.summoner);
-                    resp.normalMatchList.matches = JSON.parse(resp.normalMatchList.matches);
-                    resp.rankedMatchList.matches = JSON.parse(resp.rankedMatchList.matches);
-                    resp.otherMatchList.matches = JSON.parse(resp.otherMatchList.matches);
-                    _this.parseMatchListDataFromResponse(resp.normalMatchList.matches, resp.normalDefinedMatchList);
-                    _this.parseMatchListDataFromResponse(resp.rankedMatchList.matches, resp.rankedDefinedMatchList);
-                    _this.parseMatchListDataFromResponse(resp.otherMatchList.matches, resp.otherDefinedMatchList);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2Summoner', resp.summoner);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.summoner2.summonerName = resp.summoner.name;
+                console.log(useAccountId ? this.summoner2.accountId : this.summoner2.summonerName);
+                this.$summoner_service.load_new_summoner(tempSummoner, useAccountId ? this.summoner2.accountId : this.summoner2.summonerName, !useAccountId).then(function (resp) {
+                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner', { 'summonerNumber': summonerNumber, 'summoner': resp });
+                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 2, 'loading': false });
                     __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2Loaded', true);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2RankedMatchList', resp.rankedMatchList.matches);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2DefinedRankedMatchList', resp.rankedDefinedMatchList);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2NormalMatchList', resp.normalMatchList.matches);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2DefinedNormalMatchList', resp.normalDefinedMatchList);
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerMatchList', { 'matchList': resp.otherMatchList.matches, summonerNumber: 2, matchListType: 'other' });
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerDefinedMatchList', { 'matchList': resp.otherDefinedMatchList, summonerNumber: 2, matchListType: 'other' });
-
-                    _this.assignRankedData(summonerNumber);
-
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 2, 'loading': false });
                 }).catch(function (resp) {
-                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 2, 'loading': false });
                     _this.$notify.error('Summoner not found');
+                    console.log(resp);
+                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummonerLoading', { 'summonerNumber': 2, 'loading': false });
+                    __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].commit('assignSummoner2Loaded', true);
                 });
             }
         },
@@ -17193,13 +17176,6 @@ module.exports = defaults;
             return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.matchModalLoading;
         },
 
-        summoner1ProfileIconUrl: function summoner1ProfileIconUrl() {
-            return "http://ddragon.leagueoflegends.com/cdn/" + this.API_VERSION + "/img/profileicon/" + this.summoner1.summoner.profileIconId + ".png";
-        },
-        summoner2ProfileIconUrl: function summoner2ProfileIconUrl() {
-            return "http://ddragon.leagueoflegends.com/cdn/" + this.API_VERSION + "/img/profileicon/" + this.summoner2.summoner.profileIconId + ".png";
-        },
-
         staticInfo: function staticInfo() {
             return __WEBPACK_IMPORTED_MODULE_0__js_store_js__["default"].state.staticInfo;
         },
@@ -17252,38 +17228,38 @@ module.exports = defaults;
         },
 
         summoner1CurrentRank: function summoner1CurrentRank() {
-            return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData) ? 'Unranked' : this.summoner1.summoner.rankedData.tier + ' ' + this.summoner1.summoner.rankedData.rank;
+            return this.summoner1.rankedData == undefined || _.isEmpty(this.summoner1.rankedData) ? 'Unranked' : this.summoner1.rankedData.tier + ' ' + this.summoner1.rankedData.rank;
         },
         summoner1RankName: function summoner1RankName() {
-            return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData) ? 'Unranked' : this.summoner1.summoner.rankedData.leagueName;
+            return this.summoner1.rankedData == undefined || _.isEmpty(this.summoner1.rankedData) ? 'Unranked' : this.summoner1.rankedData.leagueName;
         },
         summoner1Ratio: function summoner1Ratio() {
-            return this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData) ? 'Unranked' : this.summoner1.summoner.rankedData.leaguePoints + ' LP / ' + this.summoner1.summoner.rankedData.wins + ' wins / ' + this.summoner1.summoner.rankedData.losses + ' losses';
+            return this.summoner1.rankedData == undefined || _.isEmpty(this.summoner1.rankedData) ? 'Unranked' : this.summoner1.rankedData.leaguePoints + ' LP / ' + this.summoner1.rankedData.wins + ' wins / ' + this.summoner1.rankedData.losses + ' losses';
         },
         summoner1RatioPercent: function summoner1RatioPercent() {
-            if (this.summoner1.summoner.rankedData == undefined || _.isEmpty(this.summoner1.summoner.rankedData)) {
+            if (this.summoner1.rankedData == undefined || _.isEmpty(this.summoner1.rankedData)) {
                 return 'Unranked';
             } else {
-                var wins = parseInt(this.summoner1.summoner.rankedData.wins);
-                var total = parseInt(this.summoner1.summoner.rankedData.wins) + parseInt(this.summoner1.summoner.rankedData.losses);
+                var wins = parseInt(this.summoner1.rankedData.wins);
+                var total = parseInt(this.summoner1.rankedData.wins) + parseInt(this.summoner1.rankedData.losses);
                 return (wins / total * 100).toFixed(2) + '%';
             }
         },
         summoner2CurrentRank: function summoner2CurrentRank() {
-            return this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData) ? 'Unranked' : this.summoner2.summoner.rankedData.tier + ' ' + this.summoner2.summoner.rankedData.rank;
+            return this.summoner2.rankedData == undefined || _.isEmpty(this.summoner2.rankedData) ? 'Unranked' : this.summoner2.rankedData.tier + ' ' + this.summoner2.rankedData.rank;
         },
         summoner2RankName: function summoner2RankName() {
-            return this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData) ? 'Unranked' : this.summoner2.summoner.rankedData.leagueName;
+            return this.summoner2.rankedData == undefined || _.isEmpty(this.summoner2.rankedData) ? 'Unranked' : this.summoner2.rankedData.leagueNam;
         },
         summoner2Ratio: function summoner2Ratio() {
-            return this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData) ? 'Unranked' : this.summoner2.summoner.rankedData.leaguePoints + ' LP / ' + this.summoner2.summoner.rankedData.wins + ' wins / ' + this.summoner2.summoner.rankedData.losses + ' losses';
+            return this.summoner2.rankedData == undefined || _.isEmpty(this.summoner2.rankedData) ? 'Unranked' : this.summoner2.rankedData.leaguePoints + ' LP / ' + this.summoner2.rankedData.wins + ' wins / ' + this.summoner2.rankedData.losses + ' losses';
         },
         summoner2RatioPercent: function summoner2RatioPercent() {
-            if (this.summoner2.summoner.rankedData == undefined || _.isEmpty(this.summoner2.summoner.rankedData)) {
+            if (this.summoner2.rankedData == undefined || _.isEmpty(this.summoner2.rankedData)) {
                 return 'Unranked';
             } else {
-                var wins = parseInt(this.summoner2.summoner.rankedData.wins);
-                var total = parseInt(this.summoner2.summoner.rankedData.wins) + parseInt(this.summoner2.summoner.rankedData.losses);
+                var wins = parseInt(this.summoner2.rankedData.wins);
+                var total = parseInt(this.summoner2.rankedData.wins) + parseInt(this.summoner2.rankedData.losses);
                 return (wins / total * 100).toFixed(2) + '%';
             }
         }
@@ -31569,7 +31545,42 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
         },
 
         changeView: function changeView(view) {
+            var _this2 = this;
+
             this.currentlyViewedMatchList = view;
+
+            if (this.summoner1.loaded) {
+                var match_list = [];
+                var defined_match_list = [];
+                this.$summoner_service.load_matchlist(view, null, __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1).then(function (resp) {
+                    match_list = resp;
+                    return _this2.$summoner_service.load_defined_matchlist(view, null, __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1);
+                }).then(function (resp) {
+                    defined_match_list = resp;
+                    _this2.$summoner_service.parse_match_list_data(match_list, defined_match_list);
+                    switch (view) {
+                        case 'ranked':
+                            __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.rankedMatchList = match_list;
+                            __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.definedRankedMatchList = defined_match_list;
+                            break;
+                        case 'normal':
+                            __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.normalMatchList = match_list;
+                            __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.definedNormalMatchList = defined_match_list;
+                            break;
+                        case 'other':
+                            __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.otherMatchList = match_list;
+                            __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner1.definedOtherMatchList = defined_match_list;
+                            break;
+                    }
+                });
+            }
+
+            if (this.summoner2.loaded) {
+                this.$summoner_service.load_matchlist(view, null, __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2).then(function (resp) {
+                    __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].commit('assignSummoner', { 'summonerNumber': "2", 'summoner': resp });
+                    return _this2.$summoner_service.load_defined_matchlist(view, null, __WEBPACK_IMPORTED_MODULE_2__store_js__["default"].state.summoner2);
+                });
+            }
         }
     },
     watch: {}
@@ -31658,7 +31669,7 @@ var moment = __webpack_require__(0);
         loadIntroductoryData: function loadIntroductoryData() {
             var _this = this;
 
-            var summonerId = this.summoner_number == '1' ? this.summoner1.summoner.accountId : this.summoner2.summoner.accountId;
+            var summonerId = this.summoner_number == '1' ? this.summoner1.accountId : this.summoner2.accountId;
             var summonerTeamId = 0;
             var enemyTeamId = 0;
             this.match_loading = true;
@@ -67985,7 +67996,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [(_vm.summoner1Loaded) ? _c('img', {
     staticClass: "ui centered small image",
     attrs: {
-      "src": _vm.summoner1ProfileIconUrl
+      "src": _vm.$summoner_service.assemble_profile_icon_url(_vm.API_VERSION, _vm.summoner1.profileIconId)
     }
   }) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "twelve wide column ranked-stats-container"
@@ -67993,7 +68004,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "refresh icon",
     on: {
       "click": function($event) {
-        _vm.refreshSummonerRankedData(1, _vm.summoner1.summoner.accountId)
+        _vm.refreshSummonerRankedData(1, _vm.summoner1.accountId)
       }
     }
   })]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.summoner1Ratio))]), _vm._v(" "), _c('p', [_vm._v("Win Ratio: " + _vm._s(_vm.summoner1RatioPercent))]), _vm._v(" "), _c('p', [_vm._v("League Name: " + _vm._s(_vm.summoner1RankName))])])])]) : _vm._e()])]), _vm._v(" "), (_vm.summoner1Loaded && !_vm.summoner1Loading) ? _c('div', {
@@ -68098,7 +68109,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [(_vm.summoner2Loaded) ? _c('img', {
     staticClass: "ui centered small image",
     attrs: {
-      "src": _vm.summoner2ProfileIconUrl
+      "src": _vm.$summoner_service.assemble_profile_icon_url(_vm.API_VERSION, _vm.summoner2.profileIconId)
     }
   }) : _vm._e()]), _vm._v(" "), _c('div', {
     staticClass: "twelve wide column ranked-stats-container"
@@ -68106,7 +68117,7 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     staticClass: "refresh icon",
     on: {
       "click": function($event) {
-        _vm.refreshSummonerRankedData(2, _vm.summoner2.summoner.accountId)
+        _vm.refreshSummonerRankedData(2, _vm.summoner2.accountId)
       }
     }
   })]), _vm._v(" "), _c('p', [_vm._v(_vm._s(_vm.summoner2Ratio))]), _vm._v(" "), _c('p', [_vm._v("Win Ratio: " + _vm._s(_vm.summoner2RatioPercent))]), _vm._v(" "), _c('p', [_vm._v("League Name: " + _vm._s(_vm.summoner2RankName))])])])]) : _vm._e()])]), _vm._v(" "), (_vm.summoner2Loaded && !_vm.summoner2Loading) ? _c('div', {
@@ -82265,7 +82276,7 @@ module.exports = __webpack_require__(151);
         var empty_summoner_object = {
             summonerName: '',
             summonerNumber: '',
-            accountNumber: '',
+            accountId: '',
 
             championMastery: [],
             profileIconId: '',
@@ -82309,6 +82320,8 @@ module.exports = __webpack_require__(151);
             }).then(function (resp) {
                 var definedMatchList = JSON.parse(resp);
                 temp_summoner.definedRankedMatchList = definedMatchList;
+                _parseMatchListDataFromResponse(temp_summoner.rankedMatchList, temp_summoner.definedRankedMatchList);
+                _assignRankedData(temp_summoner);
                 return temp_summoner;
             }).catch(function (resp) {
                 console.log(resp);
@@ -82318,61 +82331,47 @@ module.exports = __webpack_require__(151);
 
         Vue.prototype.$summoner_service.load_matchlist = function (matchListType, $params, summoner) {
             var temp_summoner = _.cloneDeep(summoner);
-            var match_list = _getMatchList(matchListType, $params, summoner);
-
-            switch (matchListType) {
-                case 'ranked':
-                    temp_summoner.rankedMatchList = match_list;
-                    break;
-                case 'normal':
-                    temp_summoner.normalMatchList = match_list;
-                    break;
-                case 'other':
-                    temp_summoner.otherMatchList = match_list;
-                    break;
-            }
-
-            return temp_summoner;
+            return _getMatchList(matchListType, $params, summoner).then(function (resp) {
+                return JSON.parse(JSON.parse(resp).matches);
+            });
         };
 
         Vue.prototype.$summoner_service.load_defined_matchlist = function (matchListType, $params, summoner) {
             var temp_summoner = _.cloneDeep(summoner);
-            var match_list = _getDefinedMatchList(matchListType, $params, summoner);
+            return _getDefinedMatchList(matchListType, $params, summoner).then(function (resp) {
+                return JSON.parse(resp);
+            });
+        };
 
-            switch (matchListType) {
-                case 'ranked':
-                    temp_summoner.definedRankedMatchList = match_list;
-                    break;
-                case 'normal':
-                    temp_summoner.definedRankedMatchList = match_list;
-                    break;
-                case 'other':
-                    temp_summoner.definedRankedMatchList = match_list;
-                    break;
-            }
+        Vue.prototype.$summoner_service.parse_match_list_data = function (tempMatchList, tempMatchListDefined) {
+            _parseMatchListDataFromResponse(tempMatchList, tempMatchListDefined);
+        };
 
-            return temp_summoner;
+        Vue.prototype.$summoner_service.assemble_profile_icon_url = function (API_VERSION, profileIconId) {
+            return "http://ddragon.leagueoflegends.com/cdn/" + API_VERSION + "/img/profileicon/" + profileIconId + ".png";
         };
 
         function _parseSummonerDataFromSummonerResponse(response, summoner) {
             var parsedResponse = JSON.parse(response);
             summoner.summonerName = parsedResponse.name;
             summoner.summonerNumber = parsedResponse.id;
-            summoner.accountNumber = parsedResponse.accountId;
-            summoner.championMastery = JSON.parse(parsedResponse.championMastery);
+            summoner.accountId = parsedResponse.accountId;
             summoner.profileIconId = parsedResponse.profileIconId;
             summoner.summonerLevel = parsedResponse.summonerLevel;
-            summoner.league = JSON.parse(parsedResponse.league);
             summoner.revisionDate = parsedResponse.revisionDate;
             summoner.created_at = parsedResponse.created_at;
             summoner.updated_at = parsedResponse.updated_at;
+
+            summoner.championMastery = typeof summoner.championMastery == 'string' ? JSON.parse(summoner.championMastery) : summoner.championMastery;
+            summoner.league = typeof summoner.league == 'string' ? JSON.parse(summoner.league) : summoner.league;
+            summoner.masteries = typeof summoner.masteries == 'string' ? JSON.parse(summoner.masteries) : summoner.masteries;
+            summoner.runes = typeof summoner.runes == 'string' ? JSON.parse(summoner.runes) : summoner.runes;
         }
 
         function _getMatchList(matchListType, $params, summoner) {
-            console.log('getting match list');
             var data_object = {
                 'matchListType': matchListType,
-                'accountId': summoner.accountNumber
+                'accountId': summoner.accountId
             };
 
             if ($params != undefined || $params != null) {
@@ -82380,14 +82379,12 @@ module.exports = __webpack_require__(151);
             }
 
             return __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.get('/summoner/' + summoner.summonerNumber + '/getMatchList', data_object);
-            return JSON.parse(JSON.parse(resp).matches);
         }
 
         function _getDefinedMatchList(matchListType, $params, summoner) {
-            console.log('getting defined match list');
             var data_object = {
                 'matchListType': matchListType,
-                'accountId': summoner.accountNumber
+                'accountId': summoner.accountId
             };
 
             if ($params != undefined || $params != null) {
@@ -82395,6 +82392,41 @@ module.exports = __webpack_require__(151);
             }
 
             return __WEBPACK_IMPORTED_MODULE_0_jquery___default.a.get('/summoner/' + summoner.summonerNumber + '/getDefinedMatchList', data_object);
+        }
+
+        function _parseMatchListDataFromResponse(tempMatchList, tempMatchListDefined) {
+            // Now we're going to add the defined match to each of the regular matches
+            _.forEach(tempMatchList, function (match) {
+                _.forEach(tempMatchListDefined, function (defined_match) {
+                    if (match.gameId == defined_match.gameId) {
+                        match.defined_match = defined_match;
+                    }
+                });
+            });
+        }
+
+        // Go through all the summoner league ranked data and find the specific data that matches with this summoner
+        function _assignRankedData(summoner) {
+            if (summoner != undefined && summoner.league != undefined) {
+                _.forEach(summoner.league, function (league) {
+                    if (league.queueType == 'RANKED_SOLO_5x5') {
+                        summoner.rankedData.freshBlood = league.freshBlood;
+                        summoner.rankedData.hotStreak = league.hotStreak;
+                        summoner.rankedData.inactive = league.inactive;
+                        summoner.rankedData.leagueId = league.leagueId;
+                        summoner.rankedData.losses = league.losses;
+                        summoner.rankedData.playerOrTeamId = league.playerOrTeamId;
+                        summoner.rankedData.playerOrTeamName = league.playerOrTeamName;
+                        summoner.rankedData.queueType = league.queueType;
+                        summoner.rankedData.rank = league.rank;
+                        summoner.rankedData.tier = league.tier;
+                        summoner.rankedData.veteran = league.veteran;
+                        summoner.rankedData.wins = league.wins;
+                        summoner.rankedData.leaguePoints = league.leaguePoints;
+                        summoner.rankedData.leagueName = league.leagueName;
+                    }
+                });
+            }
         }
     }
 };

@@ -15,11 +15,11 @@
                             <div v-if="summoner1Loaded" class="ui grid ranked-info-container">
                                 <div class="two column row">
                                     <div class="four wide column">
-                                        <img class="ui centered small image" v-if="summoner1Loaded" :src="summoner1ProfileIconUrl" />
+                                        <img class="ui centered small image" v-if="summoner1Loaded" :src="$summoner_service.assemble_profile_icon_url(API_VERSION, summoner1.profileIconId)" />
                                     </div>
                                     <div class="twelve wide column ranked-stats-container">
                                         <p>Current Rank: {{summoner1CurrentRank}}
-                                            <i class="refresh icon" @click="refreshSummonerRankedData(1, summoner1.summoner.accountId)"></i></p>
+                                            <i class="refresh icon" @click="refreshSummonerRankedData(1, summoner1.accountId)"></i></p>
                                         <p>{{summoner1Ratio}}</p>
                                         <p>Win Ratio: {{summoner1RatioPercent}}</p>
                                         <p>League Name: {{summoner1RankName}}</p>
@@ -66,11 +66,11 @@
                             <div v-if="summoner2Loaded" class="ui grid ranked-info-container">
                                 <div class="two column row">
                                     <div class="four wide column">
-                                        <img class="ui centered small image" v-if="summoner2Loaded" :src="summoner2ProfileIconUrl" />
+                                        <img class="ui centered small image" v-if="summoner2Loaded" :src="$summoner_service.assemble_profile_icon_url(API_VERSION, summoner2.profileIconId)" />
                                     </div>
                                     <div class="twelve wide column ranked-stats-container">
                                         <p>Current Rank: {{summoner2CurrentRank}}
-                                            <i class="refresh icon" @click="refreshSummonerRankedData(2, summoner2.summoner.accountId)"></i></p>
+                                            <i class="refresh icon" @click="refreshSummonerRankedData(2, summoner2.accountId)"></i></p>
                                         <p>{{summoner2Ratio}}</p>
                                         <p>Win Ratio: {{summoner2RatioPercent}}</p>
                                         <p>League Name: {{summoner2RankName}}</p>
@@ -238,6 +238,39 @@
 
             changeView : function(view) {
                 this.currentlyViewedMatchList = view;
+
+                if (this.summoner1.loaded) {
+                    var match_list = [];
+                    var defined_match_list = [];
+                    this.$summoner_service.load_matchlist(view, null, store.state.summoner1).then((resp) => {
+                        match_list = resp;
+                        return this.$summoner_service.load_defined_matchlist(view, null, store.state.summoner1);
+                    }).then((resp) => {
+                        defined_match_list = resp;
+                        this.$summoner_service.parse_match_list_data(match_list, defined_match_list);
+                        switch (view) {
+                            case 'ranked' :
+                                store.state.summoner1.rankedMatchList = match_list;
+                                store.state.summoner1.definedRankedMatchList = defined_match_list;
+                                break;
+                            case 'normal' :
+                                store.state.summoner1.normalMatchList = match_list;
+                                store.state.summoner1.definedNormalMatchList = defined_match_list;
+                                break;
+                            case 'other' :
+                                store.state.summoner1.otherMatchList = match_list;
+                                store.state.summoner1.definedOtherMatchList = defined_match_list;
+                                break;
+                        }
+                    })
+                }
+
+                if (this.summoner2.loaded) {
+                    this.$summoner_service.load_matchlist(view, null, store.state.summoner2).then((resp) => {
+                        store.commit('assignSummoner', {'summonerNumber' : "2", 'summoner' : resp });
+                        return this.$summoner_service.load_defined_matchlist(view, null, store.state.summoner2);
+                    })
+                }
             },
         },
         watch : {

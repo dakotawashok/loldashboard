@@ -31,7 +31,7 @@ class MatchList extends Model
         $matches = $this->api->getMatchList($id, $params);
 
         $this->summonerId = $id;
-        $this->season = $params['season'];
+        $this->season = json_encode($params['season']);
         $this->list_type = $list_type;
         $this->matches = json_encode($matches['matches']);
         $this->save();
@@ -79,7 +79,7 @@ class MatchList extends Model
 
     private function saveMatchListMatches() {
         // Now we have to go through each part of the matchlist and see if the match is in our database, if it isn't go find it...
-        $matches = json_decode($this->matches);
+        $matches = json_decode($this->matches, true);
         forEach($matches as $match_entry) {
             try {
                 $matchFromDatabase = Match::where('gameId', (string)$match_entry['gameId'])->firstOrFail();

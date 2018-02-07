@@ -6,7 +6,7 @@ export default {
         var empty_summoner_object = {
             summonerName : '',
             summonerNumber : '',
-            accountNumber :'',
+            accountId :'',
 
             championMastery : [],
             profileIconId : '',
@@ -40,7 +40,6 @@ export default {
                 temp_summoner.summonerNumber = identity;
             }
 
-
             return $.get('/summoner/' + (temp_summoner.summonerName != '' ? temp_summoner.summonerName : temp_summoner.summonerNumber)).then((resp) => {
                 _parseSummonerDataFromSummonerResponse(resp, temp_summoner);
                 return _getMatchList('ranked', null, temp_summoner);
@@ -51,6 +50,8 @@ export default {
             }).then((resp) => {
                 var definedMatchList = JSON.parse(resp);
                 temp_summoner.definedRankedMatchList = definedMatchList;
+                _parseMatchListDataFromResponse(temp_summoner.rankedMatchList, temp_summoner.definedRankedMatchList);
+                _assignRankedData(temp_summoner);
                 return temp_summoner;
             }).catch((resp) => {
                 console.log(resp);
@@ -58,64 +59,49 @@ export default {
             })
         }
 
-        Vue.prototype.$summoner_service.load_matchlist = function(matchListType, $params, summoner) {
+        Vue.prototype.$summoner_service.load_matchlist  = function(matchListType, $params, summoner) {
             var temp_summoner = _.cloneDeep(summoner);
-            var match_list = _getMatchList(matchListType, $params, summoner)
-
-            switch (matchListType) {
-                case 'ranked' :
-                    temp_summoner.rankedMatchList = match_list;
-                    break;
-                case 'normal' :
-                    temp_summoner.normalMatchList = match_list;
-                    break;
-                case 'other' :
-                    temp_summoner.otherMatchList = match_list;
-                    break;
-            }
-
-            return temp_summoner;
+            return _getMatchList(matchListType, $params, summoner).then((resp) => {
+                return JSON.parse(JSON.parse(resp).matches);
+            })
         }
 
         Vue.prototype.$summoner_service.load_defined_matchlist = function(matchListType, $params, summoner) {
             var temp_summoner = _.cloneDeep(summoner);
-            var match_list = _getDefinedMatchList(matchListType, $params, summoner)
-
-            switch (matchListType) {
-                case 'ranked' :
-                    temp_summoner.definedRankedMatchList = match_list;
-                    break;
-                case 'normal' :
-                    temp_summoner.definedRankedMatchList = match_list;
-                    break;
-                case 'other' :
-                    temp_summoner.definedRankedMatchList = match_list;
-                    break;
-            }
-
-            return temp_summoner;
+            return _getDefinedMatchList(matchListType, $params, summoner).then((resp) => {
+                return JSON.parse(resp);
+            })
         }
 
+        Vue.prototype.$summoner_service.parse_match_list_data = function(tempMatchList, tempMatchListDefined) {
+            _parseMatchListDataFromResponse(tempMatchList, tempMatchListDefined);
+        }
+
+        Vue.prototype.$summoner_service.assemble_profile_icon_url = function(API_VERSION, profileIconId) {
+            return "http://ddragon.leagueoflegends.com/cdn/" + API_VERSION + "/img/profileicon/" + profileIconId + ".png";
+        }
 
         function _parseSummonerDataFromSummonerResponse(response, summoner) {
             var parsedResponse = JSON.parse(response);
             summoner.summonerName = parsedResponse.name;
             summoner.summonerNumber = parsedResponse.id;
-            summoner.accountNumber = parsedResponse.accountId;
-            summoner.championMastery = JSON.parse(parsedResponse.championMastery);
+            summoner.accountId = parsedResponse.accountId;
             summoner.profileIconId = parsedResponse.profileIconId;
             summoner.summonerLevel = parsedResponse.summonerLevel;
-            summoner.league = JSON.parse(parsedResponse.league);
             summoner.revisionDate = parsedResponse.revisionDate;
             summoner.created_at = parsedResponse.created_at;
             summoner.updated_at = parsedResponse.updated_at;
+
+            summoner.championMastery = (typeof summoner.championMastery == 'string' ? JSON.parse(summoner.championMastery) : summoner.championMastery);
+            summoner.league = (typeof summoner.league == 'string' ? JSON.parse(summoner.league) : summoner.league);
+            summoner.masteries = (typeof summoner.masteries == 'string' ? JSON.parse(summoner.masteries) : summoner.masteries);
+            summoner.runes = (typeof summoner.runes == 'string' ? JSON.parse(summoner.runes) : summoner.runes);
         }
 
         function _getMatchList(matchListType, $params, summoner) {
-            console.log('getting match list');
             var data_object = {
                 'matchListType' : matchListType,
-                'accountId' : summoner.accountNumber,
+                'accountId' : summoner.accountId,
             }
 
             if ($params != undefined || $params != null) {
@@ -123,14 +109,12 @@ export default {
             }
 
             return $.get('/summoner/' + (summoner.summonerNumber) + '/getMatchList', data_object)
-            return JSON.parse(JSON.parse(resp).matches);
         }
 
         function _getDefinedMatchList(matchListType, $params, summoner) {
-            console.log('getting defined match list');
             var data_object = {
                 'matchListType' : matchListType,
-                'accountId' : summoner.accountNumber,
+                'accountId' : summoner.accountId,
             }
 
             if ($params != undefined || $params != null) {
@@ -138,6 +122,41 @@ export default {
             }
 
             return $.get('/summoner/' + (summoner.summonerNumber) + '/getDefinedMatchList', data_object)
+        }
+
+        function _parseMatchListDataFromResponse(tempMatchList, tempMatchListDefined) {
+            // Now we're going to add the defined match to each of the regular matches
+            _.forEach(tempMatchList, (match) => {
+                _.forEach(tempMatchListDefined, (defined_match) => {
+                    if (match.gameId == defined_match.gameId) {
+                        match.defined_match = defined_match;
+                    }
+                })
+            })
+        }
+
+        // Go through all the summoner league ranked data and find the specific data that matches with this summoner
+        function _assignRankedData(summoner) {
+            if (summoner != undefined && summoner.league != undefined) {
+                _.forEach(summoner.league, (league) => {
+                    if (league.queueType == 'RANKED_SOLO_5x5') {
+                        summoner.rankedData.freshBlood = league.freshBlood;
+                        summoner.rankedData.hotStreak = league.hotStreak;
+                        summoner.rankedData.inactive = league.inactive;
+                        summoner.rankedData.leagueId = league.leagueId;
+                        summoner.rankedData.losses = league.losses;
+                        summoner.rankedData.playerOrTeamId = league.playerOrTeamId;
+                        summoner.rankedData.playerOrTeamName = league.playerOrTeamName;
+                        summoner.rankedData.queueType = league.queueType;
+                        summoner.rankedData.rank = league.rank;
+                        summoner.rankedData.tier = league.tier;
+                        summoner.rankedData.veteran = league.veteran;
+                        summoner.rankedData.wins = league.wins;
+                        summoner.rankedData.leaguePoints = league.leaguePoints;
+                        summoner.rankedData.leagueName = league.leagueName;
+                    }
+                })
+            }
         }
     }
 }

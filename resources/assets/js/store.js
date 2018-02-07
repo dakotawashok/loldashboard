@@ -13,8 +13,16 @@ var store = new Vuex.Store({
         summoner1 : {
             loaded : false,
             loading : false,
-            summoner : {},
+
+            accountId: "",
+            championMastery: [],
+            league: {},
+            profileIconId: "",
+            revisionDate: "",
+            summonerLevel: "",
             summonerName : '',
+            summonerNumber: 0,
+
             normalMatchList :{},
             rankedMatchList : {},
             otherMatchList : {},
@@ -25,8 +33,16 @@ var store = new Vuex.Store({
         summoner2 : {
             loaded : false,
             loading : false,
-            summoner : {},
+
+            accountId: "",
+            championMastery: [],
+            league: {},
+            profileIconId: "",
+            revisionDate: "",
+            summonerLevel: "",
             summonerName : '',
+            summonerNumber: 0,
+
             normalMatchList :{},
             rankedMatchList : {},
             otherMatchList : {},
@@ -64,12 +80,7 @@ var store = new Vuex.Store({
         assignSeasons (state, seasonList) {                         state.staticInfo.seasons = seasonList; },
         assignMatchmakingQueues (state, matchmakingQueuesList) {    state.staticInfo.matchmaking_queues = matchmakingQueuesList; },
         assignMapNames (state, mapNameList) {                       state.staticInfo.map_names = mapNameList; },
-        assignSummoner1Summoner (state, summoner) {
-            state.summoner1.summoner = summoner;
-        },
-        assignSummoner2Summoner (state, summoner) {
-            state.summoner2.summoner = summoner;
-        },
+
         assignSummoner1RankedMatchList (state, rankedMatchList) {
             state.summoner1.rankedMatchList = rankedMatchList;
         },
@@ -177,10 +188,20 @@ var store = new Vuex.Store({
         assignTestSummoner(state, summonerObject) {
             var summonerNumber = summonerObject.summonerNumber;
             var summoner = summonerObject.summoner;
-            if (summonerNumber === 1) {
+            if (summonerNumber === "1") {
                 state.testSummoner1 = summoner;
             } else {
                 state.testSummoner2 = summoner;
+            }
+        },
+
+        assignSummoner(state, summonerObject) {
+            var summonerNumber = summonerObject.summonerNumber;
+            var summoner = summonerObject.summoner;
+            if (summonerNumber === "1") {
+                state.summoner1 = summoner;
+            } else {
+                state.summoner2 = summoner;
             }
         }
     }
