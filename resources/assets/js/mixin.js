@@ -65,7 +65,6 @@ export default {
         },
 
         getAllSummonerData : function(summonerNumber, useAccountId = false, currentlyViewedMatchList) {
-            console.log('getting all summoner data');
             if (summonerNumber == "1") {
                 var tempSummoner = this.$summoner_service.make_new_summoner();
                 store.commit('assignSummonerLoading', {'summonerNumber' : 1, 'loading' : true});

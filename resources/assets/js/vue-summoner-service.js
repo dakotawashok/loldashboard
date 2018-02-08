@@ -53,26 +53,20 @@ export default {
                 defined_match_list = JSON.parse(resp);
                 _parseMatchListDataFromResponse(match_list, defined_match_list);
                 _assignRankedData(temp_summoner);
-                console.log('service stuff: ');
-                console.log(currentlyViewedMatchList)
                 switch (currentlyViewedMatchList) {
                     case 'ranked' :
-                        console.log('in ranked');
                         temp_summoner.rankedMatchList = match_list;
                         temp_summoner.definedRankedMatchList = defined_match_list;
                         break;
                     case 'normal' :
-                        console.log('in normal');
                         temp_summoner.normalMatchList = match_list;
                         temp_summoner.definedNormalMatchList = defined_match_list;
                         break;
                     case 'other' :
-                        console.log('in other');
                         temp_summoner.otherMatchList = match_list;
                         temp_summoner.definedOtherMatchList = defined_match_list;
                         break;
                 }
-                console.log(temp_summoner);
                 return temp_summoner;
             }).catch((resp) => {
                 console.log(resp);
@@ -113,10 +107,8 @@ export default {
             summoner.created_at = parsedResponse.created_at;
             summoner.updated_at = parsedResponse.updated_at;
 
-            summoner.championMastery = (typeof summoner.championMastery == 'string' ? JSON.parse(summoner.championMastery) : summoner.championMastery);
-            summoner.league = (typeof summoner.league == 'string' ? JSON.parse(summoner.league) : summoner.league);
-            summoner.masteries = (typeof summoner.masteries == 'string' ? JSON.parse(summoner.masteries) : summoner.masteries);
-            summoner.runes = (typeof summoner.runes == 'string' ? JSON.parse(summoner.runes) : summoner.runes);
+            summoner.championMastery = (typeof parsedResponse.championMastery == 'string' ? JSON.parse(parsedResponse.championMastery) : parsedResponse.championMastery);
+            summoner.league = (typeof parsedResponse.league == 'string' ? JSON.parse(parsedResponse.league) : parsedResponse.league);
         }
 
         function _getMatchList(matchListType, $params, summoner) {
@@ -158,9 +150,13 @@ export default {
 
         // Go through all the summoner league ranked data and find the specific data that matches with this summoner
         function _assignRankedData(summoner) {
+            console.log(_.cloneDeep(summoner));
             if (summoner != undefined && summoner.league != undefined) {
+                console.log("We're in...");
                 _.forEach(summoner.league, (league) => {
                     if (league.queueType == 'RANKED_SOLO_5x5') {
+                        console.log('RANKED_SOLO_5X5');
+                        summoner.rankedData = {};
                         summoner.rankedData.freshBlood = league.freshBlood;
                         summoner.rankedData.hotStreak = league.hotStreak;
                         summoner.rankedData.inactive = league.inactive;
@@ -175,6 +171,7 @@ export default {
                         summoner.rankedData.wins = league.wins;
                         summoner.rankedData.leaguePoints = league.leaguePoints;
                         summoner.rankedData.leagueName = league.leagueName;
+                        console.log(summoner);
                     }
                 })
             }

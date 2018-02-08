@@ -238,7 +238,6 @@
 
             changeView : function(view) {
                 this.currentlyViewedMatchList = view;
-                console.log('changing view');
 
                 if (this.summoner1.loaded) {
                     var match_list = [];
@@ -246,21 +245,16 @@
                     var need_to_load_lists1 = false;
                     switch (view) {
                         case 'ranked':
-                            console.log('in ranked1');
                             need_to_load_lists1 = (store.state.summoner1.rankedMatchList.length === 0);
                             break;
                         case 'normal':
-                            console.log('in normal1');
                             need_to_load_lists1 = (store.state.summoner1.normalMatchList.length === 0);
                             break;
                         case 'other':
-                            console.log('in other1');
                             need_to_load_lists1 = (store.state.summoner1.otherMatchList.length === 0);
                             break;
                     }
-                    console.log('1: ' + need_to_load_lists1);
                     if (need_to_load_lists1) {
-                        console.log('loading list');
                         this.$summoner_service.load_matchlist(view, null, store.state.summoner1).then((resp) => {
                             match_list = resp;
                             return this.$summoner_service.load_defined_matchlist(view, null, store.state.summoner1);
@@ -291,21 +285,16 @@
                     var need_to_load_lists2 = false;
                     switch (view) {
                         case 'ranked':
-                            console.log('in ranked2');
                             need_to_load_lists2 = (store.state.summoner2.rankedMatchList.length === 0);
                             break;
                         case 'normal':
-                            console.log('in normal2');
                             need_to_load_lists2 = (store.state.summoner2.normalMatchList.length === 0);
                             break;
                         case 'other':
-                            console.log('in other2');
                             need_to_load_lists2 = (store.state.summoner2.otherMatchList.length === 0);
                             break;
                     }
-                    console.log('2: ' + need_to_load_lists2);
                     if (need_to_load_lists2) {
-                        console.log('loading list');
                         this.$summoner_service.load_matchlist(view, null, store.state.summoner2).then((resp) => {
                             match_list = resp;
                             return this.$summoner_service.load_defined_matchlist(view, null, store.state.summoner2);
