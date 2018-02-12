@@ -1,1 +1,7 @@
-@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);body{background-color:#404040}nav.navbar{margin-bottom:0}
+@import url(https://fonts.googleapis.com/css?family=Raleway:300,400,600);body {
+  background-color: #404040;
+}
+
+nav.navbar {
+  margin-bottom: 0px;
+}

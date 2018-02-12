@@ -101,7 +101,7 @@ class MatchController extends Controller
 
         try {
             $matchListObject = MatchList::where('summonerId', $accountId)->where('list_type', $matchListType)->firstOrFail();
-            $matchListObject->determineNeedForUpdating();
+            $matchListObject->determineNeedForUpdating($accountId, $params);
         } catch (ModelNotFoundException $e) {
             $matchListObject = new MatchList;
             $matchListObject->assignDataFromAPI($accountId, $matchListType, $params);

@@ -40,7 +40,7 @@ class MatchList extends Model
         return $this;
     }
 
-    public function determineNeedForUpdating() {
+    public function determineNeedForUpdating($id, $params) {
         // If it's older than a day, retrieve the newest match list from the api and resave it in the database
         if (strtotime($this->updated_at) < (strtotime('-1 day'))) {
             $matches = $this->api->getMatchList($id, $params);
