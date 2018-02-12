@@ -107,8 +107,9 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="six wide column"></div>
-                                <div class="three wide column"></div>
+                                <div class="nine wide column">
+                                    <totalstatgraph :chartData="create_chart_data_object(blue_team_participants[i-1], n)"></totalstatgraph>
+                                </div>
                             </div>
                         </div>
                         <div class="ui segment right-summoner">
@@ -493,6 +494,16 @@
                     this.total_data[variable_index] = this.red_team.total_data[variable_index] + this.blue_team.total_data[variable_index]
                 });
             },
+
+            // make a data object for the graph module
+            create_chart_data_object(participant, index) {
+                var tempChartData = {
+                    'labels' : [],
+                    'datasets' : [],
+                }
+
+
+            }
         },
         watch : {
             match : function(val) {

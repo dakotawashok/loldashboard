@@ -30242,6 +30242,7 @@ __webpack_require__(180);
 Vue.component('dashboard', __webpack_require__(273));
 Vue.component('matchcard', __webpack_require__(148));
 Vue.component('matchmodal', __webpack_require__(149));
+Vue.component('totalstatgraph', __webpack_require__(309));
 Vue.component('rankedmatchlistview', __webpack_require__(274));
 Vue.component('recentgamecard', __webpack_require__(275));
 Vue.component('recentgamesview', __webpack_require__(276));
@@ -32096,6 +32097,7 @@ var moment = __webpack_require__(0);
 //
 //
 //
+//
 
 
 
@@ -32417,6 +32419,15 @@ var moment = __webpack_require__(0);
             _.forEach(this.total_data, function (variable_name, variable_index) {
                 _this2.total_data[variable_index] = _this2.red_team.total_data[variable_index] + _this2.blue_team.total_data[variable_index];
             });
+        },
+
+
+        // make a data object for the graph module
+        create_chart_data_object: function create_chart_data_object(participant, index) {
+            var tempChartData = {
+                'labels': [],
+                'datasets': []
+            };
         }
     },
     watch: {
@@ -68607,7 +68618,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!function(e){!(_
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__package_json__ = __webpack_require__(270);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__package_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__package_json__);
 /* unused harmony reexport Bar */
-/* unused harmony reexport HorizontalBar */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_1__BaseCharts_HorizontalBar__["a"]; });
 /* unused harmony reexport Doughnut */
 /* unused harmony reexport Line */
 /* unused harmony reexport Pie */
@@ -68615,7 +68626,7 @@ var __WEBPACK_AMD_DEFINE_ARRAY__, __WEBPACK_AMD_DEFINE_RESULT__;!function(e){!(_
 /* unused harmony reexport Radar */
 /* unused harmony reexport Bubble */
 /* unused harmony reexport Scatter */
-/* unused harmony reexport mixins */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "b", function() { return __WEBPACK_IMPORTED_MODULE_9__mixins_index_js__["a"]; });
 /* unused harmony export VueCharts */
 
 
@@ -69802,10 +69813,12 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }) : _vm._e()
     }))])]), _vm._v(" "), _c('div', {
-      staticClass: "six wide column"
-    }), _vm._v(" "), _c('div', {
-      staticClass: "three wide column"
-    })])]), _vm._v(" "), _c('div', {
+      staticClass: "nine wide column"
+    }, [_c('totalstatgraph', {
+      attrs: {
+        "chartData": _vm.create_chart_data_object(_vm.blue_team_participants[i - 1], _vm.n)
+      }
+    })], 1)])]), _vm._v(" "), _c('div', {
       staticClass: "ui segment right-summoner"
     }, [_c('div', {
       staticClass: "ui four column grid"
@@ -83677,6 +83690,76 @@ module.exports = function() {
 
 __webpack_require__(150);
 module.exports = __webpack_require__(151);
+
+
+/***/ }),
+/* 307 */,
+/* 308 */
+/***/ (function(module, __webpack_exports__, __webpack_require__) {
+
+"use strict";
+Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__ = __webpack_require__(266);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__store_js__ = __webpack_require__(5);
+
+
+
+
+/* harmony default export */ __webpack_exports__["default"] = __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["a" /* HorizontalBar */].extend({
+    mixins: [__WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["b" /* mixins */].reactiveProp],
+    props: ['chartData'],
+    mounted: function mounted() {
+        this.renderChart(this.chartData, {
+            legend: {
+                labels: {
+                    fontColor: "#f8f8ff"
+                }
+            },
+            responsive: true,
+            maintainAspectRatio: false,
+            scales: {
+                xAxes: [{
+                    stacked: true
+                }],
+                yAxes: [{
+                    stacked: true
+                }]
+            }
+        });
+    }
+});
+
+/***/ }),
+/* 309 */
+/***/ (function(module, exports, __webpack_require__) {
+
+var Component = __webpack_require__(9)(
+  /* script */
+  __webpack_require__(308),
+  /* template */
+  null,
+  /* scopeId */
+  null,
+  /* cssModules */
+  null
+)
+Component.options.__file = "/Users/dakotawashok/NinjaDev/www/lolDashboard/resources/assets/js/components/TotalStatGraph.vue"
+if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
+
+/* hot reload */
+if (false) {(function () {
+  var hotAPI = require("vue-hot-reload-api")
+  hotAPI.install(require("vue"), false)
+  if (!hotAPI.compatible) return
+  module.hot.accept()
+  if (!module.hot.data) {
+    hotAPI.createRecord("data-v-7fc25356", Component.options)
+  } else {
+    hotAPI.reload("data-v-7fc25356", Component.options)
+  }
+})()}
+
+module.exports = Component.exports
 
 
 /***/ })
