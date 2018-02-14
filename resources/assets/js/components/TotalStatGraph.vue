@@ -2,7 +2,8 @@
     import { HorizontalBar, mixins } from 'vue-chartjs';
     import store from '../store.js';
 
-    export default HorizontalBar.extend({
+    export default {
+        extends: HorizontalBar,
         mixins: [mixins.reactiveProp],
         props : [
             'chartData',
@@ -26,5 +27,5 @@
                 }
             });
         }
-    });
+    };
 </script>

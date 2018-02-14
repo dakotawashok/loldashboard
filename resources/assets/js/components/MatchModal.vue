@@ -108,7 +108,36 @@
                                     </div>
                                 </div>
                                 <div class="nine wide column">
-                                    <totalstatgraph :chartData="create_chart_data_object(blue_team_participants[i-1], n)"></totalstatgraph>
+                                    <a class="ui grey label summoner-info">
+                                        Damage Dealt to Champions:
+                                        <div class="detail">
+                                            {{blue_team_participants[i-1].stats.totalDamageDealtToChampions }}
+                                        </div>
+                                    </a>
+                                    <a class="ui label summoner-info">
+                                        Damage Taken:
+                                        <div class="detail">
+                                            {{blue_team_participants[i-1].stats.totalDamageTaken }}
+                                        </div>
+                                    </a>
+                                    <a class="ui grey label summoner-info">
+                                        Total Amount Healed:
+                                        <div class="detail">
+                                            {{blue_team_participants[i-1].stats.totalHeal }}
+                                        </div>
+                                    </a>
+                                    <a class="ui label summoner-info">
+                                        Damage Dealt to Objectives:
+                                        <div class="detail">
+                                            {{blue_team_participants[i-1].stats.damageDealtToObjectives }}
+                                        </div>
+                                    </a>
+                                    <a class="ui grey label summoner-info">
+                                        Damage Self Mitigated:
+                                        <div class="detail">
+                                            {{blue_team_participants[i-1].stats.damageSelfMitigated }}
+                                        </div>
+                                    </a>
                                 </div>
                             </div>
                         </div>
@@ -143,8 +172,38 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="sixe wide column"></div>
-                                <div class="three wide column"></div>
+                                <div class="nine wide column">
+                                    <a class="ui grey label summoner-info">
+                                        Damage Dealt to Champions:
+                                        <div class="detail">
+                                            {{red_team_participants[i-1].stats.totalDamageDealtToChampions }}
+                                        </div>
+                                    </a>
+                                    <a class="ui label summoner-info">
+                                        Damage Taken:
+                                        <div class="detail">
+                                            {{red_team_participants[i-1].stats.totalDamageTaken }}
+                                        </div>
+                                    </a>
+                                    <a class="ui grey label summoner-info">
+                                        Total Amount Healed:
+                                        <div class="detail">
+                                            {{red_team_participants[i-1].stats.totalHeal }}
+                                        </div>
+                                    </a>
+                                    <a class="ui label summoner-info">
+                                        Damage Dealt to Objectives:
+                                        <div class="detail">
+                                            {{red_team_participants[i-1].stats.damageDealtToObjectives }}
+                                        </div>
+                                    </a>
+                                    <a class="ui grey label summoner-info">
+                                        Damage Self Mitigated:
+                                        <div class="detail">
+                                            {{red_team_participants[i-1].stats.damageSelfMitigated }}
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
@@ -498,10 +557,27 @@
             // make a data object for the graph module
             create_chart_data_object(participant, index) {
                 var tempChartData = {
-                    'labels' : [],
-                    'datasets' : [],
+                    'labels' : ['Damage Done'],
+                    'datasets' : [
+                        {
+                            label: 'Damage Done',
+                            backgroundColor: '#f87979',
+                            data: [40]
+                        },
+                        {
+                            label: 'Damage Done',
+                            backgroundColor: '#f8db27',
+                            data: [20]
+                        },
+                        {
+                            label: 'Damage Done',
+                            backgroundColor: '#4cf863',
+                            data: [20]
+                        },
+                    ],
                 }
 
+                return tempChartData;
 
             }
         },
@@ -514,6 +590,10 @@
         }
     }
 </script>
+
+<style>
+
+</style>
 
 <style scoped>
     .header {

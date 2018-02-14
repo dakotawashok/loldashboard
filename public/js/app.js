@@ -30181,7 +30181,8 @@ module.exports = Component.exports
 
 
 /* styles */
-__webpack_require__(297)
+__webpack_require__(312)
+__webpack_require__(313)
 
 var Component = __webpack_require__(9)(
   /* script */
@@ -32098,6 +32099,65 @@ var moment = __webpack_require__(0);
 //
 //
 //
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
+//
 
 
 
@@ -32425,9 +32485,23 @@ var moment = __webpack_require__(0);
         // make a data object for the graph module
         create_chart_data_object: function create_chart_data_object(participant, index) {
             var tempChartData = {
-                'labels': [],
-                'datasets': []
+                'labels': ['Damage Done'],
+                'datasets': [{
+                    label: 'Damage Done',
+                    backgroundColor: '#f87979',
+                    data: [40]
+                }, {
+                    label: 'Damage Done',
+                    backgroundColor: '#f8db27',
+                    data: [20]
+                }, {
+                    label: 'Damage Done',
+                    backgroundColor: '#4cf863',
+                    data: [20]
+                }]
             };
+
+            return tempChartData;
         }
     },
     watch: {
@@ -46703,20 +46777,7 @@ exports.push([module.i, "\n#main-grid-container > *[data-v-57152485]:first-child
 
 
 /***/ }),
-/* 238 */
-/***/ (function(module, exports, __webpack_require__) {
-
-exports = module.exports = __webpack_require__(3)(undefined);
-// imports
-
-
-// module
-exports.push([module.i, "\n.header[data-v-6c1b3c47] {\n    text-align: center;\n}\nh4[data-v-6c1b3c47] {\n    margin-top: 5px!important;\n    margin-bottom: 5px!important;\n}\n.stats-container > .column[data-v-6c1b3c47] {\n    padding: 5px 10px!important;\n    font-size: 10px;\n}\n.stats-container > * > span > i[data-v-6c1b3c47] {\n    display: inline;\n}\n.picture-column > .ui.grid > .column[data-v-6c1b3c47] {\n    padding: 9px!important;\n}\n.participant-summonerimage[data-v-6c1b3c47] {\n    width: 66px!important;\n    margin: 0px!important;\n}\n.participant-underimage[data-v-6c1b3c47] {\n    width: 22px!important;\n    margin: 0px!important;\n    float: left;\n}\n.summoner-level-label > .label[data-v-6c1b3c47] {\n    position: absolute;\n    z-index: 100;\n    bottom: 24px;\n    right: 21px;\n}\n.summoner-info[data-v-6c1b3c47] {\n    font-size: 10px!important;\n    text-align: center;\n    display: block!important;\n    margin-bottom: 5px!important;\n}\n.summoner-info.summoner-name[data-v-6c1b3c47] {\n    font-size: 12px!important;\n}\n.summoner-data > .segment[data-v-6c1b3c47], #team-stats > .segment[data-v-6c1b3c47], .blue-team-header[data-v-6c1b3c47], .red-team-header[data-v-6c1b3c47] {\n    width: 50%!important;\n}\n.item-column[data-v-6c1b3c47] {\n    padding: 2px;\n}\n.item-column > .ui.grid > .column[data-v-6c1b3c47] {\n    padding: 1rem 0px 1rem 10px;\n}\n.participant-item-image[data-v-6c1b3c47] {\n    padding: 2px;\n}\n", ""]);
-
-// exports
-
-
-/***/ }),
+/* 238 */,
 /* 239 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -69814,11 +69875,27 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       }) : _vm._e()
     }))])]), _vm._v(" "), _c('div', {
       staticClass: "nine wide column"
-    }, [_c('totalstatgraph', {
-      attrs: {
-        "chartData": _vm.create_chart_data_object(_vm.blue_team_participants[i - 1], _vm.n)
-      }
-    })], 1)])]), _vm._v(" "), _c('div', {
+    }, [_c('a', {
+      staticClass: "ui grey label summoner-info"
+    }, [_vm._v("\n                                    Damage Dealt to Champions:\n                                    "), _c('div', {
+      staticClass: "detail"
+    }, [_vm._v("\n                                        " + _vm._s(_vm.blue_team_participants[i - 1].stats.totalDamageDealtToChampions) + "\n                                    ")])]), _vm._v(" "), _c('a', {
+      staticClass: "ui label summoner-info"
+    }, [_vm._v("\n                                    Damage Taken:\n                                    "), _c('div', {
+      staticClass: "detail"
+    }, [_vm._v("\n                                        " + _vm._s(_vm.blue_team_participants[i - 1].stats.totalDamageTaken) + "\n                                    ")])]), _vm._v(" "), _c('a', {
+      staticClass: "ui grey label summoner-info"
+    }, [_vm._v("\n                                    Total Amount Healed:\n                                    "), _c('div', {
+      staticClass: "detail"
+    }, [_vm._v("\n                                        " + _vm._s(_vm.blue_team_participants[i - 1].stats.totalHeal) + "\n                                    ")])]), _vm._v(" "), _c('a', {
+      staticClass: "ui label summoner-info"
+    }, [_vm._v("\n                                    Damage Dealt to Objectives:\n                                    "), _c('div', {
+      staticClass: "detail"
+    }, [_vm._v("\n                                        " + _vm._s(_vm.blue_team_participants[i - 1].stats.damageDealtToObjectives) + "\n                                    ")])]), _vm._v(" "), _c('a', {
+      staticClass: "ui grey label summoner-info"
+    }, [_vm._v("\n                                    Damage Self Mitigated:\n                                    "), _c('div', {
+      staticClass: "detail"
+    }, [_vm._v("\n                                        " + _vm._s(_vm.blue_team_participants[i - 1].stats.damageSelfMitigated) + "\n                                    ")])])])])]), _vm._v(" "), _c('div', {
       staticClass: "ui segment right-summoner"
     }, [_c('div', {
       staticClass: "ui four column grid"
@@ -69897,10 +69974,28 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
         }
       }) : _vm._e()
     }))])]), _vm._v(" "), _c('div', {
-      staticClass: "sixe wide column"
-    }), _vm._v(" "), _c('div', {
-      staticClass: "three wide column"
-    })])])])
+      staticClass: "nine wide column"
+    }, [_c('a', {
+      staticClass: "ui grey label summoner-info"
+    }, [_vm._v("\n                                    Damage Dealt to Champions:\n                                    "), _c('div', {
+      staticClass: "detail"
+    }, [_vm._v("\n                                        " + _vm._s(_vm.red_team_participants[i - 1].stats.totalDamageDealtToChampions) + "\n                                    ")])]), _vm._v(" "), _c('a', {
+      staticClass: "ui label summoner-info"
+    }, [_vm._v("\n                                    Damage Taken:\n                                    "), _c('div', {
+      staticClass: "detail"
+    }, [_vm._v("\n                                        " + _vm._s(_vm.red_team_participants[i - 1].stats.totalDamageTaken) + "\n                                    ")])]), _vm._v(" "), _c('a', {
+      staticClass: "ui grey label summoner-info"
+    }, [_vm._v("\n                                    Total Amount Healed:\n                                    "), _c('div', {
+      staticClass: "detail"
+    }, [_vm._v("\n                                        " + _vm._s(_vm.red_team_participants[i - 1].stats.totalHeal) + "\n                                    ")])]), _vm._v(" "), _c('a', {
+      staticClass: "ui label summoner-info"
+    }, [_vm._v("\n                                    Damage Dealt to Objectives:\n                                    "), _c('div', {
+      staticClass: "detail"
+    }, [_vm._v("\n                                        " + _vm._s(_vm.red_team_participants[i - 1].stats.damageDealtToObjectives) + "\n                                    ")])]), _vm._v(" "), _c('a', {
+      staticClass: "ui grey label summoner-info"
+    }, [_vm._v("\n                                    Damage Self Mitigated:\n                                    "), _c('div', {
+      staticClass: "detail"
+    }, [_vm._v("\n                                        " + _vm._s(_vm.red_team_participants[i - 1].stats.damageSelfMitigated) + "\n                                    ")])])])])])])
   })], 2) : _vm._e()]), _vm._v(" "), _vm._m(1, false, false), _vm._v(" "), _vm._m(2, false, false)])])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
@@ -71922,32 +72017,7 @@ if(false) {
 }
 
 /***/ }),
-/* 297 */
-/***/ (function(module, exports, __webpack_require__) {
-
-// style-loader: Adds some css to the DOM by adding a <style> tag
-
-// load the styles
-var content = __webpack_require__(238);
-if(typeof content === 'string') content = [[module.i, content, '']];
-if(content.locals) module.exports = content.locals;
-// add the styles to the DOM
-var update = __webpack_require__(7)("7101de67", content, false);
-// Hot Module Replacement
-if(false) {
- // When the styles change, update the <style> tags
- if(!content.locals) {
-   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6c1b3c47&scoped=true!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MatchModal.vue", function() {
-     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6c1b3c47&scoped=true!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MatchModal.vue");
-     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
-     update(newContent);
-   });
- }
- // When the module is disposed, remove the <style> tags
- module.hot.dispose(function() { update(); });
-}
-
-/***/ }),
+/* 297 */,
 /* 298 */
 /***/ (function(module, exports, __webpack_require__) {
 
@@ -83705,7 +83775,8 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 
-/* harmony default export */ __webpack_exports__["default"] = __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["a" /* HorizontalBar */].extend({
+/* harmony default export */ __webpack_exports__["default"] = {
+    extends: __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["a" /* HorizontalBar */],
     mixins: [__WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["b" /* mixins */].reactiveProp],
     props: ['chartData'],
     mounted: function mounted() {
@@ -83727,7 +83798,7 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
             }
         });
     }
-});
+};
 
 /***/ }),
 /* 309 */
@@ -83761,6 +83832,86 @@ if (false) {(function () {
 
 module.exports = Component.exports
 
+
+/***/ }),
+/* 310 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 311 */
+/***/ (function(module, exports, __webpack_require__) {
+
+exports = module.exports = __webpack_require__(3)(undefined);
+// imports
+
+
+// module
+exports.push([module.i, "\n.header[data-v-6c1b3c47] {\n    text-align: center;\n}\nh4[data-v-6c1b3c47] {\n    margin-top: 5px!important;\n    margin-bottom: 5px!important;\n}\n.stats-container > .column[data-v-6c1b3c47] {\n    padding: 5px 10px!important;\n    font-size: 10px;\n}\n.stats-container > * > span > i[data-v-6c1b3c47] {\n    display: inline;\n}\n.picture-column > .ui.grid > .column[data-v-6c1b3c47] {\n    padding: 9px!important;\n}\n.participant-summonerimage[data-v-6c1b3c47] {\n    width: 66px!important;\n    margin: 0px!important;\n}\n.participant-underimage[data-v-6c1b3c47] {\n    width: 22px!important;\n    margin: 0px!important;\n    float: left;\n}\n.summoner-level-label > .label[data-v-6c1b3c47] {\n    position: absolute;\n    z-index: 100;\n    bottom: 24px;\n    right: 21px;\n}\n.summoner-info[data-v-6c1b3c47] {\n    font-size: 10px!important;\n    text-align: center;\n    display: block!important;\n    margin-bottom: 5px!important;\n}\n.summoner-info.summoner-name[data-v-6c1b3c47] {\n    font-size: 12px!important;\n}\n.summoner-data > .segment[data-v-6c1b3c47], #team-stats > .segment[data-v-6c1b3c47], .blue-team-header[data-v-6c1b3c47], .red-team-header[data-v-6c1b3c47] {\n    width: 50%!important;\n}\n.item-column[data-v-6c1b3c47] {\n    padding: 2px;\n}\n.item-column > .ui.grid > .column[data-v-6c1b3c47] {\n    padding: 1rem 0px 1rem 10px;\n}\n.participant-item-image[data-v-6c1b3c47] {\n    padding: 2px;\n}\n", ""]);
+
+// exports
+
+
+/***/ }),
+/* 312 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(310);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(7)("aa28945c", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6c1b3c47!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MatchModal.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6c1b3c47!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=0!./MatchModal.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
+
+/***/ }),
+/* 313 */
+/***/ (function(module, exports, __webpack_require__) {
+
+// style-loader: Adds some css to the DOM by adding a <style> tag
+
+// load the styles
+var content = __webpack_require__(311);
+if(typeof content === 'string') content = [[module.i, content, '']];
+if(content.locals) module.exports = content.locals;
+// add the styles to the DOM
+var update = __webpack_require__(7)("3eac4028", content, false);
+// Hot Module Replacement
+if(false) {
+ // When the styles change, update the <style> tags
+ if(!content.locals) {
+   module.hot.accept("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6c1b3c47&scoped=true!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1!./MatchModal.vue", function() {
+     var newContent = require("!!../../../../node_modules/css-loader/index.js!../../../../node_modules/vue-loader/lib/style-rewriter.js?id=data-v-6c1b3c47&scoped=true!../../../../node_modules/vue-loader/lib/selector.js?type=styles&index=1!./MatchModal.vue");
+     if(typeof newContent === 'string') newContent = [[module.id, newContent, '']];
+     update(newContent);
+   });
+ }
+ // When the module is disposed, remove the <style> tags
+ module.hot.dispose(function() { update(); });
+}
 
 /***/ })
 /******/ ]);
