@@ -213,7 +213,7 @@ export default {
 
         openMatchModal(matchId) {
             store.commit('assignMatchModalLoading', true);
-            $('#match-modal').modal('show')
+            store.commit('assignMatchModalLoaded', false);
 
             this.$http.get('/match/' + matchId).then((resp) => {
                 resp = JSON.parse(resp.body);
@@ -222,6 +222,18 @@ export default {
 
                 store.commit('assignModalMatch', parsedMatch);
                 store.commit('assignMatchModalLoading', false);
+                store.commit('assignMatchModalLoaded', true);
+
+                setTimeout(function() {
+                    $('#match-modal').modal('setting', {
+                        observeChanges: true,
+                        closable  : true,
+                        detachable: false,
+                        onHidden: () => {
+                            store.commit('assignMatchModalLoaded', false);
+                        }
+                    }).modal('show');
+                }, 500);
             });
         },
 
@@ -275,6 +287,7 @@ export default {
 
         modalMatch : function() { return store.state.modalMatch; },
         matchModalLoading : function() { return store.state.matchModalLoading; },
+        matchModalLoaded : function() { return store.state.matchModalLoaded; },
 
         staticInfo : function() { return store.state.staticInfo; },
         staticChampions : function() { return store.state.staticInfo.champions; },
@@ -340,7 +353,7 @@ export default {
         },
         summoner2RankName : function() {
             return this.summoner2.rankedData == undefined || _.isEmpty(this.summoner2.rankedData)
-                ? 'Unranked' : this.summoner2.rankedData.leagueNam
+                ? 'Unranked' : this.summoner2.rankedData.leagueName
         },
         summoner2Ratio : function() {
             return this.summoner2.rankedData == undefined || _.isEmpty(this.summoner2.rankedData)

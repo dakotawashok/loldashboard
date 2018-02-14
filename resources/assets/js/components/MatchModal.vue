@@ -1,13 +1,13 @@
 <template>
-    <div class="ui fullscreen modal" id="match-modal" style="height: 1000px;">
-        <div class="header">
+    <div class="ui fullscreen modal" id="match-modal">
+        <div class="header" v-if="!loading && loaded">
             <h3>Match {{match.gameId}}</h3>
             <h4>{{date}}</h4>
             <h4>{{duration}}</h4>
             <h4>{{staticMatchmakingQueue(match.queueId).map}}</h4>
             <h4>{{staticMatchmakingQueue(match.queueId).description}}</h4>
         </div>
-        <div class="content">
+        <div class="content" v-if="!loading && loaded">
             <div class="ui top attached tabular menu">
                 <div class="active item" data-tab="overview">Overview</div>
                 <div class="item" data-tab="timeline">Timeline</div>
@@ -211,6 +211,7 @@
             </div>
             <div class="ui bottom attached tab segment" data-tab="timeline">
                 <h3>Timeline</h3>
+                <timelinegraph :chartData.sync="timeline_graph_data"></timelinegraph>
             </div>
             <div class="ui bottom attached tab segment" data-tab="misc">
                 <h3>Misc</h3>
@@ -222,6 +223,7 @@
 <script>
     import store from '../store.js';
     import mixin from '../mixin.js';
+    import TimelineGraph from '../components/TimelineGraph.vue'
 
     var moment = require('moment');
 
@@ -233,16 +235,7 @@
 
         ],
         mounted() {
-            $('#match-modal').modal({
-                closable  : true,
-                detachable: true,
-                onHidden: () => {
 
-                }
-            })
-
-            // initialize the tabs for the modal
-            $('.menu .item').tab();
         },
         props : [
             "match",
@@ -399,6 +392,8 @@
                     wardsKilled: 0,
                     wardsPlaced: 0,
                 },
+                loading: true,
+                loaded: false,
             }
         },
         computed : {
@@ -413,6 +408,30 @@
 
                     return minutes + 'm ' + seconds + 's';
                 }
+            },
+            timeline_graph_data : function() {
+                var tempChartData = {
+                    'labels' : ['Damage Done'],
+                    'datasets' : [
+                        {
+                            label: 'Damage Done',
+                            backgroundColor: '#f87979',
+                            data: [40]
+                        },
+                        {
+                            label: 'Damage Done',
+                            backgroundColor: '#f8db27',
+                            data: [20]
+                        },
+                        {
+                            label: 'Damage Done',
+                            backgroundColor: '#4cf863',
+                            data: [20]
+                        },
+                    ],
+                }
+
+                return tempChartData;
             },
         },
         methods : {
@@ -553,39 +572,20 @@
                     this.total_data[variable_index] = this.red_team.total_data[variable_index] + this.blue_team.total_data[variable_index]
                 });
             },
-
-            // make a data object for the graph module
-            create_chart_data_object(participant, index) {
-                var tempChartData = {
-                    'labels' : ['Damage Done'],
-                    'datasets' : [
-                        {
-                            label: 'Damage Done',
-                            backgroundColor: '#f87979',
-                            data: [40]
-                        },
-                        {
-                            label: 'Damage Done',
-                            backgroundColor: '#f8db27',
-                            data: [20]
-                        },
-                        {
-                            label: 'Damage Done',
-                            backgroundColor: '#4cf863',
-                            data: [20]
-                        },
-                    ],
-                }
-
-                return tempChartData;
-
-            }
         },
         watch : {
             match : function(val) {
+                this.loading = true;
                 this.resetData();
                 this.assignData();
                 this.calculateStats();
+                this.loading = false;
+                this.loaded = true;
+                // initialize the tabs for the modal
+                setTimeout(function() {
+                    $('.menu .item').tab();
+                }, 650)
+
             }
         }
     }
