@@ -282,9 +282,6 @@ export default {
     },
 
     computed: {
-        testSummoner1 : function() { return store.state.testSummoner1; },
-        testSummoner2 : function() { return store.state.testSummoner2; },
-
         modalMatch : function() { return store.state.modalMatch; },
         matchModalLoading : function() { return store.state.matchModalLoading; },
         matchModalLoaded : function() { return store.state.matchModalLoaded; },

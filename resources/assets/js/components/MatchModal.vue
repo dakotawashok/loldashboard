@@ -210,6 +210,25 @@
                 </div>
             </div>
             <div class="ui bottom attached tab segment" data-tab="timeline">
+                <div class="ui five column grid" id="summoner-role-portraits-timeline-container" v-if="timeline_graph_data_loaded">
+                    <div style="padding-bottom: 5px;" class="row">
+                        <div class="column portrait-and-summoner-name" v-for="participant in blue_team_participants">
+                            <img class="ui centered tiny image" :src="getChampionImageUrl(participant.championId)">
+                            <h4 style="text-align: center;">{{participant.participantIdentity.summonerName}}</h4>
+                        </div>
+                    </div>
+                    <div class="row" id="participant-role-row">
+                        <div class="column" v-for="participant in blue_team_participants">
+                            <h2 style="text-align: center;">{{getParticipantRole(participant.timeline.lane, participant.timeline.role)}}</h2>
+                        </div>
+                    </div>
+                    <div style="padding-top: 5px;" class="row">
+                        <div class="column portrait-and-summoner-name" v-for="participant in red_team_participants">
+                            <h4 style="text-align: center;">{{participant.participantIdentity.summonerName}}</h4>
+                            <img class="ui centered tiny image" :src="getChampionImageUrl(participant.championId)">
+                        </div>
+                    </div>
+                </div>
                 <p>*Note: Riot's API doesn't record jungle minions killed for some reason, so junglers Creeps Killed Per Minute stat may be misleading</p>
                 <div class="four ui butons">
                     <button class="ui button" v-on:click="create_timeline_graph_data('creepsPerMinDeltas')">Creeps Killed Per Minute</button>
@@ -601,6 +620,22 @@
                     }
                 });
 
+                this.blue_team_participants.sort(function(a, b) {
+                    if (a.timeline.lane > b.timeline.lane) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                })
+
+                this.red_team_participants.sort(function(a, b) {
+                    if (a.timeline.lane > b.timeline.lane) {
+                        return 1;
+                    } else {
+                        return -1;
+                    }
+                })
+
                 this.calculateTotals();
             },
 
@@ -724,5 +759,14 @@
     }
     .participant-item-image {
         padding: 2px;
+    }
+
+    #participant-role-row {
+        text-align: center;
+        padding: 0px;
+    }
+
+    #summoner-role-portraits-timeline-container {
+        margin-bottom: 10px!important;
     }
 </style>
