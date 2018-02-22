@@ -1,13 +1,13 @@
 <template>
-    <div class="ui fullscreen modal" id="match-modal" style="height: 1000px;">
-        <div class="header">
+    <div class="ui fullscreen modal" id="match-modal">
+        <div class="header" v-if="!loading && loaded">
             <h3>Match {{match.gameId}}</h3>
             <h4>{{date}}</h4>
             <h4>{{duration}}</h4>
             <h4>{{staticMatchmakingQueue(match.queueId).map}}</h4>
             <h4>{{staticMatchmakingQueue(match.queueId).description}}</h4>
         </div>
-        <div class="content">
+        <div class="content" v-if="!loading && loaded">
             <div class="ui top attached tabular menu">
                 <div class="active item" data-tab="overview">Overview</div>
                 <div class="item" data-tab="timeline">Timeline</div>
@@ -107,8 +107,38 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="six wide column"></div>
-                                <div class="three wide column"></div>
+                                <div class="nine wide column">
+                                    <a class="ui grey label summoner-info">
+                                        Damage Dealt to Champions:
+                                        <div class="detail">
+                                            {{blue_team_participants[i-1].stats.totalDamageDealtToChampions }}
+                                        </div>
+                                    </a>
+                                    <a class="ui label summoner-info">
+                                        Damage Taken:
+                                        <div class="detail">
+                                            {{blue_team_participants[i-1].stats.totalDamageTaken }}
+                                        </div>
+                                    </a>
+                                    <a class="ui grey label summoner-info">
+                                        Total Amount Healed:
+                                        <div class="detail">
+                                            {{blue_team_participants[i-1].stats.totalHeal }}
+                                        </div>
+                                    </a>
+                                    <a class="ui label summoner-info">
+                                        Damage Dealt to Objectives:
+                                        <div class="detail">
+                                            {{blue_team_participants[i-1].stats.damageDealtToObjectives }}
+                                        </div>
+                                    </a>
+                                    <a class="ui grey label summoner-info">
+                                        Damage Self Mitigated:
+                                        <div class="detail">
+                                            {{blue_team_participants[i-1].stats.damageSelfMitigated }}
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                         <div class="ui segment right-summoner">
@@ -142,15 +172,52 @@
                                         </div>
                                     </div>
                                 </div>
-                                <div class="sixe wide column"></div>
-                                <div class="three wide column"></div>
+                                <div class="nine wide column">
+                                    <a class="ui grey label summoner-info">
+                                        Damage Dealt to Champions:
+                                        <div class="detail">
+                                            {{red_team_participants[i-1].stats.totalDamageDealtToChampions }}
+                                        </div>
+                                    </a>
+                                    <a class="ui label summoner-info">
+                                        Damage Taken:
+                                        <div class="detail">
+                                            {{red_team_participants[i-1].stats.totalDamageTaken }}
+                                        </div>
+                                    </a>
+                                    <a class="ui grey label summoner-info">
+                                        Total Amount Healed:
+                                        <div class="detail">
+                                            {{red_team_participants[i-1].stats.totalHeal }}
+                                        </div>
+                                    </a>
+                                    <a class="ui label summoner-info">
+                                        Damage Dealt to Objectives:
+                                        <div class="detail">
+                                            {{red_team_participants[i-1].stats.damageDealtToObjectives }}
+                                        </div>
+                                    </a>
+                                    <a class="ui grey label summoner-info">
+                                        Damage Self Mitigated:
+                                        <div class="detail">
+                                            {{red_team_participants[i-1].stats.damageSelfMitigated }}
+                                        </div>
+                                    </a>
+                                </div>
                             </div>
                         </div>
                     </div>
                 </div>
             </div>
             <div class="ui bottom attached tab segment" data-tab="timeline">
-                <h3>Timeline</h3>
+                <p>*Note: Riot's API doesn't record jungle minions killed for some reason, so junglers Creeps Killed Per Minute stat may be misleading</p>
+                <div class="four ui butons">
+                    <button class="ui button" v-on:click="create_timeline_graph_data('creepsPerMinDeltas')">Creeps Killed Per Minute</button>
+                    <button class="ui button" v-on:click="create_timeline_graph_data('damageTakenPerMinDeltas')">Damage Taken Per Minute</button>
+                    <button class="ui button" v-on:click="create_timeline_graph_data('xpPerMinDeltas')">XP Earned Per Minute</button>
+                    <button class="ui button" v-on:click="create_timeline_graph_data('goldPerMinDeltas')">Gold Earned Per Minute</button>
+                </div>
+                <timelinegraph v-if="timeline_graph_data_loaded" :chartData.sync="timeline_graph_data" :height="300"></timelinegraph>
             </div>
             <div class="ui bottom attached tab segment" data-tab="misc">
                 <h3>Misc</h3>
@@ -162,6 +229,8 @@
 <script>
     import store from '../store.js';
     import mixin from '../mixin.js';
+    import TimelineGraph from '../components/TimelineGraph.vue'
+    import SummaryStatsGraph from '../components/SummaryStatsGraph.vue'
 
     var moment = require('moment');
 
@@ -173,16 +242,7 @@
 
         ],
         mounted() {
-            $('#match-modal').modal({
-                closable  : true,
-                detachable: true,
-                onHidden: () => {
 
-                }
-            })
-
-            // initialize the tabs for the modal
-            $('.menu .item').tab();
         },
         props : [
             "match",
@@ -239,6 +299,14 @@
                         wardsPlaced: 0,
                     },
                 },
+                red_team_colors : [
+                    '#f09700',
+                    '#f05200',
+                    '#f01a00',
+                    '#f05e60',
+                    '#f06d9f',
+                    '#f000a3',
+                ],
                 blue_team: {
                     win: false,
                     total_data: {
@@ -290,6 +358,14 @@
                     },
                 },
                 blue_team_participants : [],
+                blue_team_colors : [
+                    '#00f0c9',
+                    '#84bbf0',
+                    '#2061f0',
+                    '#9c78f0',
+                    '#7af080',
+                    '#a800f0',
+                ],
                 red_team_participants : [],
 
                 total_data: {
@@ -339,6 +415,10 @@
                     wardsKilled: 0,
                     wardsPlaced: 0,
                 },
+                timeline_graph_data: {},
+                timeline_graph_data_loaded: false,
+                loading: true,
+                loaded: false,
             }
         },
         computed : {
@@ -357,6 +437,8 @@
         },
         methods : {
             resetData() {
+                $('.tabular.menu .item').tab('change tab', 'overview')
+
                 this.total_data = {
                     assists: 0,
                     damageDealtToObjectives: 0,
@@ -407,6 +489,9 @@
                 this.red_team_participants = [];
                 this.red_team = {};
                 this.blue_team = {};
+
+                this.timeline_graph_data = {};
+                this.timeline_graph_data_loaded = false;
             },
 
             assignData() {
@@ -414,18 +499,6 @@
                 this.blue_team = _.cloneDeep(this.match.matchTeams[0]);
                 this.red_team.total_data = _.cloneDeep(this.total_data)
                 this.blue_team.total_data = _.cloneDeep(this.total_data)
-            },
-
-            calculateStats() {
-                _.forEach(this.match.matchParticipants, (participant, participant_index) => {
-                    if (participant.teamId == "100") {
-                        this.blue_team_participants.push(participant);
-                    } else {
-                        this.red_team_participants.push(participant);
-                    }
-                });
-
-                this.calculateTotals();
             },
 
             findParticipantKDA(participant) {
@@ -474,6 +547,31 @@
                 return this.getItemImageUrl(participant.stats['item'+(index-1)]);
             },
 
+            getParticipantRole(lane, role) {
+                var title = '';
+                switch (lane) {
+                    case 'TOP' :
+                        title = "(Top)";
+                        break;
+                    case 'JUNGLE' :
+                        title = "(Jungle)";
+                        break;
+                    case 'BOTTOM' :
+                        title = (role == 'DUO_SUPPORT' ? '(Support)' : '(AD Carry)');
+                        break;
+                    case 'MID' :
+                        title = "(Mid)";
+                        break;
+                    case 'MIDDLE' :
+                        title = "(Mid)";
+                        break;
+                    default :
+                        title = "";
+                        break;
+                }
+                return title;
+            },
+
             // go through every participant in blue_team_participants and red_team_participants
             //  and calculate an aggregate of every stat
             calculateTotals() {
@@ -493,16 +591,81 @@
                     this.total_data[variable_index] = this.red_team.total_data[variable_index] + this.blue_team.total_data[variable_index]
                 });
             },
+
+            calculateStats() {
+                _.forEach(this.match.matchParticipants, (participant, participant_index) => {
+                    if (participant.teamId == "100") {
+                        this.blue_team_participants.push(participant);
+                    } else {
+                        this.red_team_participants.push(participant);
+                    }
+                });
+
+                this.calculateTotals();
+            },
+
+            create_timeline_graph_data(stat) {
+                var tempChartData = {
+                    'labels' : Object.keys(this.red_team_participants[0].timeline[stat]),
+                    'datasets' : [],
+                }
+                tempChartData.labels.push('0')
+                tempChartData.labels.sort();
+
+                // add a dataset for each participant
+                _.forEach(this.red_team_participants, (participant, index) => {
+                    var temp_dataset = {};
+                    temp_dataset.label = participant.participantIdentity.summonerName + ' ' + this.getParticipantRole(participant.timeline.lane, participant.timeline.role);
+                    temp_dataset.lineTension = 0;
+                    temp_dataset.data = [0];
+                    _.forEach(participant.timeline[stat], (stat, index) => {
+                        temp_dataset.data.push(stat);
+                    })
+                    temp_dataset.borderColor = this.red_team_colors[index];
+                    temp_dataset.backgroundColor = 'rgba(0, 0, 0, 0)';
+
+                    tempChartData.datasets.push(temp_dataset);
+                })
+
+                _.forEach(this.blue_team_participants, (participant, index) => {
+                    var temp_dataset = {};
+                    temp_dataset.label = participant.participantIdentity.summonerName + ' ' + this.getParticipantRole(participant.timeline.lane, participant.timeline.role);
+                    temp_dataset.lineTension = 0;
+                    temp_dataset.data = [0];
+                    _.forEach(participant.timeline[stat], (stat, index) => {
+                        temp_dataset.data.push(stat);
+                    })
+                    temp_dataset.borderColor = this.blue_team_colors[index];
+                    temp_dataset.backgroundColor = 'rgba(0, 0, 0, 0)';
+
+                    tempChartData.datasets.push(temp_dataset);
+                })
+
+                this.timeline_graph_data = tempChartData;
+                if (!this.timeline_graph_data_loaded) this.timeline_graph_data_loaded = true;
+            }
         },
         watch : {
             match : function(val) {
+                this.loading = true;
                 this.resetData();
                 this.assignData();
                 this.calculateStats();
+                this.loading = false;
+                this.loaded = true;
+                // initialize the tabs for the modal
+                setTimeout(function() {
+                    $('.menu .item').tab();
+                }, 650)
+
             }
         }
     }
 </script>
+
+<style>
+
+</style>
 
 <style scoped>
     .header {

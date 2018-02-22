@@ -1,9 +1,9 @@
 <script>
-    import { Pie, mixins } from 'vue-chartjs';
+    import { Line, mixins } from 'vue-chartjs';
     import store from '../store.js';
 
     export default {
-        extends: Pie,
+        extends: Line,
         mixins: [mixins.reactiveProp],
         props : [
             'chartData',
@@ -13,7 +13,7 @@
             this.renderChart(this.chartData, {
                 legend : {
                     labels : {
-                        fontColor: "#f8f8ff"
+                        fontColor: "#2d2d2d"
                     }
                 }
             });

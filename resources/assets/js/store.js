@@ -72,6 +72,7 @@ var store = new Vuex.Store({
             updated_at: ""
         },
         matchModalLoading: false,
+        matchModalLoaded: false,
     },
     mutations : {
         assignItems (state, itemList) {                             state.staticInfo.items = itemList; },
@@ -183,6 +184,9 @@ var store = new Vuex.Store({
         },
         assignMatchModalLoading (state, loading) {
             state.matchModalLoading = loading;
+        },
+        assignMatchModalLoaded (state, loaded) {
+            state.matchModalLoaded = loaded;
         },
 
         assignTestSummoner(state, summonerObject) {
