@@ -150,12 +150,9 @@ export default {
 
         // Go through all the summoner league ranked data and find the specific data that matches with this summoner
         function _assignRankedData(summoner) {
-            console.log(_.cloneDeep(summoner));
             if (summoner != undefined && summoner.league != undefined) {
-                console.log("We're in...");
                 _.forEach(summoner.league, (league) => {
                     if (league.queueType == 'RANKED_SOLO_5x5') {
-                        console.log('RANKED_SOLO_5X5');
                         summoner.rankedData = {};
                         summoner.rankedData.freshBlood = league.freshBlood;
                         summoner.rankedData.hotStreak = league.hotStreak;
@@ -171,7 +168,6 @@ export default {
                         summoner.rankedData.wins = league.wins;
                         summoner.rankedData.leaguePoints = league.leaguePoints;
                         summoner.rankedData.leagueName = league.leagueName;
-                        console.log(summoner);
                     }
                 })
             }

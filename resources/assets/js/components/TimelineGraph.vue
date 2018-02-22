@@ -1,29 +1,20 @@
 <script>
-    import { HorizontalBar, mixins } from 'vue-chartjs';
+    import { Line, mixins } from 'vue-chartjs';
     import store from '../store.js';
 
     export default {
-        extends: HorizontalBar,
+        extends: Line,
         mixins: [mixins.reactiveProp],
         props : [
             'chartData',
+            'dataKey',
         ],
         mounted() {
             this.renderChart(this.chartData, {
                 legend : {
                     labels : {
-                        fontColor: "#f8f8ff"
+                        fontColor: "#2d2d2d"
                     }
-                },
-                responsive: true,
-                maintainAspectRatio: false,
-                scales : {
-                    xAxes: [{
-                        stacked: true
-                    }],
-                    yAxes: [{
-                        stacked: true
-                    }]
                 }
             });
         }

@@ -2,7 +2,8 @@
     import { Pie, mixins } from 'vue-chartjs';
     import store from '../store.js';
 
-    export default Pie.extend({
+    export default {
+        extends: Pie,
         mixins: [mixins.reactiveProp],
         props : [
             'chartData',
@@ -17,5 +18,5 @@
                 }
             });
         }
-    });
+    };
 </script>
