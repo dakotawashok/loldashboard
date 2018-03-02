@@ -18,11 +18,9 @@ require('./bootstrap');
 Vue.component('dashboard', require('./components/Dashboard.vue'));
 Vue.component('matchcard', require('./components/MatchCard.vue'));
 Vue.component('matchmodal', require('./components/MatchModal.vue'));
-Vue.component('timelinegraph', require('./components/TimelineGraph.vue'));
-Vue.component('summarystatsgraph', require('./components/SummaryStatsGraph.vue'));
 
-//Vue.component('summarystatsgraph', require('./components/SummaryStatsGraph.vue'));
-//Vue.component('rankedmatchlistgraph', require('./components/RankedMatchListGraph.vue'));
+Vue.component('timelinegraph', require('./components/TimelineGraph.vue'));
+Vue.component('teamstatsgraph', require('./components/TeamStatsGraph.vue'));
 
 var VueResource = require('vue-resource');
 

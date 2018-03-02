@@ -58,11 +58,6 @@
                         <div class="ui raised segment" :class="{'loading': summoner2Loading}">
                             <h2>SUMMONER NAME2: </h2>
                             <input id="summoner2-input" v-model="summoner2Name" placeholder="Summoner Name" v-on:keyup.enter="getAllSummonerData('2', false, currentlyViewedMatchList)"/>
-                            <!--<div v-if="summoner2Loaded" class="season-container">-->
-                                <!--<span>Season 6: </span>-->
-                                <!--<span>Season 5:  </span>-->
-                                <!--<span>Season 4: </span>-->
-                            <!--</div>-->
                             <div v-if="summoner2Loaded" class="ui grid ranked-info-container">
                                 <div class="two column row">
                                     <div class="four wide column">
@@ -333,6 +328,10 @@
         top: 0px;
         margin-top: 6px;
         cursor: pointer;
+    }
+
+    #match-modal > .content > .tab {
+        min-height: 80vh;
     }
 </style>
 

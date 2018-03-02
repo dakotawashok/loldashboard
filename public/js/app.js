@@ -28706,11 +28706,11 @@ return zhTw;
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_9__mixins_index_js__ = __webpack_require__(258);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__package_json__ = __webpack_require__(261);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_10__package_json___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_10__package_json__);
-/* unused harmony reexport Bar */
+/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_0__BaseCharts_Bar__["a"]; });
 /* unused harmony reexport HorizontalBar */
 /* unused harmony reexport Doughnut */
 /* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "c", function() { return __WEBPACK_IMPORTED_MODULE_3__BaseCharts_Line__["a"]; });
-/* harmony reexport (binding) */ __webpack_require__.d(__webpack_exports__, "a", function() { return __WEBPACK_IMPORTED_MODULE_4__BaseCharts_Pie__["a"]; });
+/* unused harmony reexport Pie */
 /* unused harmony reexport PolarArea */
 /* unused harmony reexport Radar */
 /* unused harmony reexport Bubble */
@@ -30295,7 +30295,7 @@ var Component = __webpack_require__(13)(
   /* cssModules */
   null
 )
-Component.options.__file = "/Users/dakotawashok/NinjaDev/www/lolDashboard/resources/assets/js/components/SummaryStatsGraph.vue"
+Component.options.__file = "/Users/dakotawashok/NinjaDev/www/lolDashboard/resources/assets/js/components/TeamStatsGraph.vue"
 if (Component.esModule && Object.keys(Component.esModule).some(function (key) {return key !== "default" && key !== "__esModule"})) {console.error("named exports are not supported in *.vue files.")}
 
 /* hot reload */
@@ -30305,9 +30305,9 @@ if (false) {(function () {
   if (!hotAPI.compatible) return
   module.hot.accept()
   if (!module.hot.data) {
-    hotAPI.createRecord("data-v-6b1bdca6", Component.options)
+    hotAPI.createRecord("data-v-48ad610b", Component.options)
   } else {
-    hotAPI.reload("data-v-6b1bdca6", Component.options)
+    hotAPI.reload("data-v-48ad610b", Component.options)
   }
 })()}
 
@@ -30376,11 +30376,9 @@ __webpack_require__(178);
 Vue.component('dashboard', __webpack_require__(262));
 Vue.component('matchcard', __webpack_require__(149));
 Vue.component('matchmodal', __webpack_require__(150));
-Vue.component('timelinegraph', __webpack_require__(152));
-Vue.component('summarystatsgraph', __webpack_require__(151));
 
-//Vue.component('summarystatsgraph', require('./components/SummaryStatsGraph.vue'));
-//Vue.component('rankedmatchlistgraph', require('./components/RankedMatchListGraph.vue'));
+Vue.component('timelinegraph', __webpack_require__(152));
+Vue.component('teamstatsgraph', __webpack_require__(151));
 
 var VueResource = __webpack_require__(266);
 
@@ -31367,11 +31365,6 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 //
 //
 //
-//
-//
-//
-//
-//
 
 
 
@@ -31891,8 +31884,15 @@ var moment = __webpack_require__(0);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_1__mixin_js__ = __webpack_require__(18);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_TimelineGraph_vue__ = __webpack_require__(152);
 /* harmony import */ var __WEBPACK_IMPORTED_MODULE_2__components_TimelineGraph_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_2__components_TimelineGraph_vue__);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_SummaryStatsGraph_vue__ = __webpack_require__(151);
-/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_SummaryStatsGraph_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_SummaryStatsGraph_vue__);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_TeamStatsGraph_vue__ = __webpack_require__(151);
+/* harmony import */ var __WEBPACK_IMPORTED_MODULE_3__components_TeamStatsGraph_vue___default = __webpack_require__.n(__WEBPACK_IMPORTED_MODULE_3__components_TeamStatsGraph_vue__);
+//
+//
+//
+//
+//
+//
+//
 //
 //
 //
@@ -32310,6 +32310,7 @@ var moment = __webpack_require__(0);
             },
             timeline_graph_data: {},
             timeline_graph_data_loaded: false,
+            buttons_html: '',
             loading: true,
             loaded: false
         };
@@ -32330,7 +32331,7 @@ var moment = __webpack_require__(0);
     },
     methods: {
         resetData: function resetData() {
-            $('.tabular.menu .item').tab('change tab', 'overview');
+            $('.tabular.menu .item').tab('change tab', 'general-info');
 
             this.total_data = {
                 assists: 0,
@@ -32463,13 +32464,25 @@ var moment = __webpack_require__(0);
 
             _.forEach(this.blue_team_participants, function (participant, participant_index) {
                 _.forEach(_this.blue_team.total_data, function (variable_name, variable_index) {
-                    _this.blue_team.total_data[variable_index] += participant.stats[variable_index];
+                    if (variable_index == 'largestCriticalStrike' || variable_index == 'largestMultiKill') {
+                        if (_this.blue_team.total_data[variable_index] == undefined || _this.blue_team.total_data[variable_index] < participant.stats[variable_index]) {
+                            _this.blue_team.total_data[variable_index] = participant.stats[variable_index];
+                        }
+                    } else {
+                        _this.blue_team.total_data[variable_index] += participant.stats[variable_index];
+                    }
                 });
             });
 
             _.forEach(this.red_team_participants, function (participant, participant_index) {
                 _.forEach(_this.red_team.total_data, function (variable_name, variable_index) {
-                    _this.red_team.total_data[variable_index] += participant.stats[variable_index];
+                    if (variable_index == 'largestCriticalStrike' || variable_index == 'largestMultiKill') {
+                        if (_this.blue_team.total_data[variable_index] == undefined || _this.blue_team.total_data[variable_index] < participant.stats[variable_index]) {
+                            _this.red_team.total_data[variable_index] = participant.stats[variable_index];
+                        }
+                    } else {
+                        _this.red_team.total_data[variable_index] += participant.stats[variable_index];
+                    }
                 });
             });
 
@@ -32547,6 +32560,49 @@ var moment = __webpack_require__(0);
 
             this.timeline_graph_data = tempChartData;
             if (!this.timeline_graph_data_loaded) this.timeline_graph_data_loaded = true;
+        },
+        create_team_stats_graph_data: function create_team_stats_graph_data(stat) {
+            var tempChartData = {
+                'labels': [ true ? '(w)' : '(l)',  true ? '(w)' : '(l)'],
+                'datasets': []
+            };
+            var red_team_dataset = {
+                'label': this.stat_to_readable_statistic_converter(stat),
+                'data': red_team.total_data[stat],
+                'borderColor': this.red_team_colors[2],
+                'backgroundColor': 'rgba(0, 0, 0, 0)'
+            };
+            var blue_team_dataset = {
+                'label': this.stat_to_readable_statistic_converter(stat),
+                'data': blue_team.total_data[stat],
+                'borderColor': this.blue_team_colors[2],
+                'backgroundColor': 'rgba(0, 0, 0, 0)'
+            };
+        },
+        create_buttons_html: function create_buttons_html() {
+            var _this4 = this;
+
+            var temp_html = "";
+            var index = 1;
+
+            _.forEach(this.blue_team.total_data, function (stat_value, stat_index) {
+                if (index == 1) {
+                    temp_html += '<div class=\"ten ui buttons\">';
+                }
+
+                temp_html += '<button class="statistics-button ui tiny button" ' + 'v-on:click="create_team_stats_graph_data(' + stat_index + ')">' + _this4.stat_to_readable_statistic_converter(stat_index) + '</button>\n';
+
+                if (index == 10) {
+                    temp_html += '</div>';
+                    index = 0;
+                }
+                index++;
+            });
+
+            this.buttons_html = temp_html;
+        },
+        stat_to_readable_statistic_converter: function stat_to_readable_statistic_converter(stat) {
+            return stat.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1");
         }
     },
     watch: {
@@ -32555,6 +32611,7 @@ var moment = __webpack_require__(0);
             this.resetData();
             this.assignData();
             this.calculateStats();
+            this.create_buttons_html();
             this.loading = false;
             this.loaded = true;
             // initialize the tabs for the modal
@@ -32579,14 +32636,14 @@ Object.defineProperty(__webpack_exports__, "__esModule", { value: true });
 
 
 /* harmony default export */ __webpack_exports__["default"] = {
-    extends: __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["a" /* Pie */],
+    extends: __WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["a" /* Bar */],
     mixins: [__WEBPACK_IMPORTED_MODULE_0_vue_chartjs__["b" /* mixins */].reactiveProp],
     props: ['chartData', 'dataKey'],
     mounted: function mounted() {
         this.renderChart(this.chartData, {
             legend: {
                 labels: {
-                    fontColor: "#f8f8ff"
+                    fontColor: "#1a1a1a"
                 }
             }
         });
@@ -46379,7 +46436,7 @@ exports = module.exports = __webpack_require__(9)(undefined);
 
 
 // module
-exports.push([module.i, "\n.match-modal-button {\n    position: absolute;\n    right: 0px;\n    top: 0px;\n    margin-top: 6px;\n    cursor: pointer;\n}\n", ""]);
+exports.push([module.i, "\n.match-modal-button {\n    position: absolute;\n    right: 0px;\n    top: 0px;\n    margin-top: 6px;\n    cursor: pointer;\n}\n#match-modal > .content > .tab {\n    min-height: 80vh;\n}\n", ""]);
 
 // exports
 
@@ -46407,7 +46464,7 @@ exports = module.exports = __webpack_require__(9)(undefined);
 
 
 // module
-exports.push([module.i, "\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n\n", ""]);
+exports.push([module.i, "\n.statistics-button {\n    font-size: 10px!important;\n}\n", ""]);
 
 // exports
 
@@ -68839,11 +68896,71 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
       "id": "match-modal"
     }
   }, [(!_vm.loading && _vm.loaded) ? _c('div', {
-    staticClass: "header"
-  }, [_c('h3', [_vm._v("Match " + _vm._s(_vm.match.gameId))]), _vm._v(" "), _c('h4', [_vm._v(_vm._s(_vm.date))]), _vm._v(" "), _c('h4', [_vm._v(_vm._s(_vm.duration))]), _vm._v(" "), _c('h4', [_vm._v(_vm._s(_vm.staticMatchmakingQueue(_vm.match.queueId).map))]), _vm._v(" "), _c('h4', [_vm._v(_vm._s(_vm.staticMatchmakingQueue(_vm.match.queueId).description))])]) : _vm._e(), _vm._v(" "), (!_vm.loading && _vm.loaded) ? _c('div', {
     staticClass: "content"
   }, [_vm._m(0, false, false), _vm._v(" "), _c('div', {
     staticClass: "ui bottom attached active tab segment",
+    attrs: {
+      "data-tab": "general-info",
+      "id": "general-info-container"
+    }
+  }, [_c('h3', [_vm._v("General Match Info")]), _vm._v(" "), (!_vm.loading && _vm.loaded) ? _c('div', {
+    staticClass: "header"
+  }, [_c('h3', [_vm._v("Match " + _vm._s(_vm.match.gameId))]), _vm._v(" "), _c('h4', [_vm._v(_vm._s(_vm.date))]), _vm._v(" "), _c('h4', [_vm._v(_vm._s(_vm.duration))]), _vm._v(" "), _c('h4', [_vm._v(_vm._s(_vm.staticMatchmakingQueue(_vm.match.queueId).map))]), _vm._v(" "), _c('h4', [_vm._v(_vm._s(_vm.staticMatchmakingQueue(_vm.match.queueId).description))])]) : _vm._e(), _vm._v(" "), _c('div', {
+    staticClass: "ui five column grid",
+    attrs: {
+      "id": "summoner-role-portraits-timeline-container"
+    }
+  }, [_c('div', {
+    staticClass: "row",
+    staticStyle: {
+      "padding-bottom": "5px"
+    }
+  }, _vm._l((_vm.blue_team_participants), function(participant) {
+    return _c('div', {
+      staticClass: "column portrait-and-summoner-name"
+    }, [_c('img', {
+      staticClass: "ui centered tiny image",
+      attrs: {
+        "src": _vm.getChampionImageUrl(participant.championId)
+      }
+    }), _vm._v(" "), _c('h4', {
+      staticStyle: {
+        "text-align": "center"
+      }
+    }, [_vm._v(_vm._s(participant.participantIdentity.summonerName))])])
+  })), _vm._v(" "), _c('div', {
+    staticClass: "row",
+    attrs: {
+      "id": "participant-role-row"
+    }
+  }, _vm._l((_vm.blue_team_participants), function(participant) {
+    return _c('div', {
+      staticClass: "column"
+    }, [_c('h2', {
+      staticStyle: {
+        "text-align": "center"
+      }
+    }, [_vm._v(_vm._s(_vm.getParticipantRole(participant.timeline.lane, participant.timeline.role)))])])
+  })), _vm._v(" "), _c('div', {
+    staticClass: "row",
+    staticStyle: {
+      "padding-top": "5px"
+    }
+  }, _vm._l((_vm.red_team_participants), function(participant) {
+    return _c('div', {
+      staticClass: "column portrait-and-summoner-name"
+    }, [_c('h4', {
+      staticStyle: {
+        "text-align": "center"
+      }
+    }, [_vm._v(_vm._s(participant.participantIdentity.summonerName))]), _vm._v(" "), _c('img', {
+      staticClass: "ui centered tiny image",
+      attrs: {
+        "src": _vm.getChampionImageUrl(participant.championId)
+      }
+    })])
+  }))])]), _vm._v(" "), _c('div', {
+    staticClass: "ui bottom attached tab segment",
     attrs: {
       "data-tab": "overview",
       "id": "overview-container"
@@ -69135,62 +69252,8 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
     attrs: {
       "data-tab": "timeline"
     }
-  }, [(_vm.timeline_graph_data_loaded) ? _c('div', {
-    staticClass: "ui five column grid",
-    attrs: {
-      "id": "summoner-role-portraits-timeline-container"
-    }
-  }, [_c('div', {
-    staticClass: "row",
-    staticStyle: {
-      "padding-bottom": "5px"
-    }
-  }, _vm._l((_vm.blue_team_participants), function(participant) {
-    return _c('div', {
-      staticClass: "column portrait-and-summoner-name"
-    }, [_c('img', {
-      staticClass: "ui centered tiny image",
-      attrs: {
-        "src": _vm.getChampionImageUrl(participant.championId)
-      }
-    }), _vm._v(" "), _c('h4', {
-      staticStyle: {
-        "text-align": "center"
-      }
-    }, [_vm._v(_vm._s(participant.participantIdentity.summonerName))])])
-  })), _vm._v(" "), _c('div', {
-    staticClass: "row",
-    attrs: {
-      "id": "participant-role-row"
-    }
-  }, _vm._l((_vm.blue_team_participants), function(participant) {
-    return _c('div', {
-      staticClass: "column"
-    }, [_c('h2', {
-      staticStyle: {
-        "text-align": "center"
-      }
-    }, [_vm._v(_vm._s(_vm.getParticipantRole(participant.timeline.lane, participant.timeline.role)))])])
-  })), _vm._v(" "), _c('div', {
-    staticClass: "row",
-    staticStyle: {
-      "padding-top": "5px"
-    }
-  }, _vm._l((_vm.red_team_participants), function(participant) {
-    return _c('div', {
-      staticClass: "column portrait-and-summoner-name"
-    }, [_c('h4', {
-      staticStyle: {
-        "text-align": "center"
-      }
-    }, [_vm._v(_vm._s(participant.participantIdentity.summonerName))]), _vm._v(" "), _c('img', {
-      staticClass: "ui centered tiny image",
-      attrs: {
-        "src": _vm.getChampionImageUrl(participant.championId)
-      }
-    })])
-  }))]) : _vm._e(), _vm._v(" "), _c('p', [_vm._v("*Note: Riot's API doesn't record jungle minions killed for some reason, so junglers Creeps Killed Per Minute stat may be misleading")]), _vm._v(" "), _c('div', {
-    staticClass: "four ui butons"
+  }, [_c('p', [_vm._v("*Note: Riot's API doesn't record jungle minions killed for some reason, so junglers Creeps Killed Per Minute stat may be misleading")]), _vm._v(" "), _c('div', {
+    staticClass: "four ui buttons"
   }, [_c('button', {
     staticClass: "ui button",
     on: {
@@ -69222,19 +69285,32 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("Gold Earned Per Minute")])]), _vm._v(" "), (_vm.timeline_graph_data_loaded) ? _c('timelinegraph', {
     attrs: {
       "chartData": _vm.timeline_graph_data,
-      "height": 300
+      "height": 150
     },
     on: {
       "update:chartData": function($event) {
         _vm.timeline_graph_data = $event
       }
     }
-  }) : _vm._e()], 1), _vm._v(" "), _vm._m(1, false, false)]) : _vm._e()])
+  }) : _vm._e()], 1), _vm._v(" "), _c('div', {
+    staticClass: "ui bottom attached tab segment",
+    attrs: {
+      "data-tab": "team-stats"
+    },
+    domProps: {
+      "innerHTML": _vm._s(_vm.buttons_html)
+    }
+  }), _vm._v(" "), _vm._m(1, false, false)]) : _vm._e()])
 },staticRenderFns: [function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "ui top attached tabular menu"
   }, [_c('div', {
     staticClass: "active item",
+    attrs: {
+      "data-tab": "general-info"
+    }
+  }, [_vm._v("General Info")]), _vm._v(" "), _c('div', {
+    staticClass: "item",
     attrs: {
       "data-tab": "overview"
     }
@@ -69246,14 +69322,19 @@ module.exports={render:function (){var _vm=this;var _h=_vm.$createElement;var _c
   }, [_vm._v("Timeline")]), _vm._v(" "), _c('div', {
     staticClass: "item",
     attrs: {
-      "data-tab": "misc"
+      "data-tab": "team-stats"
     }
-  }, [_vm._v("Misc")])])
+  }, [_vm._v("Team Statistics")]), _vm._v(" "), _c('div', {
+    staticClass: "item",
+    attrs: {
+      "data-tab": "participant-stats"
+    }
+  }, [_vm._v("Participant Statistics")])])
 },function (){var _vm=this;var _h=_vm.$createElement;var _c=_vm._self._c||_h;
   return _c('div', {
     staticClass: "ui bottom attached tab segment",
     attrs: {
-      "data-tab": "misc"
+      "data-tab": "participant-stats"
     }
   }, [_c('h3', [_vm._v("Misc")])])
 }]}

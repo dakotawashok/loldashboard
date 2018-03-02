@@ -1,19 +1,44 @@
 <template>
     <div class="ui fullscreen modal" id="match-modal">
-        <div class="header" v-if="!loading && loaded">
-            <h3>Match {{match.gameId}}</h3>
-            <h4>{{date}}</h4>
-            <h4>{{duration}}</h4>
-            <h4>{{staticMatchmakingQueue(match.queueId).map}}</h4>
-            <h4>{{staticMatchmakingQueue(match.queueId).description}}</h4>
-        </div>
         <div class="content" v-if="!loading && loaded">
             <div class="ui top attached tabular menu">
-                <div class="active item" data-tab="overview">Overview</div>
+                <div class="active item" data-tab="general-info">General Info</div>
+                <div class="item" data-tab="overview">Overview</div>
                 <div class="item" data-tab="timeline">Timeline</div>
-                <div class="item" data-tab="misc">Misc</div>
+                <div class="item" data-tab="team-stats">Team Statistics</div>
+                <div class="item" data-tab="participant-stats">Participant Statistics</div>
             </div>
-            <div class="ui bottom attached active tab segment" data-tab="overview" id="overview-container">
+            <div class="ui bottom attached active tab segment" data-tab="general-info" id="general-info-container">
+                <h3>General Match Info</h3>
+                <div class="header" v-if="!loading && loaded">
+                    <h3>Match {{match.gameId}}</h3>
+                    <h4>{{date}}</h4>
+                    <h4>{{duration}}</h4>
+                    <h4>{{staticMatchmakingQueue(match.queueId).map}}</h4>
+                    <h4>{{staticMatchmakingQueue(match.queueId).description}}</h4>
+                </div>
+
+                <div class="ui five column grid" id="summoner-role-portraits-timeline-container">
+                    <div style="padding-bottom: 5px;" class="row">
+                        <div class="column portrait-and-summoner-name" v-for="participant in blue_team_participants">
+                            <img class="ui centered tiny image" :src="getChampionImageUrl(participant.championId)">
+                            <h4 style="text-align: center;">{{participant.participantIdentity.summonerName}}</h4>
+                        </div>
+                    </div>
+                    <div class="row" id="participant-role-row">
+                        <div class="column" v-for="participant in blue_team_participants">
+                            <h2 style="text-align: center;">{{getParticipantRole(participant.timeline.lane, participant.timeline.role)}}</h2>
+                        </div>
+                    </div>
+                    <div style="padding-top: 5px;" class="row">
+                        <div class="column portrait-and-summoner-name" v-for="participant in red_team_participants">
+                            <h4 style="text-align: center;">{{participant.participantIdentity.summonerName}}</h4>
+                            <img class="ui centered tiny image" :src="getChampionImageUrl(participant.championId)">
+                        </div>
+                    </div>
+                </div>
+            </div>
+            <div class="ui bottom attached tab segment" data-tab="overview" id="overview-container">
                 <div class="ui segments" v-if="match.gameId != 0">
                     <div class="ui horizontal segments">
                         <div class="ui segment blue-team-header">
@@ -210,35 +235,17 @@
                 </div>
             </div>
             <div class="ui bottom attached tab segment" data-tab="timeline">
-                <div class="ui five column grid" id="summoner-role-portraits-timeline-container" v-if="timeline_graph_data_loaded">
-                    <div style="padding-bottom: 5px;" class="row">
-                        <div class="column portrait-and-summoner-name" v-for="participant in blue_team_participants">
-                            <img class="ui centered tiny image" :src="getChampionImageUrl(participant.championId)">
-                            <h4 style="text-align: center;">{{participant.participantIdentity.summonerName}}</h4>
-                        </div>
-                    </div>
-                    <div class="row" id="participant-role-row">
-                        <div class="column" v-for="participant in blue_team_participants">
-                            <h2 style="text-align: center;">{{getParticipantRole(participant.timeline.lane, participant.timeline.role)}}</h2>
-                        </div>
-                    </div>
-                    <div style="padding-top: 5px;" class="row">
-                        <div class="column portrait-and-summoner-name" v-for="participant in red_team_participants">
-                            <h4 style="text-align: center;">{{participant.participantIdentity.summonerName}}</h4>
-                            <img class="ui centered tiny image" :src="getChampionImageUrl(participant.championId)">
-                        </div>
-                    </div>
-                </div>
                 <p>*Note: Riot's API doesn't record jungle minions killed for some reason, so junglers Creeps Killed Per Minute stat may be misleading</p>
-                <div class="four ui butons">
+                <div class="four ui buttons">
                     <button class="ui button" v-on:click="create_timeline_graph_data('creepsPerMinDeltas')">Creeps Killed Per Minute</button>
                     <button class="ui button" v-on:click="create_timeline_graph_data('damageTakenPerMinDeltas')">Damage Taken Per Minute</button>
                     <button class="ui button" v-on:click="create_timeline_graph_data('xpPerMinDeltas')">XP Earned Per Minute</button>
                     <button class="ui button" v-on:click="create_timeline_graph_data('goldPerMinDeltas')">Gold Earned Per Minute</button>
                 </div>
-                <timelinegraph v-if="timeline_graph_data_loaded" :chartData.sync="timeline_graph_data" :height="300"></timelinegraph>
+                <timelinegraph v-if="timeline_graph_data_loaded" :chartData.sync="timeline_graph_data" :height="150"></timelinegraph>
             </div>
-            <div class="ui bottom attached tab segment" data-tab="misc">
+            <div class="ui bottom attached tab segment" data-tab="team-stats" v-html="buttons_html"></div>
+            <div class="ui bottom attached tab segment" data-tab="participant-stats">
                 <h3>Misc</h3>
             </div>
         </div>
@@ -249,7 +256,7 @@
     import store from '../store.js';
     import mixin from '../mixin.js';
     import TimelineGraph from '../components/TimelineGraph.vue'
-    import SummaryStatsGraph from '../components/SummaryStatsGraph.vue'
+    import TeamStatsGraph from '../components/TeamStatsGraph.vue'
 
     var moment = require('moment');
 
@@ -436,6 +443,7 @@
                 },
                 timeline_graph_data: {},
                 timeline_graph_data_loaded: false,
+                buttons_html: '',
                 loading: true,
                 loaded: false,
             }
@@ -456,7 +464,7 @@
         },
         methods : {
             resetData() {
-                $('.tabular.menu .item').tab('change tab', 'overview')
+                $('.tabular.menu .item').tab('change tab', 'general-info')
 
                 this.total_data = {
                     assists: 0,
@@ -596,13 +604,25 @@
             calculateTotals() {
                 _.forEach(this.blue_team_participants, (participant, participant_index) => {
                     _.forEach(this.blue_team.total_data, (variable_name, variable_index) => {
-                        this.blue_team.total_data[variable_index] += participant.stats[variable_index]
+                        if (variable_index == 'largestCriticalStrike' || variable_index == 'largestMultiKill') {
+                            if (this.blue_team.total_data[variable_index] == undefined || this.blue_team.total_data[variable_index] < participant.stats[variable_index]) {
+                                this.blue_team.total_data[variable_index] = participant.stats[variable_index];
+                            }
+                        } else {
+                            this.blue_team.total_data[variable_index] += participant.stats[variable_index]
+                        }
                     });
                 });
 
                 _.forEach(this.red_team_participants, (participant, participant_index) => {
                     _.forEach(this.red_team.total_data, (variable_name, variable_index) => {
-                        this.red_team.total_data[variable_index] += participant.stats[variable_index]
+                        if (variable_index == 'largestCriticalStrike' || variable_index == 'largestMultiKill') {
+                            if (this.blue_team.total_data[variable_index] == undefined || this.blue_team.total_data[variable_index] < participant.stats[variable_index]) {
+                                this.red_team.total_data[variable_index] = participant.stats[variable_index];
+                            }
+                        } else {
+                            this.red_team.total_data[variable_index] += participant.stats[variable_index]
+                        }
                     });
                 });
 
@@ -678,6 +698,53 @@
 
                 this.timeline_graph_data = tempChartData;
                 if (!this.timeline_graph_data_loaded) this.timeline_graph_data_loaded = true;
+            },
+
+            create_team_stats_graph_data(stat) {
+                var tempChartData = {
+                    'labels' : ['Red Team ' + this.blue_team.win ? '(w)' : '(l)', 'Blue Team ' + this.red_team.win ? '(w)' : '(l)'],
+                    'datasets' : [],
+                }
+                var red_team_dataset = {
+                    'label' : this.stat_to_readable_statistic_converter(stat),
+                    'data' : red_team.total_data[stat],
+                    'borderColor' : this.red_team_colors[2],
+                    'backgroundColor' : 'rgba(0, 0, 0, 0)'
+                };
+                var blue_team_dataset = {
+                    'label' : this.stat_to_readable_statistic_converter(stat),
+                    'data' : blue_team.total_data[stat],
+                    'borderColor' : this.blue_team_colors[2],
+                    'backgroundColor' : 'rgba(0, 0, 0, 0)'
+                };
+            },
+
+            create_buttons_html() {
+                var temp_html = ""
+                var index = 1;
+
+                _.forEach(this.blue_team.total_data, (stat_value, stat_index) => {
+                    if (index == 1) {
+                        temp_html += '<div class=\"ten ui buttons\">'
+                    }
+
+                    temp_html += '<button class="statistics-button ui tiny button" ' +
+                        'v-on:click="create_team_stats_graph_data('+ stat_index +')">' +
+                        this.stat_to_readable_statistic_converter(stat_index) +
+                        '</button>\n';
+
+                    if (index == 10) {
+                        temp_html += '</div>';
+                        index = 0;
+                    }
+                    index++;
+                });
+
+                this.buttons_html = temp_html;
+            },
+
+            stat_to_readable_statistic_converter(stat) {
+                return stat.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1")
             }
         },
         watch : {
@@ -686,6 +753,7 @@
                 this.resetData();
                 this.assignData();
                 this.calculateStats();
+                this.create_buttons_html();
                 this.loading = false;
                 this.loaded = true;
                 // initialize the tabs for the modal
@@ -699,7 +767,9 @@
 </script>
 
 <style>
-
+    .statistics-button {
+        font-size: 10px!important;
+    }
 </style>
 
 <style scoped>
