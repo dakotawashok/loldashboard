@@ -7,7 +7,7 @@ export default {
 
     data () {
         return {
-            API_VERSION: '8.2.1'
+            API_VERSION: '8.5.2'
         }
     },
 

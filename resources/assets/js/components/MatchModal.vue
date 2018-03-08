@@ -244,7 +244,15 @@
                 </div>
                 <timelinegraph v-if="timeline_graph_data_loaded" :chartData.sync="timeline_graph_data" :height="150"></timelinegraph>
             </div>
-            <div class="ui bottom attached tab segment" data-tab="team-stats" v-html="buttons_html"></div>
+            <div class="ui bottom attached tab segment" data-tab="team-stats">
+                <div class="button-container">
+                    <div class="ten ui buttons" v-for="buttons_array in buttons_array_structure">
+                        <button v-for="stat in buttons_array" class="statistics-button ui tiny button"
+                                v-on:click="create_team_stats_graph_data(stat)">{{stat_to_readable_statistic_converter(stat)}}</button>
+                    </div>
+                </div>
+                <teamstatsgraph v-if="team_stats_graph_data_loaded" :chartData.sync="team_stats_graph_data" :height="150"></teamstatsgraph>
+            </div>
             <div class="ui bottom attached tab segment" data-tab="participant-stats">
                 <h3>Misc</h3>
             </div>
@@ -253,8 +261,10 @@
 </template>
 
 <script>
+    import Vue from 'vue'
     import store from '../store.js';
     import mixin from '../mixin.js';
+    import _ from 'lodash'
     import TimelineGraph from '../components/TimelineGraph.vue'
     import TeamStatsGraph from '../components/TeamStatsGraph.vue'
 
@@ -442,8 +452,10 @@
                     wardsPlaced: 0,
                 },
                 timeline_graph_data: {},
+                team_stats_graph_data: {},
                 timeline_graph_data_loaded: false,
-                buttons_html: '',
+                team_stats_graph_data_loaded: false,
+                buttons_array_structure: [],
                 loading: true,
                 loaded: false,
             }
@@ -702,49 +714,51 @@
 
             create_team_stats_graph_data(stat) {
                 var tempChartData = {
-                    'labels' : ['Red Team ' + this.blue_team.win ? '(w)' : '(l)', 'Blue Team ' + this.red_team.win ? '(w)' : '(l)'],
+                    'labels' : [this.stat_to_readable_statistic_converter(stat)],
                     'datasets' : [],
                 }
-                var red_team_dataset = {
-                    'label' : this.stat_to_readable_statistic_converter(stat),
-                    'data' : red_team.total_data[stat],
-                    'borderColor' : this.red_team_colors[2],
-                    'backgroundColor' : 'rgba(0, 0, 0, 0)'
-                };
-                var blue_team_dataset = {
-                    'label' : this.stat_to_readable_statistic_converter(stat),
-                    'data' : blue_team.total_data[stat],
-                    'borderColor' : this.blue_team_colors[2],
-                    'backgroundColor' : 'rgba(0, 0, 0, 0)'
-                };
+                var temp_dataset = {
+                    'label' : ['Red Team'],
+                    'data' : [this.red_team.total_data[stat]],
+                    'borderColor' : [this.red_team_colors[2]],
+                    'backgroundColor' : [this.red_team_colors[2]]
+                }
+                tempChartData.datasets.push(temp_dataset)
+                var temp_dataset = {
+                    'label' : ['Blue Team'],
+                    'data' : [this.blue_team.total_data[stat]],
+                    'borderColor' : [this.blue_team_colors[2]],
+                    'backgroundColor' : [this.blue_team_colors[2]]
+                }
+                tempChartData.datasets.push(temp_dataset)
+                this.team_stats_graph_data = tempChartData;
+
+                if (!this.team_stats_graph_data_loaded) this.team_stats_graph_data_loaded = true;
             },
 
-            create_buttons_html() {
-                var temp_html = ""
-                var index = 1;
+            create_buttons_structure() {
+                var index = 0;
+                var total_index = 0;
+                var button_container_array = [];
+                var temp_button_array = [];
 
                 _.forEach(this.blue_team.total_data, (stat_value, stat_index) => {
-                    if (index == 1) {
-                        temp_html += '<div class=\"ten ui buttons\">'
+                    temp_button_array.push(stat_index);
+                    if (index == 9 || (total_index + 1) == _.size(this.blue_team.total_data)) {
+                        button_container_array.push(temp_button_array);
+                        temp_button_array = [];
+                        index = 0
+                    } else {
+                        index++;
                     }
-
-                    temp_html += '<button class="statistics-button ui tiny button" ' +
-                        'v-on:click="create_team_stats_graph_data('+ stat_index +')">' +
-                        this.stat_to_readable_statistic_converter(stat_index) +
-                        '</button>\n';
-
-                    if (index == 10) {
-                        temp_html += '</div>';
-                        index = 0;
-                    }
-                    index++;
+                    total_index++;
                 });
 
-                this.buttons_html = temp_html;
+                this.buttons_array_structure = button_container_array;
             },
 
             stat_to_readable_statistic_converter(stat) {
-                return stat.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1")
+                return stat.charAt(0).toUpperCase() + stat.replace(/([A-Z]+)/g, " $1").replace(/([A-Z][a-z])/g, " $1").slice(1)
             }
         },
         watch : {
@@ -753,7 +767,7 @@
                 this.resetData();
                 this.assignData();
                 this.calculateStats();
-                this.create_buttons_html();
+                this.create_buttons_structure();
                 this.loading = false;
                 this.loaded = true;
                 // initialize the tabs for the modal
